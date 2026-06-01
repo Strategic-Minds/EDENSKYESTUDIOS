@@ -3,7 +3,7 @@ export const brand = {
   shortName: "Eden Skye",
   domain: "edenskyestudios.com",
   primaryOffer: "AI luxury creator studio and launch engine",
-  relatedProperties: ["aicantdothis.net", "epoxywillchange-yourlife.com"],
+  relatedProperties: ["aicantdothis.net", "epoxywillchangeyourlife.com"],
   voice: "warm, cinematic, refined, emotionally intelligent, platform-safe",
   disclosure: "Eden Skye is a fictional adult AI creator identity and brand system."
 };
