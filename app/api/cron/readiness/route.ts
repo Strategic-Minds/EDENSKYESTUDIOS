@@ -4,6 +4,12 @@ import { createSupabaseAdminClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
+type ReadinessReceipt = {
+  readiness: ReturnType<typeof getRuntimeReadiness>;
+  recorded: boolean;
+  error?: string;
+};
+
 function isAuthorized(request: Request) {
   const secret = process.env.CRON_SECRET;
   const header = request.headers.get("authorization");
@@ -15,7 +21,7 @@ function isAuthorized(request: Request) {
   return header === `Bearer ${secret}`;
 }
 
-async function recordReadiness(method: string, authorized: boolean) {
+async function recordReadiness(method: string, authorized: boolean): Promise<ReadinessReceipt> {
   const readiness = getRuntimeReadiness();
 
   if (!authorized || !readiness.ok) {
