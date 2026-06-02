@@ -64,13 +64,13 @@ export const agencyAvatars: AgencyAvatar[] = [
     offerTypes: ["download", "service", "license"]
   },
   {
-    slug: "seraphina-quartz",
-    displayName: "Seraphina Quartz",
+    slug: "sera",
+    displayName: "Sera",
     agencyRole: "Epoxy design muse",
     brandLane: "epoxy transformation, maker confidence, premium surfaces",
     status: "production",
     primaryChannels: ["Instagram", "TikTok", "Facebook", "Shopify"],
-    shopifyCollectionHandle: "seraphina-quartz",
+    shopifyCollectionHandle: "sera",
     visualDirection: "high-gloss resin, studio craft luxury, jewel tones, macro product beauty",
     voiceDirection: "elegant, encouraging, tactile, maker-focused",
     offerTypes: ["download", "service", "product"]
