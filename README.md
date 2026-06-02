@@ -22,3 +22,21 @@ The first application foundation includes:
 - Vercel cron readiness route
 - environment variable contract
 - Supabase migration for core operating tables
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Verification Routes
+
+- `/api/health`
+- `/api/readiness`
+- `/api/workflows/eden-launch`
+- `/api/cron/readiness`
+
+## Supabase
+
+Apply the migration in `supabase/migrations` after the Supabase project and Vercel environment variables are configured.
