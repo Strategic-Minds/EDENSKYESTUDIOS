@@ -33,7 +33,7 @@ No automation should perform these actions without explicit approval:
 | Solara Vane | Sales psychology avatar | Downloads, services, licenses |
 | Liora Vale | Wellness and transformation avatar | Downloads, services, products |
 | Nova Rain | AI fear-to-hope narrator | Downloads, services, licenses |
-| Seraphina Quartz | Epoxy design muse | Downloads, services, products |
+| Sera | Epoxy design muse | Downloads, services, products |
 | Maya Velvet | Lifestyle commerce avatar | Products, downloads, licenses |
 | Aria Stone | DIY authority avatar | Downloads, services, products |
 | Celeste Noir | Luxury nightlife campaign avatar | Licenses, downloads |
