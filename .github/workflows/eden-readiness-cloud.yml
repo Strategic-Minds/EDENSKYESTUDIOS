@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - "app/**"
+      - "public/**"
       - "scripts/scaffold-eden-readiness.mjs"
       - "docs/max_bootstrap/**"
       - "assets/eden-agents/**"
@@ -19,7 +21,7 @@ env:
 
 jobs:
   scaffold-and-validate:
-    name: Scaffold and validate Eden readiness packet
+    name: Scaffold, build, and validate Eden site
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,6 +31,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Next.js production build
+        run: npm run build
 
       - name: Run draft-only scaffold generator
         run: npm run scaffold:eden
@@ -40,13 +48,14 @@ jobs:
           npm run validate:eden:content
           npm run validate:eden:config
 
-      - name: Guard against live activation markers
+      - name: Guard generated surfaces against live activation markers
         run: |
-          ! grep -R "ACTIVE_POSTING\": true" .
-          ! grep -R "DEPLOY_NOW\": true" .
-          ! grep -R "auto_publish\": true" .
-          ! grep -R "SUPABASE_SERVICE_ROLE" .
-          ! grep -R "OPENAI_API_KEY" .
+          SCAN_TARGETS="app config workflows scripts docs/max_bootstrap docs/avatars docs/agents docs/content assets/eden-agents public"
+          ! grep -R "ACTIVE_POSTING\": true" $SCAN_TARGETS
+          ! grep -R "DEPLOY_NOW\": true" $SCAN_TARGETS
+          ! grep -R "auto_publish\": true" $SCAN_TARGETS
+          ! grep -R "SUPABASE_SERVICE_ROLE" $SCAN_TARGETS
+          ! grep -R "OPENAI_API_KEY" $SCAN_TARGETS
 
       - name: Upload generated scaffold artifact
         uses: actions/upload-artifact@v4
