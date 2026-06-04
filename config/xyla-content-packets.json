@@ -1,0 +1,16 @@
+{
+  "status": "DRAFT",
+  "human_gate_required": true,
+  "publishing_enabled": false,
+  "packet_template": {
+    "packet_id": null,
+    "avatar_id": null,
+    "platform_targets": [],
+    "visual_prompt": null,
+    "video_prompt": null,
+    "caption": null,
+    "cta": null,
+    "hashtags": [],
+    "approval_status": "HUMAN_REVIEW_REQUIRED"
+  }
+}
