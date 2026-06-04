@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
-const gates: Array<[string, string, string]> = [
+const initialGates: Array<[string, string, string]> = [
   ["Production deploy", "Locked", "Requires Jeremy approval"],
   ["Shopify publishing", "Locked", "Draft products only"],
   ["Supabase schema", "Locked", "Migration scaffold only"],
@@ -43,6 +43,8 @@ type Message = {
 };
 
 export function EdensCloset() {
+  const [gates, setGates] = useState(initialGates);
+  const [gateUpdatedAt, setGateUpdatedAt] = useState("Live refresh pending");
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -53,6 +55,29 @@ export function EdensCloset() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const readiness = useMemo(() => Math.round((workflows.reduce((sum, item) => sum + item[1], 0) / (workflows.length * 100)) * 100), []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function refreshGates() {
+      try {
+        const response = await fetch("/api/eden/gates", { cache: "no-store" });
+        const data = await response.json();
+        if (!mounted || !Array.isArray(data.gates)) return;
+        setGates(data.gates.map((gate: { name: string; state: string; note: string }) => [gate.name, gate.state, gate.note]));
+        setGateUpdatedAt(new Date(data.updated_at).toLocaleTimeString());
+      } catch {
+        if (mounted) setGateUpdatedAt("Gate API unavailable");
+      }
+    }
+
+    refreshGates();
+    const timer = window.setInterval(refreshGates, 8000);
+    return () => {
+      mounted = false;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -184,7 +209,7 @@ export function EdensCloset() {
           <div>
             <div className="panel-heading">
               <h2>Approval gates</h2>
-              <span>Real-time state model</span>
+              <span>Updated {gateUpdatedAt}</span>
             </div>
             <div className="gate-list">
               {gates.map(([name, state, note]) => (
