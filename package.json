@@ -1,1 +1,25 @@
-{"scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"next lint","typecheck":"tsc --noEmit"},"dependencies":{"@supabase/supabase-js":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{"@types/node":"latest","@types/react":"latest","typescript":"latest"}}
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "scaffold:eden": "node scripts/scaffold-eden-readiness.mjs",
+    "validate:eden": "node scripts/validate-eden-scaffold.mjs",
+    "validate:eden:avatars": "node scripts/validate-avatar-registry.mjs",
+    "validate:eden:content": "node scripts/validate-content-library.mjs",
+    "validate:eden:config": "node scripts/validate-config-json.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "typescript": "latest"
+  }
+}
