@@ -1,0 +1,46 @@
+{
+  "name": "Eden Skye Studios Ultra Lifelike Personality System",
+  "created_at": "2026-06-04",
+  "status": "personalities_ready_for_56_image_generation_no_public_use",
+  "model_profile_count": 29,
+  "female_profile_count": 19,
+  "male_profile_count": 10,
+  "automation_lane_count": 6,
+  "core_rule": "The agency can be highly automated, but external mutation, HeyGen training, publishing, commerce, and deploys remain approval-gated.",
+  "safety_boundary": "fictional adult AI models only; platform-safe, non-explicit, age-clear, natural-looking luxury editorial direction.",
+  "drive_outputs": {
+    "personality_system_sheet": {
+      "file_id": "1IaRVb7d0ccUwJMZ0aSjjxZ8W96jqIgMRayoobfbfR0I",
+      "url": "https://docs.google.com/spreadsheets/d/1IaRVb7d0ccUwJMZ0aSjjxZ8W96jqIgMRayoobfbfR0I/edit?usp=drivesdk",
+      "parent_id": null
+    },
+    "personality_system_brief_doc": {
+      "file_id": "12Bu-Xd7bkjA4Tkv7vFcMFN1uOGmSj308uYb2MYDV1v0",
+      "url": "https://docs.google.com/document/d/12Bu-Xd7bkjA4Tkv7vFcMFN1uOGmSj308uYb2MYDV1v0/edit?usp=drivesdk",
+      "parent_id": null
+    }
+  },
+  "automation_lanes": [
+    "identity_lock",
+    "image_factory",
+    "heygen_factory",
+    "content_factory",
+    "commerce_factory",
+    "telemetry_loop"
+  ],
+  "approval_gates": {
+    "source_image_generation_allowed": true,
+    "heygen_training_allowed": false,
+    "public_publishing_allowed": false,
+    "shopify_mutation_allowed": false,
+    "payment_or_discount_changes_allowed": false,
+    "production_deploy_allowed": false
+  },
+  "next_actions": [
+    "Pick priority models for full individual source-pack generation.",
+    "Generate 56 source images per approved model.",
+    "Index images with role, checksum, model ID, approval status, and Drive file ID when available.",
+    "Create HeyGen approval packets only after source-pack approval.",
+    "Use the 300-topic matrix and personality system to generate weekly content queues."
+  ]
+}
