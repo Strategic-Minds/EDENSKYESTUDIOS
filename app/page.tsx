@@ -49,6 +49,7 @@ export default function Home() {
           <a href="#offers">Offers</a>
           <a href="#products">Downloads</a>
           <a href="#licensing">Licensing</a>
+          <a href="/mockup">Mockup</a>
           <a className="nav-action" href="/admin/eden">
             Edens Closet
           </a>
@@ -68,6 +69,9 @@ export default function Home() {
             </a>
             <a className="secondary-action" href="/admin/eden">
               Open control plane
+            </a>
+            <a className="secondary-action" href="/mockup">
+              View brand mockup
             </a>
           </div>
         </div>
