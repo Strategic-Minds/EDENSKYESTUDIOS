@@ -1,0 +1,16 @@
+{
+  "status": "DRAFT",
+  "brand_lock": true,
+  "hero_headlines": [
+    "The Future Has a Face.",
+    "Digital Models. Real Commercial Power.",
+    "AI Talent Built To Create, Sell, And Scale."
+  ],
+  "cta_options": [
+    "Request Black Card Access",
+    "Explore The Models",
+    "License A Digital Model",
+    "Shop Digital Assets"
+  ],
+  "tone": ["luxury", "modern", "cinematic", "clean", "editorial"]
+}
