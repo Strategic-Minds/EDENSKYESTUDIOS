@@ -64,6 +64,12 @@
       "file_id": "1f6RFu5FTVlmrkIted8uEperQsik4AUj8nkyoDmXrjfA",
       "url": "https://docs.google.com/document/d/1f6RFu5FTVlmrkIted8uEperQsik4AUj8nkyoDmXrjfA/edit?usp=drivesdk",
       "parent_id": null
+    },
+    "expanded_visual_boards_doc": {
+      "file_id": "1_E4Q7fgTNlckMS--Nm24_Z7tPDxOHOU96Ae7-ufImRg",
+      "url": "https://docs.google.com/document/d/1_E4Q7fgTNlckMS--Nm24_Z7tPDxOHOU96Ae7-ufImRg/edit?usp=drivesdk",
+      "parent_id": null,
+      "contains_embedded_images": true
     }
   }
 }
