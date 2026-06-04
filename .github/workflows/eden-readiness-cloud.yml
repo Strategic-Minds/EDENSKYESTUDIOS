@@ -1,0 +1,75 @@
+name: Eden Readiness Cloud Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "app/**"
+      - "public/**"
+      - "scripts/scaffold-eden-readiness.mjs"
+      - "docs/max_bootstrap/**"
+      - "assets/eden-agents/**"
+      - "package.json"
+      - ".github/workflows/eden-readiness-cloud.yml"
+
+permissions:
+  contents: read
+
+env:
+  EDEN_ACTIVATION_STATUS: STUB_ONLY
+  EDEN_HUMAN_GATE_REQUIRED: "true"
+
+jobs:
+  scaffold-and-validate:
+    name: Scaffold, build, and validate Eden site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Next.js production build
+        run: npm run build
+
+      - name: Run draft-only scaffold generator
+        run: npm run scaffold:eden
+
+      - name: Run validation suite
+        run: |
+          npm run validate:eden
+          npm run validate:eden:avatars
+          npm run validate:eden:content
+          npm run validate:eden:config
+
+      - name: Guard generated surfaces against live activation markers
+        run: |
+          SCAN_TARGETS="app config workflows scripts docs/max_bootstrap docs/avatars docs/agents docs/content assets/eden-agents public"
+          ! grep -R "ACTIVE_POSTING\": true" $SCAN_TARGETS
+          ! grep -R "DEPLOY_NOW\": true" $SCAN_TARGETS
+          ! grep -R "auto_publish\": true" $SCAN_TARGETS
+          ! grep -R "SUPABASE_SERVICE_ROLE" $SCAN_TARGETS
+          ! grep -R "OPENAI_API_KEY" $SCAN_TARGETS
+
+      - name: Upload generated scaffold artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-readiness-scaffold
+          path: |
+            docs/max_bootstrap
+            docs/avatars
+            docs/agents
+            docs/content
+            config
+            workflows/eden-skye
+            app/api/eden
+            app/admin/eden
+            supabase/migrations/0001_eden_skye_readiness_scaffold.sql
+            assets/eden-agents
+          if-no-files-found: error
