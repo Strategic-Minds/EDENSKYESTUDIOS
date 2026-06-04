@@ -1,0 +1,11 @@
+{
+  "status": "DRAFT",
+  "human_gate_required": true,
+  "banks": {
+    "eden_ai": ["#EdenSkye", "#EdenSkyeStudios", "#AIAvatar", "#DigitalModel", "#VirtualInfluencer"],
+    "luxury": ["#LuxuryLifestyle", "#LuxuryBranding", "#CinematicLuxury", "#LuxuryAesthetic", "#ModernLuxury"],
+    "supercars": ["#SupercarLife", "#DreamGarage", "#LuxuryCars", "#PerformanceLifestyle", "#CarCulture"],
+    "business": ["#CreatorEconomy", "#AICommerce", "#DigitalBusiness", "#BrandStrategy", "#Monetization"],
+    "growth": ["#ContentCreator", "#SocialMediaGrowth", "#BrandBuilding", "#ContentStrategy", "#AudienceGrowth"]
+  }
+}
