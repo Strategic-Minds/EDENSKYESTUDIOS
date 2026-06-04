@@ -1,0 +1,106 @@
+{
+  "index_name": "Eden Skye Studios Avatar Stock Index",
+  "validated_at": "2026-06-04",
+  "source_registry": {
+    "title": "AVATAR_REGISTRY.csv",
+    "drive_file_id": "1lmrYVkDsbTpMNiG4nrmDI8afBhWB8c-0",
+    "url": "https://drive.google.com/file/d/1lmrYVkDsbTpMNiG4nrmDI8afBhWB8c-0/view?usp=drivesdk"
+  },
+  "primary_avatar": "F01",
+  "avatars": [
+    {
+      "avatar_id": "F01",
+      "name": "Eden Skye",
+      "gender": "Female",
+      "niche": "AI influencer and future lifestyle",
+      "primary_platform": "TikTok",
+      "status": "stock_images_available",
+      "drive_folder_id": "1q3JsMoHs_EKxn2NyMfX7-uSAE6QcBuJl",
+      "drive_folder_url": "https://drive.google.com/drive/folders/1q3JsMoHs_EKxn2NyMfX7-uSAE6QcBuJl",
+      "visual_canon": {
+        "identity": "fictional adult brunette luxury lifestyle creator and AI icon",
+        "tone": "luxurious, feminine, emotionally warm, polished, cinematic, tasteful, non-explicit",
+        "face_continuity": "warm expressive eyes, brunette hair, refined features, premium editorial presentation",
+        "lighting": "golden hour, cinematic natural light, editorial studio light, soft interior/window light",
+        "wardrobe": "business chic, elegant fashion, resort wear, evening glamour, tasteful editorial styling",
+        "avoid": "nudity, explicit sexual framing, distorted anatomy, cheap influencer aesthetic, identity drift"
+      },
+      "source_images": [
+        {
+          "role": "primary_reference",
+          "title": "ChatGPT Image Jun 4, 2026, 12_02_18 AM.png",
+          "drive_file_id": "1bGqd754UezoKLNhfcGsUrTCgrmbUqa_5",
+          "url": "https://drive.google.com/file/d/1bGqd754UezoKLNhfcGsUrTCgrmbUqa_5/view?usp=drivesdk",
+          "use_for": ["face continuity", "HeyGen photo-avatar source candidate", "image generation reference", "video look reference"]
+        },
+        {
+          "role": "supporting_reference",
+          "title": "ChatGPT Image Jun 3, 2026, 11_27_37 PM.png",
+          "drive_file_id": "1g02LVzAEg5gLBdcpbyM_T8PwTGrdmAWj",
+          "url": "https://drive.google.com/file/d/1g02LVzAEg5gLBdcpbyM_T8PwTGrdmAWj/view?usp=drivesdk",
+          "use_for": ["visual continuity", "editorial prompt grounding", "style variation"]
+        },
+        {
+          "role": "supporting_reference",
+          "title": "ChatGPT Image Jun 3, 2026, 11_17_55 PM.png",
+          "drive_file_id": "14rhoKGJWc-dgn66XCbfNEjKfAbEtPPZg",
+          "url": "https://drive.google.com/file/d/14rhoKGJWc-dgn66XCbfNEjKfAbEtPPZg/view?usp=drivesdk",
+          "use_for": ["visual continuity", "editorial prompt grounding", "style variation"]
+        }
+      ],
+      "readiness": {
+        "gpt": "ready_for_prompting_and_selection",
+        "higgins": "ready_for_manifest_consumption",
+        "heygen": "source_images_ready_but_avatar_training_not_verified",
+        "runway_or_image_generation": "ready_with_approval_and_prompt_rules"
+      }
+    },
+    {
+      "avatar_id": "F02",
+      "name": "Luna Vale",
+      "gender": "Female",
+      "niche": "Luxury lifestyle and aesthetics",
+      "primary_platform": "Instagram",
+      "status": "folder_indexed_stock_images_not_verified",
+      "drive_folder_id": "1SebSUoMX7tMTtE2EnuxUzhyGBjBXjzwC",
+      "drive_folder_url": "https://drive.google.com/drive/folders/1SebSUoMX7tMTtE2EnuxUzhyGBjBXjzwC"
+    },
+    {
+      "avatar_id": "F03",
+      "name": "Nova Rae",
+      "gender": "Female",
+      "niche": "AI tools and creator tech",
+      "primary_platform": "TikTok",
+      "status": "folder_indexed_stock_images_not_verified",
+      "drive_folder_id": "1dZ41LA84jURKymuOVt_upguCVpOe3g5A",
+      "drive_folder_url": "https://drive.google.com/drive/folders/1dZ41LA84jURKymuOVt_upguCVpOe3g5A"
+    },
+    {
+      "avatar_id": "F04",
+      "name": "Scarlett Frost",
+      "gender": "Female",
+      "niche": "Fitness and discipline",
+      "primary_platform": "Instagram",
+      "status": "folder_indexed_stock_images_not_verified",
+      "drive_folder_id": "1CmwaSe8Wsc6PSv74zabkA2WSrC1Cfinl",
+      "drive_folder_url": "https://drive.google.com/drive/folders/1CmwaSe8Wsc6PSv74zabkA2WSrC1Cfinl"
+    },
+    {
+      "avatar_id": "F05",
+      "name": "Aria Bloom",
+      "gender": "Female",
+      "niche": "Wellness and confidence",
+      "primary_platform": "Pinterest",
+      "status": "folder_indexed_stock_images_not_verified",
+      "drive_folder_id": "15Na6tRYaCQD8ndCjMsf7ffMIYdxcJXKh",
+      "drive_folder_url": "https://drive.google.com/drive/folders/15Na6tRYaCQD8ndCjMsf7ffMIYdxcJXKh"
+    }
+  ],
+  "male_avatar_registry_entries": [
+    { "avatar_id": "M01", "name": "Atlas Kane", "niche": "Entrepreneurship", "primary_platform": "TikTok", "status": "registry_entry_only" },
+    { "avatar_id": "M02", "name": "Jaxon Steele", "niche": "Sales and marketing", "primary_platform": "Facebook", "status": "registry_entry_only" },
+    { "avatar_id": "M03", "name": "Orion Black", "niche": "AI automation", "primary_platform": "Reddit", "status": "registry_entry_only" },
+    { "avatar_id": "M04", "name": "Ryder Cross", "niche": "Motivation", "primary_platform": "TikTok", "status": "registry_entry_only" },
+    { "avatar_id": "M05", "name": "Mason Cole", "niche": "Creator economy", "primary_platform": "Instagram", "status": "registry_entry_only" }
+  ]
+}
