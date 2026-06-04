@@ -1,0 +1,43 @@
+{
+  "status": "DRAFT",
+  "publishing_enabled": false,
+  "human_gate_required": true,
+  "platforms": {
+    "instagram": {
+      "handle": "thereal_edenskye",
+      "posting_mode": "draft_only",
+      "primary_formats": ["reel", "carousel", "story"],
+      "scheduler": "Metricool"
+    },
+    "facebook": {
+      "posting_mode": "draft_only",
+      "primary_formats": ["reel", "image", "link_post"],
+      "scheduler": "Metricool"
+    },
+    "tiktok": {
+      "posting_mode": "draft_only",
+      "primary_formats": ["short_video"],
+      "scheduler": "COULD_NOT_VERIFY"
+    },
+    "youtube": {
+      "posting_mode": "draft_only",
+      "primary_formats": ["shorts", "long_form"],
+      "scheduler": "COULD_NOT_VERIFY"
+    },
+    "pinterest": {
+      "posting_mode": "draft_only",
+      "primary_formats": ["pin", "idea_pin"],
+      "scheduler": "COULD_NOT_VERIFY"
+    },
+    "snapchat": {
+      "posting_mode": "draft_only",
+      "primary_formats": ["story", "spotlight"],
+      "scheduler": "COULD_NOT_VERIFY"
+    },
+    "x": {
+      "posting_mode": "draft_only",
+      "primary_formats": ["text", "image", "video"],
+      "scheduler": "COULD_NOT_VERIFY"
+    }
+  }
+}
