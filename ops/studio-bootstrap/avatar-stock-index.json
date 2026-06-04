@@ -14,7 +14,7 @@
       "gender": "Female",
       "niche": "AI influencer and future lifestyle",
       "primary_platform": "TikTok",
-      "status": "stock_images_available",
+      "status": "stock_images_available_primary_portrait_candidate_generated",
       "drive_folder_id": "1q3JsMoHs_EKxn2NyMfX7-uSAE6QcBuJl",
       "drive_folder_url": "https://drive.google.com/drive/folders/1q3JsMoHs_EKxn2NyMfX7-uSAE6QcBuJl",
       "visual_canon": {
@@ -46,12 +46,27 @@
           "drive_file_id": "14rhoKGJWc-dgn66XCbfNEjKfAbEtPPZg",
           "url": "https://drive.google.com/file/d/14rhoKGJWc-dgn66XCbfNEjKfAbEtPPZg/view?usp=drivesdk",
           "use_for": ["visual continuity", "editorial prompt grounding", "style variation"]
+        },
+        {
+          "role": "generated_heygen_primary_portrait_candidate",
+          "title": "f01_eden_skye_heygen_primary_portrait.png",
+          "drive_file_id": null,
+          "url": null,
+          "workspace_path": "/workspace/output/f01_eden_skye_heygen_primary_portrait.png",
+          "sha256": "57fbe694ddf546a1c356d7acac043f75678ba8c5edbda43d544d6e79700fc44c",
+          "dimensions": "1122x1402",
+          "created_at": "2026-06-04",
+          "status": "generated_pending_drive_upload_and_human_approval",
+          "approval_packet": "ops/studio-bootstrap/heygen-approval-packets/f01-eden-skye-primary-portrait-approval.md",
+          "generation_receipt": "ops/studio-bootstrap/receipts/f01-heygen-primary-portrait-generation-receipt.md",
+          "use_for": ["HeyGen photo-avatar approval candidate", "face continuity", "F01 source pack expansion", "GPT/Higgins/HeyGen handoff"],
+          "limitations": ["Drive upload not completed because current connector did not expose raw image upload to folder", "Do not use for HeyGen avatar creation until explicit approval is granted", "Public publishing remains blocked"]
         }
       ],
       "readiness": {
         "gpt": "ready_for_prompting_and_selection",
         "higgins": "ready_for_manifest_consumption",
-        "heygen": "source_images_ready_but_avatar_training_not_verified",
+        "heygen": "clean_primary_portrait_candidate_generated_pending_upload_and_approval",
         "runway_or_image_generation": "ready_with_approval_and_prompt_rules"
       }
     },
