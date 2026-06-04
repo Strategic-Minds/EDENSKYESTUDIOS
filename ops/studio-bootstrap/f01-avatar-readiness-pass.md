@@ -99,13 +99,29 @@ Verdict:
 
 Keep as a production planning artifact. Do not use as direct HeyGen/photo-avatar source.
 
+## Clean Portrait Candidate Created
+
+Status: `generated_pending_drive_upload_and_human_approval`
+
+A clean single-subject F01 portrait candidate has been generated from the Image C and Image B references.
+
+- File name: `f01_eden_skye_heygen_primary_portrait.png`
+- Workspace path: `/workspace/output/f01_eden_skye_heygen_primary_portrait.png`
+- Format: PNG, RGB, non-interlaced
+- Dimensions: 1122 x 1402
+- SHA-256: `57fbe694ddf546a1c356d7acac043f75678ba8c5edbda43d544d6e79700fc44c`
+- Approval packet: `ops/studio-bootstrap/heygen-approval-packets/f01-eden-skye-primary-portrait-approval.md`
+- Generation receipt: `ops/studio-bootstrap/receipts/f01-heygen-primary-portrait-generation-receipt.md`
+
+This resolves the earlier need for a clean portrait candidate, but it does not complete Drive upload or HeyGen creation. The current Drive connector did not expose a raw image upload-to-folder action in this run, so the image is indexed as pending upload.
+
 ## HeyGen Readiness
 
-Current readiness: `not_ready_for_direct_training`, `ready_for_preparation_packet`.
+Current readiness: `clean_portrait_candidate_ready_for_human_review`, `not_ready_for_unapproved_training`.
 
 Reason:
 
-The three available files are useful, but all are collages/contact sheets. For a reliable HeyGen photo-avatar workflow, Eden needs a clean single-image source, ideally:
+The three original available files are useful, but all are collages/contact sheets. A cleaner single-image source has now been generated for approval review. For a reliable HeyGen photo-avatar workflow, the approved source should remain:
 
 - head-and-shoulders portrait
 - face-forward
@@ -119,11 +135,11 @@ The three available files are useful, but all are collages/contact sheets. For a
 
 Recommended immediate action before HeyGen creation:
 
-Create or crop a clean `F01_EDEN_SKYE_HEYGEN_PRIMARY_PORTRAIT` from Image C or generate a new clean portrait using Image C as the visual reference. Then run one more face-continuity check before submitting to HeyGen.
+Approve or revise `f01_eden_skye_heygen_primary_portrait.png`, upload it into the F01 Eden Skye Drive folder when image upload capability is available, then authorize a private HeyGen avatar creation test.
 
 ## Missing Stock-Image Set For Fully Automated Image/Video Generation
 
-To make Eden Skye fully controllable for autonomous image/video generation, the current three image sheets are not enough. The system needs the following asset pack.
+To make Eden Skye fully controllable for autonomous image/video generation, the current image sheets and one clean portrait candidate are not enough. The system needs the following asset pack.
 
 ### A. HeyGen / Talking Avatar Source Pack
 
@@ -218,7 +234,7 @@ For full automation, create these files after the asset pack exists:
 
 Do not send any of the three full collage sheets directly to HeyGen for final avatar creation.
 
-Use Image C as the identity source and Image B as the body reference. Create a clean portrait source from Image C or generate a new clean portrait. Then request approval for HeyGen avatar creation/training with:
+Use Image C as the identity source and Image B as the body reference. Use the newly generated clean portrait candidate as the HeyGen primary portrait candidate after human approval. Then request approval for HeyGen avatar creation/training with:
 
 - selected source image
 - avatar name: `F01 Eden Skye`
@@ -230,9 +246,9 @@ Use Image C as the identity source and Image B as the body reference. Create a c
 
 - GPT readiness: ready for controlled prompt/script/job packet generation.
 - Higgins readiness: ready to consume manifests and route sandbox jobs.
-- HeyGen readiness: source identity ready, direct training not ready until clean portrait is created and approved.
+- HeyGen readiness: clean source candidate generated; waiting on Drive upload and explicit approval.
 - Fully automated image/video readiness: partial. Needs the missing stock-image set above.
 
 ## Next Safe Action
 
-Create `F01_EDEN_SKYE_HEYGEN_PRIMARY_PORTRAIT` as a clean single portrait based on Image C, then add it to Drive and update `avatar-stock-index.json` with the new file ID after upload.
+Approve or revise the clean F01 portrait candidate. After approval, upload it into the F01 Drive folder and authorize private HeyGen avatar creation only if the user explicitly approves that step.
