@@ -1,0 +1,69 @@
+{
+  "name": "Eden Skye Studios Expanded Model Roster",
+  "created_at": "2026-06-04",
+  "status": "personalities_created_visual_boards_created_source_images_pending",
+  "new_female_personalities": 19,
+  "new_male_personalities": 10,
+  "female_age_cohorts": {
+    "25_to_45": 10,
+    "50s": 3,
+    "60s": 3,
+    "70s": 3
+  },
+  "visual_boards": [
+    {
+      "board_id": "VB-F-25-45",
+      "title": "Additional Female Models 25-45 Visual Board",
+      "workspace_path": "/workspace/output/eden_skye_new_female_models_25_45_visual_board.png",
+      "role": "visual direction for 10 new 25-45 female model personalities"
+    },
+    {
+      "board_id": "VB-F-50S",
+      "title": "Mature Female Models 50s Visual Board",
+      "workspace_path": "/workspace/output/eden_skye_mature_female_models_50s_visual_board.png",
+      "role": "visual direction for 3 women in their 50s"
+    },
+    {
+      "board_id": "VB-F-60S",
+      "title": "Mature Female Models 60s Visual Board",
+      "workspace_path": "/workspace/output/eden_skye_mature_female_models_60s_visual_board.png",
+      "role": "visual direction for 3 women in their 60s"
+    },
+    {
+      "board_id": "VB-F-70S",
+      "title": "Mature Female Models 70s Visual Board",
+      "workspace_path": "/workspace/output/eden_skye_mature_female_models_70s_visual_board.png",
+      "role": "visual direction for 3 women in their 70s"
+    },
+    {
+      "board_id": "VB-M-NEW-10",
+      "title": "Additional Male Models Visual Board",
+      "workspace_path": "/workspace/output/eden_skye_new_male_models_visual_board.png",
+      "role": "visual direction for 10 new male model personalities"
+    }
+  ],
+  "target_drive": {
+    "eden_skye_studios_root_folder_id": "1Agdaq28Lha01ASVdpm1g_CS_x_aObRcT",
+    "avatar_network_folder_id": "19qdJPbuWdPxl9oU6KKYR-IWIoGRpHlhw",
+    "female_avatars_folder_id": "1SJnixqXGsB1QTUk-unG9ZjJIiOmMXH4k",
+    "status": "native_sheet_doc_uploaded_without_parent_folder_support; raw_png_folder_upload_pending_connector_support"
+  },
+  "approval_gates": {
+    "heygen_training_allowed": false,
+    "public_use_allowed": false,
+    "shopify_mutation_allowed": false,
+    "production_deploy_allowed": false
+  },
+  "drive_outputs": {
+    "expanded_roster_sheet": {
+      "file_id": "1jM8q44pkf9Gzo8KuOl2L6cUYPHnpgvbkp09ivvMjvgc",
+      "url": "https://docs.google.com/spreadsheets/d/1jM8q44pkf9Gzo8KuOl2L6cUYPHnpgvbkp09ivvMjvgc/edit?usp=drivesdk",
+      "parent_id": null
+    },
+    "expanded_roster_brief_doc": {
+      "file_id": "1f6RFu5FTVlmrkIted8uEperQsik4AUj8nkyoDmXrjfA",
+      "url": "https://docs.google.com/document/d/1f6RFu5FTVlmrkIted8uEperQsik4AUj8nkyoDmXrjfA/edit?usp=drivesdk",
+      "parent_id": null
+    }
+  }
+}
