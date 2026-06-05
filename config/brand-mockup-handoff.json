@@ -1,0 +1,46 @@
+{
+  "packet_id": "brand-mockup-handoff-20260605",
+  "brand": "Eden Skye Studios",
+  "source_of_truth": {
+    "drive": "Eden Skye brand lock, storefront mockup, Black Card commerce mockup",
+    "git": "Strategic-Minds/EDENSKYESTUDIOS",
+    "branch": "eden/readiness-scaffold-20260604"
+  },
+  "implemented_assets": [
+    "/brand/mockups/storefront-home-reference.svg",
+    "/brand/mockups/brand-lock-reference.svg",
+    "/brand/mockups/black-card-commerce-reference.svg",
+    "/brand/creators/eden-skye.svg",
+    "/brand/creators/solara-vane.svg",
+    "/brand/creators/liora-vale.svg",
+    "/brand/creators/nova-rain.svg",
+    "/brand/creators/celeste-noir.svg"
+  ],
+  "implemented_surfaces": [
+    "/",
+    "/admin/eden",
+    "/manifest.webmanifest",
+    "/api/cron/brand-mockup-handoff",
+    "/api/cron/bridge-queue-worker"
+  ],
+  "cron": {
+    "sandbox_handoff": "/api/cron/brand-mockup-handoff",
+    "bridge_worker": "/api/cron/bridge-queue-worker",
+    "schedule": "*/5 * * * *"
+  },
+  "deployment_path": {
+    "sandbox_first": true,
+    "vercel_preview_required": true,
+    "github_workflow": ".github/workflows/eden-preview-validation.yml",
+    "production_workflow": ".github/workflows/eden-production-deploy.yml",
+    "auto_builder_router": "https://auto-builder-livid.vercel.app/api/factory/router"
+  },
+  "gates": {
+    "shopify_mutations_enabled": false,
+    "public_publishing_enabled": false,
+    "payment_changes_enabled": false,
+    "supabase_production_migrations_enabled": false,
+    "production_deploy_requires_workflow_confirmation": true
+  },
+  "status": "SANDBOX_HANDOFF_READY"
+}
