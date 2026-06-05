@@ -7,7 +7,7 @@ const generatedImages = [
   'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/bdfb6bbc-0e73-4454-b6b9-ea5c2e4ffff4/Create_four_distinct_premium_editorial_model_card_portraits_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNzRjZmFmY2RiMjE5YzYzMiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc0NzIxM30.OVmf7x29m3YZCKG7v-x9nmZpt2zQKa0mxTN_4b_mIMg',
   'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/c61940cd-3041-4b69-b08e-6d8ad254c7de/Create_four_distinct_premium_editorial_model_card_portraits_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMGQ3Y2NmNzZiY2IxNjYwZSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc5MjE4Mn0.OoxXOB0jiOdOz7ke54RywoocSwkHW70f35Ipn6EGxSU',
   'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/25149955-7c3b-4059-8679-4a1436a6d4e9/Create_four_distinct_premium_editorial_model_card_portraits_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNjIwMzIwNTI3MmQ3MzIzNiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc5NzY1MH0.MyW5QiJAGgtmtTGOWFydxnmAvEuyIb_djmtsYIvOxfo'
-];
+] as const;
 
 const models = [
   ['Eden Skye', 'Signature host', 'soft command, luxury warmth', 'Live', 'good', generatedImages[0]],
@@ -18,7 +18,7 @@ const models = [
   ['Vesper Hart', 'Edge model', 'tattooed glamour, direct eye contact', 'Live', 'good', generatedImages[5]],
   ['Pixie Rose', 'Playful editorial', 'bright, witty, high-trust', 'Queued', 'warn', null],
   ['Priya Rai', 'Couture model', 'graceful intimacy, refined presence', 'Queued', 'warn', null]
-];
+] as const;
 
 const wardrobeLooks = [
   ['Black Card Satin', 'black satin, silver hardware, private lounge lighting'],
@@ -27,7 +27,7 @@ const wardrobeLooks = [
   ['Hot Pink Signal', 'high-fashion pink accent, confident social hook energy'],
   ['Cinematic Night Out', 'glossy evening styling, hotel corridor, polished motion-ready pose'],
   ['Shopify Feature Look', 'product-forward styling built for offer banners and collection cards']
-];
+] as const;
 
 const posePresets = [
   ['Standing editorial', 'front, three-quarter, and side angles for hero stills'],
@@ -36,7 +36,7 @@ const posePresets = [
   ['Product hold', 'hands visible, item-forward, Shopify-safe framing'],
   ['Close portrait', 'face continuity, eye contact, voice-video thumbnail'],
   ['Creator desk', 'admin/control-room scene for Eden as operator']
-];
+] as const;
 
 const xylaQueues = [
   ['Daily Reel Packet', 'Hook, 18-second script, 3 visual beats, caption, CTA', 'Draft'],
@@ -45,21 +45,21 @@ const xylaQueues = [
   ['Snapchat Lens Brief', 'Model look, outfit note, scene prompt, boundary notes', 'Planned'],
   ['X Thread Teaser', 'One-line hook, 4-post thread, image prompt', 'Draft'],
   ['Instagram Carousel', 'Cover, 4 panels, caption, Black Card CTA', 'Draft']
-];
+] as const;
 
 const approvals = [
   ['Draft generation', 'Allowed', 'Xyla packets, scripts, prompts, captions, and scene plans can be created now.', 'good'],
   ['Voice/video chat', 'Approval gated', 'HeyGen live sessions and paid avatar generation require explicit approval first.', 'bad'],
   ['Shopify bridge', 'Prepared only', 'The site can route to offers later; product creation, price changes, and mutations stay locked.', 'warn'],
   ['Public posting', 'Approval gated', 'Metricool/social publishing is held until a release approval exists.', 'bad']
-];
+] as const;
 
 const workflow = [
   ['Xyla', 'Receives structured draft packets for video creation and channel adaptation.', 'good'],
   ['OpenAI image path', 'Cheap GPT image creation can be used for draft stills and scene exploration.', 'good'],
   ['HeyGen', 'Reserved for approved voice, avatar, and presenter-led video sessions.', 'warn'],
   ['Drive', 'Keeps content plant, image library, and workflow bridge records together.', 'good']
-];
+] as const;
 
 export default function ClosetPreviewPage() {
   return (
@@ -110,9 +110,9 @@ export default function ClosetPreviewPage() {
           {models.map(([name, role, tone, status, risk, image]) => (
             <article className="card" key={name}>
               <div className="portrait">
-                <span>{String(name).split(' ').map((part) => part[0]).join('')}</span>
+                <span>{name.split(' ').map((part) => part[0]).join('')}</span>
                 {image ? (
-                  <img src={String(image)} alt={`${name}, fictional adult AI model editorial preview`} loading="lazy" />
+                  <img src={image} alt={`${name}, fictional adult AI model editorial preview`} loading="lazy" />
                 ) : (
                   <div className="queuedPortrait"><strong>Queued</strong><p>Ready for the next approved image run</p></div>
                 )}
