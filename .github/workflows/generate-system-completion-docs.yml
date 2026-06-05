@@ -1,0 +1,33 @@
+name: Generate System Completion Docs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run completion docs generator
+        run: node scripts/generate-system-completion-docs.mjs
+
+      - name: Show generated files
+        run: |
+          echo 'Generated/available system completion files:'
+          find docs/system_completion -maxdepth 1 -type f | sort
+
+      - name: Commit generated docs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Generate system completion docs
+          file_pattern: docs/system_completion/*.md
