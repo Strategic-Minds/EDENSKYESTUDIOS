@@ -1,12 +1,60 @@
 import EdenChatPanel from './EdenChatPanel';
 
 const models = [
-  ['Amara Vale', 'Brazil', 'velvet confidence', 'black satin set', 'Approved', 'good'],
-  ['Mina Sol', 'Morocco', 'warm midnight', 'silver robe preview', 'Review', 'warn'],
-  ['Lena Frost', 'Germany', 'cool editorial', 'white lace layer', 'Draft', 'warn'],
-  ['Sora Kim', 'Korea', 'soft precision', 'hot pink studio set', 'Approved', 'good'],
-  ['Nia Monroe', 'United States', 'deep luxury', 'purple lounge look', 'Action', 'bad'],
-  ['Isla Noire', 'France', 'private club', 'black card editorial', 'Review', 'warn']
+  {
+    name: 'Amara Vale',
+    country: 'Brazil',
+    tone: 'velvet confidence',
+    outfit: 'black satin editorial set',
+    status: 'Approved',
+    risk: 'good',
+    image: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/d1db2076-48f5-4b44-bfbf-07f5eb65db06/Create_four_distinct_premium_editorial_portrait_images_for_a.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZDdhYmQ3NDNhNjU2MmY3NCIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDcyMTYwM30.K6YRRxamHrrbHPzT2eYn7j_xdBel7hmexuHXg7xG5O0'
+  },
+  {
+    name: 'Mina Sol',
+    country: 'Morocco',
+    tone: 'warm midnight',
+    outfit: 'silver robe preview',
+    status: 'Review',
+    risk: 'warn',
+    image: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/753cdf1e-49a8-4898-a043-a2d0615f5185/Create_four_distinct_premium_editorial_portrait_images_for_a.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzg4OTZjMGZmZGY1Njc1NSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDczNzI5NX0.M754yuQCbw8HAe658XXFX25ea0Dsrrta8M-Bg4BTErE'
+  },
+  {
+    name: 'Lena Frost',
+    country: 'Germany',
+    tone: 'cool editorial',
+    outfit: 'white lace-inspired bodysuit',
+    status: 'Draft',
+    risk: 'warn',
+    image: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/2a124f1b-5988-4e0a-8ccf-5e8099ec431d/Create_four_distinct_premium_editorial_portrait_images_for_a.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNTM1ODYzMjdiZTIxNjVjYyIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc5NDI3OX0.EW2FXWF-yh5o5GLCnKO5ejCGwgvuExdYb4iMLP1MJc4'
+  },
+  {
+    name: 'Sora Kim',
+    country: 'Korea',
+    tone: 'soft precision',
+    outfit: 'hot pink studio set',
+    status: 'Approved',
+    risk: 'good',
+    image: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/9d9967ff-a117-4bf2-ac2c-a7f6824c3c86/Create_four_distinct_premium_editorial_portrait_images_for_a.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZWZiMTkwYzRlYzc1MDUzMiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc4MDM1Nn0.ziJK0nJIWxjkC7RHp0yNEMcylm9uTwIIl0xvvsi6Wps'
+  },
+  {
+    name: 'Nia Monroe',
+    country: 'United States',
+    tone: 'deep luxury',
+    outfit: 'purple lounge look',
+    status: 'Action',
+    risk: 'bad',
+    image: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/8bb0e1c5-58bd-47bb-9221-1ece8dcbcb78/Create_two_distinct_premium_editorial_portrait_images_for_a_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZGI1NDk0MjRmMzQ3MWZkZCIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc2NzY1Mn0.xk0ajthfZyPcbUnJqy-7CSPseKe4sIiViJHmRP9SAr0'
+  },
+  {
+    name: 'Isla Noire',
+    country: 'France',
+    tone: 'private club',
+    outfit: 'black card editorial',
+    status: 'Review',
+    risk: 'warn',
+    image: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image-preview/images/3850d6a9-d049-49a9-ae39-ea843cb43ade/Create_two_distinct_premium_editorial_portrait_images_for_a_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZTZjYTU5NmQ0ZDQ5NzMxMCIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4MDc5NTI0NX0.vIPv5wjmMyWtEkVwBCkhO8vIV1sFmuvhU_xKCalv-ag'
+  }
 ];
 
 const approvals = [
@@ -54,9 +102,9 @@ const styles = `
   .modelGrid, .workflowGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .card { overflow: hidden; transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
   .card:hover { transform: translateY(-2px); }
-  .portrait { min-height: 250px; display: grid; place-items: end center; padding: 18px; background: radial-gradient(circle at 50% 18%, #f2c7d9 0 10%, transparent 12%), linear-gradient(160deg, #111, #2b2b2b 45%, #ff2e9a 115%); position: relative; }
-  .portrait::before { content: ''; width: 48%; max-width: 130px; aspect-ratio: .62; border-radius: 48% 48% 10% 10%; background: linear-gradient(180deg, rgba(248,248,248,.95), rgba(255,46,154,.82) 68%, rgba(0,0,0,.9)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.22), 0 18px 40px rgba(0,0,0,.4); }
-  .portrait span { position: absolute; top: 14px; right: 14px; color: #000; background: #c8c8c8; border-radius: 999px; padding: 6px 8px; font-weight: 950; font-size: 12px; }
+  .portrait { min-height: 310px; aspect-ratio: 3 / 4; display: block; background: #080808; position: relative; overflow: hidden; border-bottom: 1px solid #282828; }
+  .portrait img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; filter: saturate(1.04) contrast(1.03); }
+  .portrait span { position: absolute; top: 14px; right: 14px; color: #000; background: #c8c8c8; border-radius: 999px; padding: 6px 8px; font-weight: 950; font-size: 12px; z-index: 1; }
   .info { padding: 14px; }
   .topline, .chatHeader { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
   .outfit { color: #f2f2f2; margin-top: 8px; }
@@ -72,7 +120,7 @@ const styles = `
   .chatResult { margin-top: 14px; padding: 14px; }
   .resultNote { color: #c8c8c8; margin-top: 8px; font-size: 13px; }
   @media (max-width: 900px) { .heroGrid, .approval { grid-template-columns: 1fr; } .modelGrid, .workflowGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chatHeader { flex-direction: column; } }
-  @media (max-width: 620px) { .modelGrid, .workflowGrid { grid-template-columns: 1fr; } .closet { padding: 12px; } h1 { font-size: 42px; } .portrait { min-height: 220px; } }
+  @media (max-width: 620px) { .modelGrid, .workflowGrid { grid-template-columns: 1fr; } .closet { padding: 12px; } h1 { font-size: 42px; } .portrait { min-height: 360px; } }
 `;
 
 export default function ClosetPreviewPage() {
@@ -116,9 +164,12 @@ export default function ClosetPreviewPage() {
       <section className="section" id="models">
         <div className="heading"><p className="kicker">Model Vault</p><h2>Every model stays visible, with her profile and next action.</h2></div>
         <div className="modelGrid">
-          {models.map(([name, country, tone, outfit, status, risk]) => (
+          {models.map(({ name, country, tone, outfit, status, risk, image }) => (
             <article className="card" key={name}>
-              <div className="portrait" aria-hidden="true"><span>{name.split(' ').map((part) => part[0]).join('')}</span></div>
+              <div className="portrait">
+                <span>{name.split(' ').map((part) => part[0]).join('')}</span>
+                <img src={image} alt={`${name}, fictional adult AI model profile portrait`} loading="lazy" />
+              </div>
               <div className="info">
                 <div className="topline"><h3>{name}</h3><span className={`pill ${risk}`}>{status}</span></div>
                 <p>{country} / {tone}</p><p className="outfit">Current: {outfit}</p>
