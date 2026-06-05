@@ -39,10 +39,20 @@ create table if not exists public.eden_wardrobe_states (
   updated_at timestamptz not null default now()
 );
 
-alter table public.eden_model_profiles
-  add constraint eden_model_profiles_wardrobe_state_fk
-  foreign key (wardrobe_state_id) references public.eden_wardrobe_states(id)
-  deferrable initially deferred;
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'eden_model_profiles_wardrobe_state_fk'
+      and conrelid = 'public.eden_model_profiles'::regclass
+  ) then
+    alter table public.eden_model_profiles
+      add constraint eden_model_profiles_wardrobe_state_fk
+      foreign key (wardrobe_state_id) references public.eden_wardrobe_states(id)
+      deferrable initially deferred;
+  end if;
+end $$;
 
 create table if not exists public.eden_social_drafts (
   id uuid primary key default gen_random_uuid(),
