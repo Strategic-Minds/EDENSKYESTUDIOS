@@ -12,15 +12,18 @@ export type EdenReceiptInput = {
 };
 
 export async function logEdenReceipt(input: EdenReceiptInput) {
+  const details = input.details ?? {};
   const receipt = {
     event_type: input.eventType,
     actor: input.actor ?? 'Eden Skye Runtime',
+    connector: 'eden-runtime',
     action: input.action,
     status: input.status,
     risk_level: input.riskLevel ?? 'yellow',
     request_id: input.requestId ?? null,
     target: input.target ?? null,
-    details: input.details ?? {}
+    details,
+    receipt_json: details
   };
 
   if (!hasSupabaseServerConfig() || !usesServiceRole) {
