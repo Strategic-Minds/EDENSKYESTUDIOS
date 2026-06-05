@@ -4,29 +4,34 @@ export default function HomePage() {
       <header className="topbar">
         <div>
           <p className="eyebrow">Eden Skye Studios</p>
-          <h1>Governed AI modeling and content creation control surface.</h1>
+          <h1>Eden&apos;s Closet is the working Black Card control plane.</h1>
           <p className="subtle">
-            The public site remains approval-gated. The first production slice is the internal media asset registry and approval console.
+            Open the live app to test Eden chat, model cards, approvals, workflow status, and governed runtime receipts. Public publishing and commerce actions remain approval-gated.
           </p>
         </div>
         <nav className="nav" aria-label="Primary">
+          <a href="/closet">Open Eden&apos;s Closet</a>
           <a href="/admin">Admin Console</a>
           <a href="/api/readiness">Readiness API</a>
         </nav>
       </header>
 
       <section className="grid" aria-label="Operating status">
-        <div className="metric"><strong>Level 2-3</strong><span>Automation target</span></div>
-        <div className="metric"><strong>Draft only</strong><span>Publishing status</span></div>
-        <div className="metric"><strong>Gated</strong><span>HeyGen / Shopify / deploy</span></div>
-        <div className="metric"><strong>Active</strong><span>Media registry build</span></div>
+        <div className="metric"><strong>Live</strong><span>Closet app route</span></div>
+        <div className="metric"><strong>Test mode</strong><span>Eden GPT runtime</span></div>
+        <div className="metric"><strong>Branch only</strong><span>Supabase schema</span></div>
+        <div className="metric"><strong>Locked</strong><span>Publishing and commerce</span></div>
       </section>
 
       <section className="section">
-        <h2>Current implementation slice</h2>
+        <h2>Open the app</h2>
         <p className="subtle">
-          Supabase-backed media assets, approval requests, admin review views, and API routes. No public mutation path is enabled without approval.
+          Start at Eden&apos;s Closet. The chat panel should respond immediately in governed test mode, and risky commands should show an approval gate instead of taking live action.
         </p>
+        <div className="actions">
+          <a className="button" href="/closet">Launch Eden&apos;s Closet</a>
+          <a className="button" href="/api/eden/chat">Check Chat Runtime</a>
+        </div>
       </section>
     </main>
   );
