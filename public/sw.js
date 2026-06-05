@@ -1,5 +1,18 @@
-const CACHE = "eden-skye-v1";
-const CORE = ["/", "/admin/eden", "/icon.svg"];
+const CACHE = "eden-skye-v2";
+const CORE = [
+  "/",
+  "/admin/eden",
+  "/icon.svg",
+  "/manifest.webmanifest",
+  "/brand/mockups/storefront-home-reference.svg",
+  "/brand/mockups/brand-lock-reference.svg",
+  "/brand/mockups/black-card-commerce-reference.svg",
+  "/brand/creators/eden-skye.svg",
+  "/brand/creators/solara-vane.svg",
+  "/brand/creators/liora-vale.svg",
+  "/brand/creators/nova-rain.svg",
+  "/brand/creators/celeste-noir.svg"
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE)));
