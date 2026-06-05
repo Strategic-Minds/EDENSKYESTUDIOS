@@ -1,149 +1,202 @@
-const offers = [
-  {
-    title: "Digital Model Licensing",
-    copy: "Book governed synthetic talent for luxury campaigns, product shots, explainers, and creator-led media.",
-    price: "Application"
-  },
-  {
-    title: "Downloads and Toolkits",
-    copy: "Prompt packs, content systems, creator templates, offer sheets, and production guides.",
-    price: "From $29"
-  },
-  {
-    title: "Apps and Experiences",
-    copy: "AI chat, visual avatar flows, gated client tools, and commerce-connected microsystems.",
-    price: "Custom"
-  },
-  {
-    title: "Done-With-You Studio",
-    copy: "Strategy, creative direction, media planning, and launch support for premium AI creator brands.",
-    price: "Retainer"
-  }
+const creators = [
+  ["Eden Skye", "Founder icon", "/brand/creators/eden-skye.svg"],
+  ["Solara Vane", "Luxury creator", "/brand/creators/solara-vane.svg"],
+  ["Liora Vale", "Editorial muse", "/brand/creators/liora-vale.svg"],
+  ["Nova Rain", "Nightlife creator", "/brand/creators/nova-rain.svg"],
+  ["Celeste Noir", "Commercial model", "/brand/creators/celeste-noir.svg"]
+];
+
+const actions = [
+  ["Chat", "Real-time AI creator conversation", "Start chat"],
+  ["Video Chat", "Avatar-ready face-to-face workflow", "Open video lane"],
+  ["Downloads", "Images, videos, templates, and files", "Browse content"],
+  ["Shop", "Luxury products and gated offers", "View shop"],
+  ["Licenses", "Commercial-use rights and asset terms", "Review licenses"],
+  ["Membership", "Black Card VIP access and perks", "Join waitlist"]
 ];
 
 const products = [
-  "AI model media kits",
-  "Commercial-use prompt packs",
-  "Luxury content calendars",
-  "Avatar campaign scripts",
-  "Shopify offer systems",
-  "Licensing metadata templates"
+  ["Black Card Membership", "VIP access", "Waitlist"],
+  ["Digital Drops", "Approved downloads", "Coming soon"],
+  ["Creator Licenses", "Commercial use", "Review"],
+  ["Luxury Lifestyle", "Brand products", "Draft"],
+  ["Studio Services", "Application", "Private"],
+  ["Creator Apps", "Tools and agents", "Sandbox"]
 ];
 
-const proof = [
-  ["Draft-first", "Every public move sits behind approval gates."],
-  ["Commerce-ready", "Products, services, downloads, apps, and licenses are mapped to revenue paths."],
-  ["Control-plane led", "Eden's Closet routes work through chat, queues, files, media, and workflow states."],
-  ["Synthetic-safe", "Fictional adult identity rules and brand-safety metadata are built into the system."]
+const handoff = [
+  ["Sandbox cron", "*/5 * * * *", "Bridge queue worker"],
+  ["Auto Builder", "Queued", "Router handoff packet"],
+  ["Git", "Branch gated", "No overwrite of other agents"],
+  ["Vercel", "Workflow dispatch", "Preview then production"],
+  ["Drive", "Source of truth", "Brand lock and mockups"],
+  ["Supabase", "Receipts", "Queue and validation storage"]
 ];
 
 export default function Home() {
   return (
     <main className="site-shell">
-      <nav className="topbar">
-        <a className="brand-mark" href="/">
+      <nav className="topbar storefront-nav">
+        <a className="brand-mark luxury-lockup" href="/">
           <span>ES</span>
-          Eden Skye Studios
+          <strong>Eden Skye</strong>
+          <small>Studios</small>
         </a>
         <div className="nav-links">
-          <a href="#offers">Offers</a>
-          <a href="#products">Downloads</a>
-          <a href="#licensing">Licensing</a>
-          <a href="/mockup">Mockup</a>
-          <a className="nav-action" href="/admin/eden">
-            Edens Closet
+          <a href="#creators">Creators</a>
+          <a href="#shop">Shop</a>
+          <a href="#membership">Membership</a>
+          <a href="#licenses">Licenses</a>
+          <a href="/admin/eden">Edens Closet</a>
+          <a className="nav-action" href="#membership">
+            Join now
           </a>
         </div>
       </nav>
 
-      <section className="hero-stage">
-        <div className="hero-copy">
-          <p className="eyebrow">AI luxury creator studio</p>
-          <h1>Eden Skye Studios</h1>
-          <p className="hero-line">
-            A governed digital modeling agency built to sell products, services, downloads, apps, licenses, and premium synthetic media.
+      <section className="storefront-hero">
+        <img
+          className="hero-background"
+          src="/brand/mockups/storefront-home-reference.svg"
+          alt="Eden Skye Studios storefront mockup with luxury creator and Black Card commerce"
+        />
+        <div className="hero-scrim" />
+        <div className="storefront-hero-copy">
+          <p className="eyebrow">Luxury AI creator commerce</p>
+          <h1>Luxury. Connection. Freedom.</h1>
+          <p>
+            Connect with premium fictional creators, gated content, memberships, downloads, product paths, licenses,
+            and governed AI media inside one brand-safe storefront.
           </p>
           <div className="hero-actions">
-            <a className="primary-action" href="#offers">
-              Explore offers
+            <a className="primary-action champagne" href="#creators">
+              Explore creators
             </a>
             <a className="secondary-action" href="/admin/eden">
-              Open control plane
+              Open Edens Closet
             </a>
-            <a className="secondary-action" href="/mockup">
-              View brand mockup
-            </a>
-          </div>
-        </div>
-        <div className="hero-visual" aria-label="Eden Skye metallic studio visual">
-          <div className="chrome-figure">
-            <div className="figure-head" />
-            <div className="figure-body" />
-          </div>
-          <div className="hero-metrics">
-            <span>STUB_ONLY</span>
-            <strong>Human-gated commerce</strong>
           </div>
         </div>
       </section>
 
-      <section className="commerce-band" id="offers">
-        <div className="section-heading">
-          <p className="eyebrow">Revenue architecture</p>
-          <h2>Built to sell without losing governance.</h2>
+      <section className="quick-lanes" aria-label="Storefront lanes">
+        {actions.map(([title, copy]) => (
+          <a href={title === "Membership" ? "#membership" : "#shop"} key={title}>
+            <strong>{title}</strong>
+            <span>{copy}</span>
+          </a>
+        ))}
+      </section>
+
+      <section className="creator-strip" id="creators">
+        <div className="section-row">
+          <div>
+            <p className="eyebrow">Meet our creators</p>
+            <h2>Premium fictional AI talent, ready for governed media lanes.</h2>
+          </div>
+          <a href="/admin/eden">Review registry</a>
         </div>
-        <div className="offer-grid">
-          {offers.map((offer) => (
-            <article className="offer-panel" key={offer.title}>
+        <div className="creator-grid">
+          {creators.map(([name, role, image]) => (
+            <article className="creator-card" key={name}>
+              <img src={image} alt={`${name} Eden Skye Studios creator reference`} />
               <div>
-                <span>{offer.price}</span>
-                <h3>{offer.title}</h3>
+                <strong>{name}</strong>
+                <span>{role}</span>
               </div>
-              <p>{offer.copy}</p>
-              <a href="/admin/eden">Draft in Edens Closet</a>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="product-runway" id="products">
+      <section className="black-card-band" id="membership">
+        <img
+          src="/brand/mockups/black-card-commerce-reference.svg"
+          alt="Eden Skye Studios Black Card commerce and brand-lock reference"
+        />
         <div>
-          <p className="eyebrow">Product catalog</p>
-          <h2>Downloads, apps, services, and licensing paths in one commerce system.</h2>
+          <p className="eyebrow">The Black Card</p>
+          <h2>VIP membership is the primary commerce anchor.</h2>
+          <p>
+            The live store must reconcile to Drive and Git source content before Shopify publishing. This page keeps the
+            Black Card visible while routing every offer through receipts, gates, and approval review.
+          </p>
+          <ul>
+            <li>Unlimited creator messaging path</li>
+            <li>Priority video chat and private content access</li>
+            <li>Approved downloads and commercial-use licensing review</li>
+            <li>Watermarked public media and receipt-backed production</li>
+          </ul>
+          <a className="primary-action champagne" href="/admin/eden">
+            Route through Edens Closet
+          </a>
         </div>
-        <div className="product-list">
-          {products.map((product) => (
-            <span key={product}>{product}</span>
+      </section>
+
+      <section className="shop-system" id="shop">
+        <div className="section-row">
+          <div>
+            <p className="eyebrow">Shop architecture</p>
+            <h2>Products, services, downloads, apps, and licenses without unsafe mutation.</h2>
+          </div>
+          <span>Drive/Git source-of-truth required</span>
+        </div>
+        <div className="product-rail">
+          {products.map(([title, type, state]) => (
+            <article key={title}>
+              <span>{type}</span>
+              <strong>{title}</strong>
+              <small>{state}</small>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="licensing-section" id="licensing">
-        <div className="licensing-copy">
-          <p className="eyebrow">Agency-grade control</p>
-          <h2>Every asset has a gate, owner, status, and monetization path.</h2>
+      <section className="brand-lock-section" id="licenses">
+        <div>
+          <p className="eyebrow">Brand lock</p>
+          <h2>Black marble, champagne metal, Belleza serif, Montserrat utility, and approved Eden identity assets.</h2>
           <p>
-            Eden Skye Studios is structured for premium fictional AI talent: media kits, prompt packs, synthetic identity disclosures,
-            approval receipts, platform limits, and commercial-use metadata.
+            The uploaded mockups are now mirrored into the Vercel app as the implementation reference pack. Public
+            assets must keep the Eden Skye Studios watermark and remain platform-safe, fictional, adult-coded, and
+            non-explicit.
           </p>
         </div>
-        <div className="proof-list">
-          {proof.map(([title, copy]) => (
-            <div className="proof-row" key={title}>
-              <strong>{title}</strong>
-              <span>{copy}</span>
+        <img
+          src="/brand/mockups/brand-lock-reference.svg"
+          alt="Eden Skye visual identity board with logos, palette, typography, icons, banners, and watermark"
+        />
+      </section>
+
+      <section className="handoff-console">
+        <div>
+          <p className="eyebrow">Vercel workflow handoff</p>
+          <h2>Sandbox-first. Five-minute cron. Receipts before promotion.</h2>
+        </div>
+        <div className="handoff-grid">
+          {handoff.map(([lane, state, note]) => (
+            <div key={lane}>
+              <span>{lane}</span>
+              <strong>{state}</strong>
+              <small>{note}</small>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="final-cta">
-        <p className="eyebrow">Private preproduction</p>
-        <h2>Move from idea to gated offer, asset, workflow, and launch review.</h2>
-        <a className="primary-action" href="/admin/eden">
-          Enter Edens Closet
+      <footer className="studio-footer">
+        <a className="brand-mark luxury-lockup" href="/">
+          <span>ES</span>
+          <strong>Eden Skye</strong>
+          <small>Studios</small>
         </a>
-      </section>
+        <p>Luxury creator commerce, governed media production, and Black Card membership infrastructure.</p>
+        <div>
+          <a href="/admin/eden">Control plane</a>
+          <a href="#membership">Membership</a>
+          <a href="#licenses">Licenses</a>
+        </div>
+      </footer>
     </main>
   );
 }
