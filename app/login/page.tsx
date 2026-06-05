@@ -43,7 +43,7 @@ export default function LoginPage() {
         <p>Frontend-only preview. No real authentication is wired until approval.</p>
         <div className="fieldStack">
           <label>Email<input type="email" placeholder="member@example.com" /></label>
-          <label>Password<input type="password" placeholder="••••••••" /></label>
+          <label>Password<input type="password" placeholder="********" /></label>
           <label>Choose model<select defaultValue="Eden Skye">{models.map((model) => <option key={model}>{model}</option>)}</select></label>
         </div>
         <div className="modelPick">
