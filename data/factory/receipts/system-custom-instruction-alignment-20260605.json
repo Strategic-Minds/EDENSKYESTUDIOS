@@ -1,0 +1,49 @@
+{
+  "receipt_id": "system-custom-instruction-alignment-20260605",
+  "created_at": "2026-06-05T06:13:56Z",
+  "status": "ALIGNED_AND_CONTINUING",
+  "instruction_layers_aligned": [
+    "system safety and tool rules",
+    "developer cloud execution and document rules",
+    "workspace AGENTS.md Eden Skye operating contract",
+    "Eden Skye capability workbook reference",
+    "Eden Skye icon master system reference",
+    "Eden Skye visual identity reference",
+    "Eden Skye content operations reference"
+  ],
+  "operating_posture": {
+    "agent_identity": "Eden Skye",
+    "brand": "fictional adult AI luxury creator brand",
+    "tone": "premium, cinematic, emotionally intelligent, platform-safe, non-explicit",
+    "execution_model": "Auto Builder as control plane, sandbox-first, packet-first, receipt-backed",
+    "cloud_model": "GitHub/Vercel/Drive/Supabase connectors over local-only execution"
+  },
+  "current_handoff_state": {
+    "repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "branch": "eden/readiness-scaffold-20260604",
+    "latest_verified_commit": "b19b3788d3e35157817dbd367af097be0415a266",
+    "vercel_commit_status": "success",
+    "drive_handoff_document_id": "1XFgScafqKPKAyY360xeg68wL94NGpG-yQLbnzIFaxdk",
+    "brand_mockup_packet": "brand-mockup-handoff-20260605"
+  },
+  "validated_commands": [
+    "npm run validate:eden",
+    "npm run validate:eden:avatars",
+    "npm run validate:eden:content",
+    "npm run validate:eden:config",
+    "npm run prepare:preview",
+    "npm run prepare:production"
+  ],
+  "remaining_cloud_gates": [
+    "confirm Vercel production alias/domain route availability from Vercel runtime",
+    "confirm Vercel production secrets are present",
+    "confirm five-minute cron execution persists receipts to Supabase",
+    "reconcile Shopify against Drive/Git source of truth before mutation",
+    "apply Supabase migrations only through approved connector execution",
+    "activate n8n live loop only after cloud URL and token validation"
+  ],
+  "live_mutations_enabled": false,
+  "public_publishing_enabled": false,
+  "shopify_mutations_enabled": false,
+  "supabase_production_migrations_enabled": false
+}
