@@ -20,14 +20,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Process approved bridge requests
+      - name: Run Eden Skye OS build and validation pass
+        run: node scripts/eden-skye-os-build-and-validation-pass.mjs
+
+      - name: Show generated artifacts
         run: |
-          echo 'EDEN SKYE OS bridge runner scaffold.'
-          echo 'This runner is scaffold-only until request processor script is approved.'
-          echo 'Allowed mode: dry-run / additive artifacts only.'
+          echo 'EDEN SKYE OS generated/available artifacts:'
+          find docs/eden_skye_os -maxdepth 3 -type f | sort || true
+          find app/api/eden -maxdepth 5 -type f | sort || true
+          find supabase/migrations -maxdepth 2 -type f | sort || true
 
       - name: Commit bridge results if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Eden Skye OS bridge runner results
-          file_pattern: .eden/bridge-results/*.json docs/eden_skye_os/*.md
+          file_pattern: .eden/bridge-results/*.json docs/eden_skye_os/*.md docs/eden_skye_os/**/*.md app/api/eden/**/*.ts supabase/migrations/*.sql
