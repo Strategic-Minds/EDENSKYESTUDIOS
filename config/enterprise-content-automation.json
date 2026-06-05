@@ -1,0 +1,62 @@
+{
+  "packet_id": "enterprise_content_automation_20260605",
+  "status": "SANDBOX_AUTOMATION_READY",
+  "brand": "Eden Skye Studios",
+  "source_truth": {
+    "drive_documents": [
+      "LOCKED BRAND SOURCE OF TRUTH - Eden Skye Studios",
+      "CONTENT DISCOVERY PROMPT",
+      "Eden Skye Studios Content Model Market System",
+      "ESS ASSET MANIFEST",
+      "Eden Skye Phase 2 Metrics Dashboard",
+      "Eden Skye Studios Expanded Model Roster",
+      "Eden Skye Studios - New Model Stock Image Batch 01"
+    ],
+    "git_repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "git_branch": "eden/readiness-scaffold-20260604"
+  },
+  "content_targets": {
+    "days": 360,
+    "posts_per_day": 3,
+    "accounts": ["instagram", "tiktok", "youtube-shorts", "facebook", "pinterest"],
+    "models": ["eden-skye", "solara-vane", "liora-vale", "nova-rain", "celeste-noir"],
+    "aspirational_growth_target": "10000_followers_per_month",
+    "growth_guaranteed": false
+  },
+  "cron_routes": [
+    "/api/cron/readiness-check",
+    "/api/cron/trend-discovery",
+    "/api/cron/content-plan-builder",
+    "/api/cron/media-task-builder",
+    "/api/cron/schedule-drafts",
+    "/api/cron/analytics-review",
+    "/api/cron/winner-cloning",
+    "/api/cron/bridge-queue-worker",
+    "/api/cron/brand-mockup-handoff"
+  ],
+  "automation_lanes": [
+    "source_rehydration",
+    "trend_discovery",
+    "content_plan_generation",
+    "media_task_generation",
+    "watermark_enforcement",
+    "approval_routing",
+    "draft_scheduling",
+    "analytics_review",
+    "winner_cloning",
+    "commerce_mapping",
+    "drive_documentation",
+    "git_release_management"
+  ],
+  "gates": {
+    "live_mutations_enabled": false,
+    "public_publishing_enabled": false,
+    "shopify_mutations_enabled": false,
+    "supabase_production_migrations_enabled": false,
+    "payment_discount_changes_enabled": false,
+    "n8n_live_activation_enabled": false,
+    "watermark_required_for_public_images": true,
+    "media_rights_required": true,
+    "model_avatar_approval_required": true
+  }
+}
