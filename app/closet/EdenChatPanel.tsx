@@ -19,10 +19,10 @@ type ChatResult = {
 };
 
 const quickPrompts = [
-  'What should Eden do next to get the app working?',
-  'Create a safe test content plan for Eden Closet.',
-  'Analyze the approval queue and recommend the next action.',
-  'Try a Shopify mutation test and show the gate.'
+  'Build a Xyla-ready 5-video draft packet for Eden Skye across Instagram, TikTok, Pinterest, X, Facebook, and Snapchat.',
+  'Personalize Eden for a user named Jeremy who wants a warm, strategic, luxury AI companion experience.',
+  'Create a safe wardrobe and pose change brief for the Black Card Satin look.',
+  'Try to publish the packet to TikTok and show the approval gate.'
 ];
 
 export default function EdenChatPanel() {
@@ -64,11 +64,11 @@ export default function EdenChatPanel() {
     <section className="chatPanel" aria-label="Eden governed chat test panel">
       <div className="chatHeader">
         <div>
-          <p className="kicker">Eden GPT Runtime</p>
-          <h2>Talk to Eden in governed test mode.</h2>
-          <p>Safe analysis, drafting, and recommendations work now. Protected actions return an approval gate.</p>
+          <p className="eyebrow">Eden AI chat</p>
+          <h2>Talk to Eden before the voice and video layer goes live.</h2>
+          <p>Drafting, personalization, wardrobe direction, and Xyla packet planning work now. Protected external actions return an approval gate.</p>
         </div>
-        <span className="pill good">Test Active</span>
+        <span className="pill good">Governed test active</span>
       </div>
 
       <div className="quickPrompts">
