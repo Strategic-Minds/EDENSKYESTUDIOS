@@ -1,0 +1,33 @@
+name: Generate Eden Skye OS Runtime Docs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Eden Skye OS runtime docs generator
+        run: node scripts/generate-eden-skye-os-runtime-docs.mjs
+
+      - name: Show generated files
+        run: |
+          echo 'Generated/available Eden Skye OS files:'
+          find docs/eden_skye_os -maxdepth 1 -type f | sort
+
+      - name: Commit generated Eden Skye OS docs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Generate Eden Skye OS runtime docs
+          file_pattern: docs/eden_skye_os/*.md
