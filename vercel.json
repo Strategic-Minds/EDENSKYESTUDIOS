@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/bridge-queue-worker",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/brand-mockup-handoff",
+      "schedule": "*/5 * * * *"
     }
   ],
   "headers": [
