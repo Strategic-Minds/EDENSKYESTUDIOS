@@ -1,0 +1,63 @@
+{
+  "status": "STACK_ALIGNED_FOR_VERCEL_HANDOFF",
+  "production_ready": false,
+  "human_gate_required": true,
+  "live_mutations_enabled": false,
+  "source_trees_reviewed": [
+    "eden-site",
+    "eden-local"
+  ],
+  "aligned_assets": {
+    "avatar_svg_assets": 140,
+    "agent_lane_svg_assets": 7,
+    "avatar_registry": "20 female / 120 male governed draft personas",
+    "content_seed_library": "300 governed draft content seeds",
+    "workflow_stubs": 13,
+    "brand_mockup_svg_assets": 3,
+    "creator_storefront_svg_assets": 5
+  },
+  "aligned_routes": [
+    "/api/eden/health",
+    "/api/eden/chat",
+    "/api/eden/gates",
+    "/api/bridge/autonomous-gpt",
+    "/api/bridge/n8n",
+    "/api/bridge/n8n/heartbeat",
+    "/api/bridge/n8n/dispatch",
+    "/api/factory/stack-alignment",
+    "/api/factory/production-readiness",
+    "/api/factory/auth-readiness",
+    "/api/factory/supabase-readiness",
+    "/api/factory/watermark",
+    "/api/factory/media-receipts",
+    "/api/factory/commerce-readiness",
+    "/api/factory/observability",
+    "/api/cron/brand-mockup-handoff",
+    "/api/cron/bridge-queue-worker"
+  ],
+  "latest_verified_handoff": {
+    "github_repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "github_branch": "eden/readiness-scaffold-20260604",
+    "commit_sha": "b19b3788d3e35157817dbd367af097be0415a266",
+    "vercel_status": "success",
+    "drive_handoff_document_id": "1XFgScafqKPKAyY360xeg68wL94NGpG-yQLbnzIFaxdk",
+    "sandbox_route_validation_from_gpt_runtime": "blocked_by_network_egress_http_000",
+    "validated_locally": [
+      "npm run validate:eden",
+      "npm run validate:eden:avatars",
+      "npm run validate:eden:content",
+      "npm run validate:eden:config",
+      "npm run prepare:preview",
+      "npm run prepare:production"
+    ]
+  },
+  "remaining_gates": [
+    "package lock generation after cloud dependency install",
+    "confirm Vercel production alias/domain route availability from Vercel runtime",
+    "confirm cloud secrets are present in Vercel production",
+    "CRON_SECRET configuration for Vercel cron route protection",
+    "Supabase migration approval and execution",
+    "Shopify source-of-truth reconciliation before mutation",
+    "public publishing approval and channel connection"
+  ]
+}
