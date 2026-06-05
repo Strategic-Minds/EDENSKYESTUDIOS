@@ -2,11 +2,26 @@
   "crons": [
     {
       "path": "/api/cron/factory-readiness",
-      "schedule": "0 13 * * *"
+      "schedule": "0 12 * * *"
     },
     {
       "path": "/api/cron/reverse-engineering-passive",
-      "schedule": "0 15 * * 1"
+      "schedule": "0 */8 * * *"
+    },
+    {
+      "path": "/api/cron/bridge-queue-worker",
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     }
   ]
 }
