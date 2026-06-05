@@ -10,6 +10,7 @@ export default function HomePage() {
           </p>
         </div>
         <nav className="nav" aria-label="Primary">
+          <a href="/closet">Eden&apos;s Closet</a>
           <a href="/admin">Admin Console</a>
           <a href="/api/readiness">Readiness API</a>
         </nav>
