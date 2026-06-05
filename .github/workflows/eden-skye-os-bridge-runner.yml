@@ -1,0 +1,33 @@
+name: Eden Skye OS Bridge Runner
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  bridge-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Process approved bridge requests
+        run: |
+          echo 'EDEN SKYE OS bridge runner scaffold.'
+          echo 'This runner is scaffold-only until request processor script is approved.'
+          echo 'Allowed mode: dry-run / additive artifacts only.'
+
+      - name: Commit bridge results if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Eden Skye OS bridge runner results
+          file_pattern: .eden/bridge-results/*.json docs/eden_skye_os/*.md
