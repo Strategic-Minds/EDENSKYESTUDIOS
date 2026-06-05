@@ -8,24 +8,27 @@ const initialGates: Array<[string, string, string]> = [
   ["Supabase schema", "Locked", "Migration scaffold only"],
   ["Metricool posting", "Locked", "Draft routing only"],
   ["AI Gateway", "Wired", "Activates when Vercel env is approved"],
-  ["Licensing", "Review", "Not public until asset pack approved"]
+  ["Licensing", "Review", "Not public until asset pack approved"],
+  ["n8n live loop", "Locked", "Sandbox heartbeat only"],
+  ["Public media", "Locked", "Watermark and disclosure required"]
 ];
 
 const workflows: Array<[string, number]> = [
   ["Intake", 100],
-  ["Planning", 88],
-  ["Sandbox", 72],
-  ["Validation", 64],
+  ["Planning", 92],
+  ["Sandbox", 82],
+  ["Validation", 68],
   ["Promotion", 18],
-  ["Improve", 42]
+  ["Improve", 48]
 ];
 
 const assets: Array<[string, string, string]> = [
-  ["Images", "147 draft visual assets", "Review"],
+  ["Images", "Brand lock + mockups mirrored", "Ready"],
+  ["Models", "140 avatar assets", "Draft"],
   ["Videos", "0 produced clips", "Plan"],
   ["Editing", "Descript / Adobe lane", "Draft"],
-  ["Files", "Scaffold artifact", "Ready"],
-  ["Folders", "Drive canon pending", "Blocked"],
+  ["Files", "262 staged files", "Ready"],
+  ["Folders", "Drive/Git source truth", "Review"],
   ["Licenses", "Metadata templates", "Draft"]
 ];
 
@@ -35,6 +38,29 @@ const revenue: Array<[string, string, string]> = [
   ["Downloads", "Starter catalog", "6 SKUs planned"],
   ["Apps", "Custom", "AI tools lane"],
   ["Licenses", "Review only", "Asset gates required"]
+];
+
+const routeStatus: Array<[string, string, string]> = [
+  ["Health", "/api/eden/health", "Ready"],
+  ["Build packet", "/api/factory/build-packet", "Ready"],
+  ["Readiness", "/api/factory/readiness", "Ready"],
+  ["Stack alignment", "/api/factory/stack-alignment", "Ready"],
+  ["GPT bridge", "/api/bridge/autonomous-gpt", "Ready"],
+  ["Codex bridge", "/api/bridge/codex", "Ready"],
+  ["n8n bridge", "/api/bridge/n8n", "Ready"],
+  ["Cron readiness", "/api/cron/factory-readiness", "Staged"],
+  ["Brand handoff", "/api/cron/brand-mockup-handoff", "5 min"]
+];
+
+const receipts: Array<[string, string, string]> = [
+  ["Codex bridge handoff", "codex_production_3234b220", "Queued"],
+  ["Production deploy approval", "production_deploy_approved_20260605", "Approved"],
+  ["Cloud preview approval", "cloud_preview_approved_20260605", "Approved"],
+  ["Pipeline start", "pipeline_start_20260605", "Created"],
+  ["Bridge batch", "bridge-batch-1780618010132", "Created"],
+  ["n8n loop", "n8n-loop-1780618707114", "Created"],
+  ["Stack audit", "20_PIPELINE_START_PACKET", "Created"],
+  ["Brand mockup handoff", "brand-mockup-handoff-20260605", "Ready"]
 ];
 
 type Message = {
@@ -161,7 +187,7 @@ export function EdensCloset() {
           </div>
           <div>
             <span>Human gates</span>
-            <strong>6</strong>
+            <strong>8</strong>
           </div>
           <div>
             <span>Revenue lanes</span>
@@ -233,6 +259,40 @@ export function EdensCloset() {
                   <span>{name}</span>
                   <strong>{value}</strong>
                   <small>{note}</small>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="ops-grid">
+          <div>
+            <div className="panel-heading">
+              <h2>Route console</h2>
+              <span>Sandbox cloud workflow</span>
+            </div>
+            <div className="revenue-list">
+              {routeStatus.map(([name, route, state]) => (
+                <div className="revenue-row" key={name}>
+                  <span>{name}</span>
+                  <strong>{state}</strong>
+                  <small>{route}</small>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="panel-heading">
+              <h2>Receipts</h2>
+              <span>Continuity records</span>
+            </div>
+            <div className="revenue-list">
+              {receipts.map(([name, id, state]) => (
+                <div className="revenue-row" key={id}>
+                  <span>{name}</span>
+                  <strong>{state}</strong>
+                  <small>{id}</small>
                 </div>
               ))}
             </div>
