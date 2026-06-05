@@ -49,7 +49,13 @@ const routeStatus: Array<[string, string, string]> = [
   ["Codex bridge", "/api/bridge/codex", "Ready"],
   ["n8n bridge", "/api/bridge/n8n", "Ready"],
   ["Cron readiness", "/api/cron/factory-readiness", "Staged"],
-  ["Brand handoff", "/api/cron/brand-mockup-handoff", "5 min"]
+  ["Brand handoff", "/api/cron/brand-mockup-handoff", "5 min"],
+  ["Trend discovery", "/api/cron/trend-discovery", "6 hr"],
+  ["360 plan", "/api/cron/content-plan-builder", "6 hr"],
+  ["Media queue", "/api/cron/media-task-builder", "6 hr"],
+  ["Schedule drafts", "/api/cron/schedule-drafts", "6 hr"],
+  ["Analytics review", "/api/cron/analytics-review", "Daily"],
+  ["Winner cloning", "/api/cron/winner-cloning", "Weekly"]
 ];
 
 const receipts: Array<[string, string, string]> = [
@@ -60,7 +66,8 @@ const receipts: Array<[string, string, string]> = [
   ["Bridge batch", "bridge-batch-1780618010132", "Created"],
   ["n8n loop", "n8n-loop-1780618707114", "Created"],
   ["Stack audit", "20_PIPELINE_START_PACKET", "Created"],
-  ["Brand mockup handoff", "brand-mockup-handoff-20260605", "Ready"]
+  ["Brand mockup handoff", "brand-mockup-handoff-20260605", "Ready"],
+  ["Enterprise automation", "enterprise-content-automation-completion-20260605", "Ready"]
 ];
 
 type Message = {
