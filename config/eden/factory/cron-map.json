@@ -34,5 +34,14 @@
     "maxRisk": "yellow",
     "allowedActions": ["analytics_snapshot", "winner_scoring", "draft_clone_recommendations"],
     "blockedActions": ["new_campaign_activation"]
+  },
+  {
+    "id": "EDEN-CRON-005",
+    "path": "/api/cron/eden-media-preview",
+    "schedule": "0 10 * * *",
+    "purpose": "Run the Eden Skye Studios media preview readiness pass through the Vercel sandbox cron surface, with GPT/OpenAI as the image lane, HeyGen as the approval-gated video lane, Drive as workflow record, and receipts as the validation output.",
+    "maxRisk": "yellow",
+    "allowedActions": ["readiness_check", "drive_queue_reference", "draft_asset_receipt", "create_receipt", "create_approval_request"],
+    "blockedActions": ["production_deploy", "public_publish", "shopify_mutation", "payment_change", "discount_change", "live_avatar_session", "paid_heygen_generation_without_approval"]
   }
 ]
