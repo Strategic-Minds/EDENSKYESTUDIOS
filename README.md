@@ -1,8 +1,10 @@
 # Eden Skye Studios
 
-Eden Skye Studios is the source repo for the Eden Skye public website, Shopify-style storefront, Edens Closet member experience, approval control plane, and Xyla-ready content packet workflow.
+Eden Skye Studios is the source repo for the Eden Skye Vercel app surfaces: Edens Closet, login/member experience, admin/control plane, AI chat, content workflow, and bridge APIs.
 
-This repo is the operating source of truth for the Eden Skye Studios website. Auto Builder is used as the factory and bridge guide, but the sandbox repo is not the source of truth for Eden Skye Studios.
+The public Shopify page is the black/champagne website mockup shown in Drive: `EDENSKYEWEBSITEV2.png`. Shopify should own that public commerce page. Vercel should own Edens Closet and the private app/control experience.
+
+Auto Builder is used as the factory and bridge guide, but the sandbox repo is not the source of truth for Eden Skye Studios.
 
 ## Start Here
 
@@ -11,13 +13,14 @@ Read these files before making changes:
 1. `START_HERE.md` - first-run operating sequence for every agent.
 2. `AGENTS.md` - repo-level execution rules and approval locks.
 3. `docs/PLAN_MODE_BUILD_MODE.md` - mandatory to-do list format for every new task, workflow, system, or idea.
-4. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - immediate Auto Builder packet for finishing the site.
-5. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Git/Vercel/Shopify linking path and constraints.
-6. `docs/SITE_FINISH_NOW_CHECKLIST.md` - route, visual, commerce, preview, and approval checklist.
-7. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
-8. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
-9. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
-10. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
+4. `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md` - corrected split: Shopify page plus Vercel Closet.
+5. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - Auto Builder packet for the corrected architecture.
+6. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Shopify GitHub theme path and Vercel app routing.
+7. `docs/SITE_FINISH_NOW_CHECKLIST.md` - Shopify page, Vercel app, routing, preview, and approval checklist.
+8. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
+9. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
+10. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
+11. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
 
 ## Mandatory Operating Rule
 
@@ -30,18 +33,22 @@ Every new task, system, workflow, content idea, automation, bridge, route, data 
 
 Every material build must update the relevant docs before the work is called complete.
 
-## Site Finish Priority
+## Correct Launch Architecture
 
-The current site should be finished against the approved Drive mockup `EDENSKYEWEBSITEV2.png`.
+Shopify owns the public commerce website:
 
-Fastest recommended launch path:
+- Drive mockup: `EDENSKYEWEBSITEV2.png`
+- Store: `eden-skye-studios.myshopify.com`
+- Surfaces: home page, products, collections, memberships, downloads, licenses, services, checkout
+- Required path: create a Shopify theme-compatible branch/repo before using Shopify GitHub theme integration
 
-1. Keep `Strategic-Minds/EDENSKYESTUDIOS` as the Next.js/Vercel storefront.
-2. Run preview-only Vercel validation.
-3. Link approved Shopify products, collections, or checkout URLs into the site CTAs after approval.
-4. Keep production deploy and Shopify mutations locked until explicit approval.
+Vercel owns Edens Closet and app/control surfaces:
 
-Native Shopify GitHub theme integration is a separate path. It requires a Shopify theme-compatible repo or branch with Shopify theme structure. The current Next.js app should not be connected directly as a Shopify theme branch.
+- Vercel project id: `prj_mtmJQYYqRodNnH2UrDqwaK2MHgoA`
+- Surfaces: `/closet`, `/login`, `/admin`, `/admin/eden`, AI chat, video-chat readiness, model changing-room, Xyla/content packets, bridge APIs
+- Production deploy stays locked until approval
+
+Do not connect the current Next.js branch directly as a Shopify theme. Shopify GitHub theme integration requires Shopify theme structure.
 
 ## Governance Locks
 
@@ -49,6 +56,7 @@ This repository stays governed by default:
 
 - no production deploy without explicit approval
 - no Shopify mutation without explicit approval
+- no Shopify theme publish without explicit approval
 - no public publishing without explicit approval
 - no payment, subscription, pricing, or discount change without explicit approval
 - no live HeyGen/avatar/video-chat session without explicit approval
@@ -58,13 +66,11 @@ This repository stays governed by default:
 
 Approved preview, draft, read-only, and queue-first work is allowed when it preserves these locks.
 
-## Current Website Scope
+## Current Vercel App Scope
 
-The live app is structured as:
+The Vercel app is structured as:
 
-- `/` public Eden Skye Studios Shopify-style storefront in the black/champagne Drive mockup direction
 - `/login` member login portal preview for model selection and Edens Closet entry
-- `/payment` Black Card payment page preview for future Shopify/Stripe checkout wiring
 - `/closet` Edens Closet model changing-room and admin control surface
 - `/admin/eden` route alias into Edens Closet for the older mockup handoff path
 - `/admin` approval/media operations console
@@ -78,6 +84,20 @@ The live app is structured as:
 - `/api/bridge/drive-move` queue-first Drive move bridge
 - `/api/bridge/github-move` queue-first GitHub move bridge
 - `/api/bridge/vercel-preview` preview-only Vercel bridge packet
+
+## Shopify Page Scope
+
+The Shopify public page should implement the Drive mockup:
+
+- Creator Experience hero
+- Chat / Video Chat / Downloads / Licenses / Membership feature rail
+- Creator card row
+- Popular Downloads
+- Top Products
+- Premium Services
+- Trust/footer strip
+- Product, license, download, membership, and checkout paths
+- Approved links into Vercel for private Edens Closet access
 
 ## Auto Builder Cloud Bridge
 
@@ -94,15 +114,14 @@ Production deploys remain locked unless the user gives the exact required approv
 
 ## Strategic Flow
 
-1. Eden Skye Studios presents the public fictional AI luxury creator brand and Black Card commerce path.
-2. The payment page previews the Black Card checkout and remains non-live until Shopify/Stripe wiring is approved.
-3. The login portal previews member authentication, model choice, and access into Edens Closet.
-4. Edens Closet defines model, personality, wardrobe, pose, user profile, and safe boundaries.
-5. The Xyla draft API packages hook, spoken line, visual prompt, caption, CTA, and channel variants.
+1. Shopify presents the public fictional AI luxury creator brand and Black Card commerce path.
+2. Shopify owns product, collection, membership, download, license, service, and checkout surfaces.
+3. Vercel owns Edens Closet, login, model changing-room, AI chat, and video-chat readiness.
+4. Shopify routes approved private/member actions into Vercel `/login` or `/closet`.
+5. Xyla draft API packages hook, spoken line, visual prompt, caption, CTA, and channel variants.
 6. GPT image creation can be used for lower-cost still/image drafting.
 7. HeyGen is reserved for approved avatar, voice, and presenter-led video production.
 8. Facebook, Instagram, X, TikTok, Pinterest, and Snapchat remain draft channels until publishing approval exists.
-9. Shopify can be linked as the commerce destination later; the app does not mutate Shopify without approval.
 
 ## Environment Contract
 
@@ -122,12 +141,12 @@ Core repo runtime variables:
 
 ## Bootstrap Scope
 
-The first application foundation includes:
+The current foundation includes:
 
-- Next.js App Router template
-- premium Eden Skye Studios storefront landing page
-- login and payment preview pages
+- Next.js App Router Vercel app
 - Edens Closet model and content control room
+- login and payment preview pages
+- admin/media operations console
 - health and readiness APIs
 - Supabase server client helpers
 - launch workflow contract
@@ -137,6 +156,6 @@ The first application foundation includes:
 - Supabase migration for core operating tables
 - Auto Builder-aligned bridge documentation
 - Plan Mode and Build Mode operating contract
-- Auto Builder site completion packet
+- corrected Shopify/Vercel split architecture
 - Shopify Git linking runbook
-- Site finish-now checklist
+- site finish-now checklist
