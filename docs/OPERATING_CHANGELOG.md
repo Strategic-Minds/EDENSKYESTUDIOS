@@ -4,6 +4,42 @@ This file records material operating-system, bridge, workflow, and documentation
 
 ## 2026-06-06
 
+### Auto Builder Site Completion Packet
+
+Created the immediate documentation layer for finishing the Eden Skye Studios website and preparing Git/Vercel/Shopify linkage.
+
+Created:
+
+- `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md`
+- `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md`
+- `docs/SITE_FINISH_NOW_CHECKLIST.md`
+
+Updated:
+
+- `README.md`
+- `docs/OPERATING_CHANGELOG.md`
+
+Key decision recorded:
+
+- Track A is the fastest recommended launch path: keep `Strategic-Minds/EDENSKYESTUDIOS` as the Next.js/Vercel storefront and link approved Shopify products, collections, or checkout URLs after approval.
+- Track B is the native Shopify GitHub theme path: create a Shopify theme-compatible repo or branch before using Shopify Admin > Online Store > Themes > Add theme > Connect from GitHub.
+- The current Next.js repo should not be connected directly as a Shopify theme branch because Shopify GitHub theme integration expects Shopify theme folder structure.
+
+Source truth recorded:
+
+- Approved website mockup: `EDENSKYEWEBSITEV2.png`
+- Drive file: `https://drive.google.com/file/d/1xaDrBNIaXSwmtdothIZvZSczDjqX6qTR/view`
+- Eden Vercel project id: `prj_mtmJQYYqRodNnH2UrDqwaK2MHgoA`
+- Shopify store: `eden-skye-studios.myshopify.com`
+
+Next execution focus:
+
+1. Replace temporary image URLs with durable assets.
+2. Run Vercel preview only.
+3. Compare preview against the Drive mockup.
+4. Draft Shopify product/link map.
+5. Request approval before Shopify mutation or production deploy.
+
 ### Documentation Operating Layer
 
 Added a repo-level documentation system so Eden Skye Studios has a stable first-run and change-management path.
