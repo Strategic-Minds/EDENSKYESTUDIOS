@@ -11,10 +11,13 @@ Read these files before making changes:
 1. `START_HERE.md` - first-run operating sequence for every agent.
 2. `AGENTS.md` - repo-level execution rules and approval locks.
 3. `docs/PLAN_MODE_BUILD_MODE.md` - mandatory to-do list format for every new task, workflow, system, or idea.
-4. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
-5. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
-6. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
-7. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
+4. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - immediate Auto Builder packet for finishing the site.
+5. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Git/Vercel/Shopify linking path and constraints.
+6. `docs/SITE_FINISH_NOW_CHECKLIST.md` - route, visual, commerce, preview, and approval checklist.
+7. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
+8. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
+9. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
+10. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
 
 ## Mandatory Operating Rule
 
@@ -26,6 +29,19 @@ Every new task, system, workflow, content idea, automation, bridge, route, data 
 - Build Mode: implementation steps, validation receipts, documentation updates, and next actions.
 
 Every material build must update the relevant docs before the work is called complete.
+
+## Site Finish Priority
+
+The current site should be finished against the approved Drive mockup `EDENSKYEWEBSITEV2.png`.
+
+Fastest recommended launch path:
+
+1. Keep `Strategic-Minds/EDENSKYESTUDIOS` as the Next.js/Vercel storefront.
+2. Run preview-only Vercel validation.
+3. Link approved Shopify products, collections, or checkout URLs into the site CTAs after approval.
+4. Keep production deploy and Shopify mutations locked until explicit approval.
+
+Native Shopify GitHub theme integration is a separate path. It requires a Shopify theme-compatible repo or branch with Shopify theme structure. The current Next.js app should not be connected directly as a Shopify theme branch.
 
 ## Governance Locks
 
@@ -121,3 +137,6 @@ The first application foundation includes:
 - Supabase migration for core operating tables
 - Auto Builder-aligned bridge documentation
 - Plan Mode and Build Mode operating contract
+- Auto Builder site completion packet
+- Shopify Git linking runbook
+- Site finish-now checklist
