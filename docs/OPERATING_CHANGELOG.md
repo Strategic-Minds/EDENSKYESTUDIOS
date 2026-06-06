@@ -4,6 +4,36 @@ This file records material operating-system, bridge, workflow, and documentation
 
 ## 2026-06-06
 
+### Corrected Shopify Page And Vercel Closet Split
+
+Corrected the launch architecture per Jeremy's direction.
+
+Created:
+
+- `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md`
+
+Updated:
+
+- `README.md`
+- `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md`
+- `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md`
+- `docs/SITE_FINISH_NOW_CHECKLIST.md`
+- `docs/OPERATING_CHANGELOG.md`
+
+Corrected decision:
+
+- Shopify owns the public page shown in Drive: `EDENSKYEWEBSITEV2.png`.
+- Vercel owns Edens Closet, login/member experience, admin/control plane, AI chat, video-chat readiness, model changing-room, bridge APIs, and content workflow.
+- The current Next.js repo should remain the Vercel app/control surface.
+- A Shopify theme-compatible repo or branch must be created for Shopify GitHub theme integration.
+
+Immediate next action:
+
+1. Build the Shopify page/theme from `EDENSKYEWEBSITEV2.png`.
+2. Keep Edens Closet in Vercel.
+3. Route Shopify Sign In/Chat/private member actions into Vercel `/login` or `/closet` after approval.
+4. Keep Shopify publish, Shopify mutations, and Vercel production deploy locked until approval.
+
 ### Auto Builder Site Completion Packet
 
 Created the immediate documentation layer for finishing the Eden Skye Studios website and preparing Git/Vercel/Shopify linkage.
@@ -19,11 +49,7 @@ Updated:
 - `README.md`
 - `docs/OPERATING_CHANGELOG.md`
 
-Key decision recorded:
-
-- Track A is the fastest recommended launch path: keep `Strategic-Minds/EDENSKYESTUDIOS` as the Next.js/Vercel storefront and link approved Shopify products, collections, or checkout URLs after approval.
-- Track B is the native Shopify GitHub theme path: create a Shopify theme-compatible repo or branch before using Shopify Admin > Online Store > Themes > Add theme > Connect from GitHub.
-- The current Next.js repo should not be connected directly as a Shopify theme branch because Shopify GitHub theme integration expects Shopify theme folder structure.
+Original decision was superseded by the corrected split above.
 
 Source truth recorded:
 
@@ -31,14 +57,6 @@ Source truth recorded:
 - Drive file: `https://drive.google.com/file/d/1xaDrBNIaXSwmtdothIZvZSczDjqX6qTR/view`
 - Eden Vercel project id: `prj_mtmJQYYqRodNnH2UrDqwaK2MHgoA`
 - Shopify store: `eden-skye-studios.myshopify.com`
-
-Next execution focus:
-
-1. Replace temporary image URLs with durable assets.
-2. Run Vercel preview only.
-3. Compare preview against the Drive mockup.
-4. Draft Shopify product/link map.
-5. Request approval before Shopify mutation or production deploy.
 
 ### Documentation Operating Layer
 
@@ -78,6 +96,7 @@ Governance remains locked for:
 
 - production deploys
 - Shopify mutations
+- Shopify theme publishing
 - public publishing
 - payment, pricing, subscription, and discount changes
 - live avatar/video-chat sessions
