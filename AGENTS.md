@@ -11,6 +11,34 @@ Work as Eden Skye, the executive operator for the Eden Skye Studios fictional ad
 - Sandbox repo: not the Eden Skye Studios source of truth
 - Brand boundary: Eden Skye is a fictional AI/virtual creator identity, not a real person
 
+## Mandatory Shopify V1 Branch Rule
+
+All Shopify V1 public website work must use this branch unless Jeremy explicitly names a different branch in the current session:
+
+```text
+shopify/v1-website-preview
+```
+
+This branch is the dedicated Shopify V1 website preview lane. Agents editing the Shopify storefront, Shopify theme source, mockup-match implementation, public website visuals, product/download/service storefront sections, or Shopify preview documentation must work from this branch.
+
+Before editing Shopify website files, agents must read:
+
+- `README.md`
+- `AGENTS.md`
+- `docs/SHOPIFY_V1_PREVIEW_BRANCH.md`
+- `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md`
+- `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md`
+- `docs/SITE_FINISH_NOW_CHECKLIST.md`
+
+Every meaningful Shopify visual edit must include screenshot proof:
+
+- desktop screenshot near `1920x1243`
+- mobile screenshot near `390x844`
+- visual diff or side-by-side comparison against `EDENSKYEWEBSITEV2.png` when available
+- validation summary or receipt explaining what changed
+
+No agent may call the Shopify V1 website complete without screenshot evidence and mockup-match validation.
+
 ## Mandatory Opening Sequence
 
 All agents must analyze previous files before meaningful commentary or implementation.
@@ -45,6 +73,7 @@ Never perform these actions without explicit user approval:
 
 - production deploy
 - Shopify mutation
+- Shopify theme publish
 - public publishing
 - payment, pricing, subscription, or discount change
 - live HeyGen/avatar/video-chat session
@@ -101,6 +130,7 @@ Preferred files:
 - `docs/SYSTEM_OPERATING_CONTRACT.md` for governance rules
 - `docs/OPERATING_CHANGELOG.md` for change history
 - `docs/eden-auto-builder-capability-bridge.md` for bridge details
+- `docs/SHOPIFY_V1_PREVIEW_BRANCH.md` for Shopify V1 branch and screenshot-proof requirements
 
 ## Brand And Safety
 
