@@ -1,0 +1,120 @@
+name: Shopify V1 Screenshot Proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why screenshot proof is being captured"
+        required: false
+  push:
+    branches:
+      - shopify/v1-website-preview
+    paths:
+      - "app/**"
+      - "package.json"
+      - "next.config.*"
+      - ".github/workflows/shopify-v1-screenshot-proof.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  screenshot-proof:
+    name: Build And Capture Shopify V1 Proof
+    runs-on: ubuntu-latest
+    env:
+      PRODUCTION_LOCKED: "true"
+      SHOPIFY_MUTATION_LOCKED: "true"
+      EDEN_APPROVED_MOCKUP: EDENSKYEWEBSITEV2.png
+    steps:
+      - name: Checkout Shopify V1 branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next app
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start preview server
+        run: |
+          npm run start > /tmp/eden-shopify-v1.log 2>&1 &
+          echo $! > /tmp/eden-shopify-v1.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000 >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          echo "Preview server did not start"
+          cat /tmp/eden-shopify-v1.log || true
+          exit 1
+
+      - name: Capture screenshots and validate required text
+        run: |
+          mkdir -p screenshot-proof
+          cat > screenshot-proof/capture.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+
+          const required = [
+            'Creator Experience',
+            'Real. Beautiful',
+            'Unforgettable',
+            'Meet Our Creators',
+            'Popular Downloads',
+            'Top Products',
+            'Premium Services',
+            '100% Secure',
+            'Private & Encrypted',
+            'Safe Payments',
+            'Cancel Anytime'
+          ];
+
+          const browser = await chromium.launch();
+          const results = [];
+          for (const target of [
+            { name: 'desktop', width: 1920, height: 1243 },
+            { name: 'mobile', width: 390, height: 844 }
+          ]) {
+            const page = await browser.newPage({ viewport: { width: target.width, height: target.height }, deviceScaleFactor: 1 });
+            await page.goto('http://127.0.0.1:3000', { waitUntil: 'networkidle' });
+            await page.screenshot({ path: `screenshot-proof/eden-shopify-v1-${target.name}.png`, fullPage: false });
+            const text = await page.locator('body').innerText();
+            const checks = required.map((label) => ({ label, detected: text.includes(label) }));
+            results.push({ viewport: target, checks });
+            await page.close();
+          }
+          await browser.close();
+
+          const missing = results.flatMap((result) => result.checks.filter((check) => !check.detected).map((check) => `${result.viewport.name}: ${check.label}`));
+          const summary = {
+            approved_mockup: process.env.EDEN_APPROVED_MOCKUP,
+            production_locked: true,
+            shopify_mutation_locked: true,
+            branch: process.env.GITHUB_REF_NAME,
+            sha: process.env.GITHUB_SHA,
+            screenshots: ['eden-shopify-v1-desktop.png', 'eden-shopify-v1-mobile.png'],
+            results,
+            missing,
+            passed: missing.length === 0
+          };
+          fs.writeFileSync('screenshot-proof/validation-summary.json', JSON.stringify(summary, null, 2));
+          fs.writeFileSync('screenshot-proof/VALIDATION_SUMMARY.md', `# Shopify V1 Screenshot Proof\n\nBranch: ${process.env.GITHUB_REF_NAME}\n\nSHA: ${process.env.GITHUB_SHA}\n\nApproved mockup: ${process.env.EDEN_APPROVED_MOCKUP}\n\nProduction locked: true\n\nShopify mutation locked: true\n\nPassed required text check: ${summary.passed}\n\nMissing:\n${missing.map((item) => `- ${item}`).join('\n') || '- None'}\n`);
+          if (missing.length > 0) process.exit(1);
+          NODE
+          node screenshot-proof/capture.mjs
+
+      - name: Upload screenshot proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-shopify-v1-screenshot-proof
+          path: screenshot-proof/
