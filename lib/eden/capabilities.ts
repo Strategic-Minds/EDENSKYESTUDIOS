@@ -54,15 +54,21 @@ export const edenCapabilityRegistry: EdenCapability[] = [
     connector: 'Vercel',
     purpose: 'Preview deploys, production deploy gates, route smoke checks, cron readiness, and preview receipts.',
     status: 'partial',
-    availableNow: ['repo-side route and cron definitions', 'Auto Builder bridge packet handoff', 'preview-only bridge queue route', 'Eden target Vercel project id provided'],
-    bridgeRoutes: ['/api/bridge/vercel-preview', '/api/bridge/stack-readiness', '/api/bridge/registry'],
+    availableNow: ['repo-side route and cron definitions', 'Auto Builder bridge packet handoff', 'Auto Builder preview executor route', 'Eden target Vercel project id provided'],
+    bridgeRoutes: [
+      'https://auto-builder-livid.vercel.app/api/bridge/vercel/eden-preview',
+      '/api/bridge/vercel-preview',
+      '/api/bridge/stack-readiness',
+      '/api/bridge/registry'
+    ],
     requiredSecrets: ['VERCEL_TOKEN in Auto Builder runtime', 'EDEN_SKYE_VERCEL_PROJECT_ID in Auto Builder runtime', 'VERCEL_TEAM_ID when required'],
     approvalGate: 'production deploy, env mutation, rollback, domain changes',
     blockedLiveActions: ['production deploy', 'environment variable mutation', 'domain switch', 'rollback'],
-    fallbackReceiptMode: 'Auto Builder build packet plus manual Vercel dashboard preview',
+    fallbackReceiptMode: 'Auto Builder preview executor plus manual Vercel dashboard preview',
     currentEvidence: {
       edenProjectId: 'prj_mtmJQYYqRodNnH2UrDqwaK2MHgoA',
       expectedAutoBuilderEnv: 'EDEN_SKYE_VERCEL_PROJECT_ID',
+      autoBuilderExecutor: 'https://auto-builder-livid.vercel.app/api/bridge/vercel/eden-preview',
       directRuntimeCallFromContainer: 'blocked by CONNECT 403',
       previewBridge: '/api/bridge/vercel-preview',
       buildPacket: 'https://github.com/Strategic-Minds/AUTO_BUILDER/blob/main/factory/build-packets/eden-skye-studios-shopify-preview-20260605.json'
@@ -142,9 +148,9 @@ export const edenBridgeQueues = [
   {
     id: 'QUEUE-VERCEL-PREVIEW-001',
     name: 'Vercel Preview Bridge',
-    route: '/api/bridge/vercel-preview',
-    mode: 'preview_receipt_first',
-    description: 'Accepts preview deployment and smoke-check intents, blocks production deploy requests, and returns a credential-gated Vercel execution packet.'
+    route: 'https://auto-builder-livid.vercel.app/api/bridge/vercel/eden-preview',
+    mode: 'auto_builder_preview_executor',
+    description: 'Auto Builder runtime executor for Eden Skye Studios Vercel preview deploys. Production deploy requests are blocked.'
   },
   {
     id: 'QUEUE-STACK-READINESS-001',
