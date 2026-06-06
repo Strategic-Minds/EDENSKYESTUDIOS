@@ -18,6 +18,17 @@ export const APPROVAL_LOCKED_ACTIONS = [
   'live avatar session',
   'production deploy',
   'vercel production deploy',
+  'vercel env mutation',
+  'vercel domain change',
+  'vercel rollback',
+  'drive move execute',
+  'drive bulk move',
+  'drive delete',
+  'drive sharing change',
+  'github delete',
+  'github overwrite',
+  'github force',
+  'github merge',
   'slack post'
 ] as const;
 
@@ -68,5 +79,10 @@ export const EDEN_PUBLICATION_LOCKS = {
   klaviyoSends: true,
   liveHeyGenSessions: true,
   productionDeploys: true,
-  slackPosts: true
+  slackPosts: true,
+  driveMoves: true,
+  driveSharingChanges: true,
+  githubDestructiveWrites: true,
+  vercelEnvironmentChanges: true,
+  vercelDomainChanges: true
 } as const;
