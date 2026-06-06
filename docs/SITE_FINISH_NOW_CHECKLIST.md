@@ -1,12 +1,15 @@
 # Site Finish Now Checklist
 
-This is the immediate checklist to finish Eden Skye Studios from the approved website mockup.
+This is the immediate checklist to finish Eden Skye Studios with the correct split:
+
+- Shopify page: the public website mockup shown in Drive.
+- Vercel app: Edens Closet and all private/app/control surfaces.
 
 ## Plan Mode
 
 ### Objective
 
-Finish the Eden Skye Studios site so Jeremy can review the Vercel preview, approve Shopify linkage, and move toward launch without production or Shopify mutations happening early.
+Finish the Eden Skye Studios Shopify page and Vercel Edens Closet app so Jeremy can review both previews, approve linking, and move toward launch without early production deploys or Shopify mutations.
 
 ### Source Truth
 
@@ -16,46 +19,46 @@ Finish the Eden Skye Studios site so Jeremy can review the Vercel preview, appro
 - Vercel project: `prj_mtmJQYYqRodNnH2UrDqwaK2MHgoA`
 - Shopify store: `eden-skye-studios.myshopify.com`
 
-### Current Site Surfaces
+### Correct Build Decision
 
-- `/`
-- `/login`
-- `/payment`
-- `/closet`
-- `/admin`
-- `/admin/eden`
-- `/api/readiness`
-- `/api/bridge/stack-readiness`
-- `/api/xyla/draft`
-
-### Build Decision
-
-Default to Track A: Vercel storefront plus Shopify commerce links.
-
-Do not attempt direct Shopify GitHub theme integration with the current Next.js repo unless a theme-compatible branch/repo is created.
+- Build the Drive mockup as the Shopify public storefront/page.
+- Keep Edens Closet in Vercel.
+- Do not connect the current Next.js branch directly as a Shopify theme.
+- Create a Shopify theme-compatible branch/repo for the Shopify page if using Shopify GitHub integration.
 
 ## Build Mode
 
-## Phase 1: Mockup Parity
+## Phase 1: Shopify Page From Drive Mockup
 
-- [ ] Compare `/` against `EDENSKYEWEBSITEV2.png`.
-- [ ] Confirm black/champagne/premium visual system.
-- [ ] Confirm hero copy, creator lane, service cards, product cards, membership block, footer trust strip.
-- [ ] Confirm mobile responsive layout.
-- [ ] Confirm no text overlap or clipped controls.
-- [ ] Confirm all imagery is durable, not temporary signed URLs.
+- [ ] Create or select Shopify theme-compatible repo/branch.
+- [ ] Build Shopify theme folder structure: `assets`, `config`, `layout`, `locales`, `sections`, `snippets`, `templates`.
+- [ ] Convert `EDENSKYEWEBSITEV2.png` into Shopify sections.
+- [ ] Build header/navigation.
+- [ ] Build Creator Experience hero.
+- [ ] Build right-side feature cards: Chat, Video Chat, Downloads, Licenses, Membership.
+- [ ] Build capability strip.
+- [ ] Build Meet Our Creators row.
+- [ ] Build Popular Downloads.
+- [ ] Build Top Products.
+- [ ] Build Premium Services.
+- [ ] Build trust/footer strip.
+- [ ] Use durable Shopify/repo/CDN assets.
+- [ ] Keep Shopify theme unpublished until approval.
 
-## Phase 2: Route Completion
+## Phase 2: Vercel Edens Closet App
 
 - [ ] `/login` renders member/model entry preview.
-- [ ] `/payment` renders Black Card payment preview and approved Shopify placeholder/link area.
-- [ ] `/closet` renders Edens Closet model changing-room/admin preview.
+- [ ] `/closet` renders model changing-room/admin preview.
 - [ ] `/admin` renders approval/media operations console.
 - [ ] `/admin/eden` routes cleanly.
+- [ ] `/api/eden/chat` remains governed.
+- [ ] `/api/closet/session` remains draft/session builder.
+- [ ] `/api/xyla/draft` remains draft-only.
 - [ ] `/api/readiness` returns JSON status.
 - [ ] `/api/bridge/stack-readiness` returns JSON status.
+- [ ] Vercel preview only; production stays locked.
 
-## Phase 3: Commerce Mapping
+## Phase 3: Shopify Commerce Mapping
 
 - [ ] Draft Black Card Membership product map.
 - [ ] Draft Creator Starter Pack product map.
@@ -67,61 +70,57 @@ Do not attempt direct Shopify GitHub theme integration with the current Next.js 
 - [ ] Draft Brand Collaboration/Sponsorship service map.
 - [ ] Add Shopify mutation approval rows before creating or updating objects.
 
-## Phase 4: Shopify Linkage
+## Phase 4: Shopify To Vercel Routing
 
-Track A:
-
-- [ ] Keep the app on Vercel.
-- [ ] Use Shopify product/collection/checkout links after approval.
-- [ ] Update CTAs only after target Shopify URLs are approved.
-- [ ] Preserve `/payment` as a preview until checkout is approved.
-
-Track B:
-
-- [ ] Create Shopify theme-compatible repo/branch.
-- [ ] Convert Eden mockup into Liquid sections/templates.
-- [ ] Connect through Shopify Admin > Online Store > Themes > Add theme > Connect from GitHub.
-- [ ] Keep theme unpublished until approved.
+- [ ] Shopify `Sign In` -> Vercel `/login`.
+- [ ] Shopify `Chat` -> Vercel `/login` or gated `/closet`.
+- [ ] Shopify `Video Chat` -> Vercel gated video-chat route after access.
+- [ ] Shopify post-purchase/member CTA -> Vercel `/closet`.
+- [ ] Shopify `Join Now`, products, downloads, licenses, and services remain Shopify commerce surfaces unless approved otherwise.
 
 ## Phase 5: Auto Builder Preview
 
 - [ ] Call Auto Builder provider readiness.
 - [ ] Call Eden runtime readiness.
-- [ ] Dispatch preview-only Vercel redeploy for Eden Skye Studios.
-- [ ] Confirm preview URL.
-- [ ] Check routes.
+- [ ] Run Vercel preview for Edens Closet app.
+- [ ] Create Shopify unpublished theme preview for public page.
+- [ ] Check routes and visual parity.
 - [ ] Record receipts in Drive control plane.
 
 ## Phase 6: Approval And Promotion
 
-- [ ] Add final preview to Drive control plane.
-- [ ] Add Shopify link/product mutation request rows.
+- [ ] Add Vercel preview to Drive control plane.
+- [ ] Add Shopify theme preview to Drive control plane.
+- [ ] Add Shopify product/link mutation request rows.
 - [ ] Add production deploy approval request row.
 - [ ] Wait for explicit approval.
-- [ ] Production deploy only after approval.
-- [ ] Shopify mutation only after approval.
+- [ ] Vercel production deploy only after approval.
+- [ ] Shopify theme publish only after approval.
+- [ ] Shopify product/payment mutations only after approval.
 
 ## Immediate Next Actions
 
-1. Replace any temporary signed creator/hero image URLs with durable repo or CDN assets.
-2. Run a preview-only Vercel deployment.
-3. Review preview against `EDENSKYEWEBSITEV2.png`.
-4. Build Shopify product/link map as draft only.
-5. Ask Jeremy to approve Track A or Track B.
+1. Build the Shopify theme-compatible page from `EDENSKYEWEBSITEV2.png`.
+2. Keep current Next.js/Vercel app focused on Edens Closet and private app surfaces.
+3. Replace any temporary signed image URLs with durable assets.
+4. Produce Shopify unpublished theme preview and Vercel preview.
+5. Add both previews to the Drive approval control plane.
 
 ## Completion Receipt Template
 
 ```markdown
 ## Site Completion Receipt
 
-- GitHub commit:
+- Shopify theme repo/branch:
+- Shopify unpublished preview URL:
+- Vercel app commit:
 - Vercel preview URL:
 - Mockup compared:
-- Routes checked:
+- Vercel routes checked:
 - Durable assets confirmed:
-- Shopify track selected:
+- Shopify-to-Vercel routing confirmed:
 - Shopify mutation approval state:
-- Production deploy approval state:
-- Drive control-plane row:
+- Vercel production approval state:
+- Drive control-plane rows:
 - Final status:
 ```
