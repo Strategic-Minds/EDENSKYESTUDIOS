@@ -1,0 +1,78 @@
+{
+  "provider": "heygen",
+  "displayName": "HeyGen MCP",
+  "mcpEndpoint": "https://mcp.heygen.com/mcp/v1/",
+  "transport": "remote_mcp_streamable_http",
+  "authMode": "oauth_via_mcp_client_or_connected_tool_session",
+  "apiKeyRequiredForMcp": false,
+  "directBrowserAutomation": false,
+  "edenRuntimeHasConnectedHeyGenTools": true,
+  "connectionModes": [
+    {
+      "id": "connected_heygen_tools",
+      "name": "Connected HeyGen tools",
+      "status": "available_in_this_runtime",
+      "useFor": ["avatar_videos", "photo_avatar", "prompt_avatar", "voice", "speech", "lipsync", "video_agent", "avatar_look_management"]
+    },
+    {
+      "id": "native_mcp_client",
+      "name": "Native MCP client",
+      "status": "preferred_when_custom_mcp_connectors_are_available",
+      "instructions": [
+        "Add custom MCP connector named HeyGen",
+        "Use URL https://mcp.heygen.com/mcp/v1/",
+        "Sign in with the paid HeyGen account",
+        "List tools to confirm HeyGen tools are available"
+      ]
+    },
+    {
+      "id": "browser_handoff_surface",
+      "name": "Browser handoff surface",
+      "status": "installed",
+      "routes": ["/heygen/bridge", "/api/bridge/heygen/mcp/status", "/api/bridge/heygen/mcp/packet"]
+    }
+  ],
+  "toolFamilies": [
+    "avatar_video_generation",
+    "photo_avatar_creation",
+    "prompt_avatar_creation",
+    "digital_twin",
+    "avatar_looks",
+    "lipsync",
+    "speech",
+    "voice",
+    "video_agent",
+    "video_translation"
+  ],
+  "roleInAutoSocialMax": {
+    "primary": "winner_avatar_video_conversion",
+    "secondary": ["voice_identity", "personalized_video", "video_chat_assets", "creator_personality_continuity"],
+    "notPrimaryFor": ["bulk_first_pass_image_generation", "bulk_cinematic_b_roll"]
+  },
+  "queueContract": {
+    "sourceWorkbookId": "16abS0dwSDs1H33P4FE05RBBukWAHpxq1mWMq3B4H2qA",
+    "sourceWorkbookUrl": "https://docs.google.com/spreadsheets/d/16abS0dwSDs1H33P4FE05RBBukWAHpxq1mWMq3B4H2qA/edit?usp=drivesdk",
+    "preferredSourceSheets": ["CONTENT_QUEUE_7DAY", "APPROVAL_QUEUE", "SYSTEM_RECEIPTS"],
+    "requiredFields": [
+      "queue_id",
+      "source_winner_id",
+      "avatar_or_model",
+      "voice_direction",
+      "script",
+      "format",
+      "aspect_ratio",
+      "duration_target_seconds",
+      "approval_status",
+      "receipt_destination"
+    ]
+  },
+  "governance": {
+    "publicPublishing": "locked",
+    "productionDeploy": "locked",
+    "shopifyMutation": "locked",
+    "paymentsAndDiscounts": "locked",
+    "massEmail": "locked",
+    "receiptsRequired": true,
+    "visualProofRequired": true
+  }
+}

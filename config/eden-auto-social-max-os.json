@@ -1,0 +1,79 @@
+{
+  "systemName": "Eden Skye Auto Social MAX Revised OS v1",
+  "installedAt": "2026-06-07T04:44:25Z",
+  "sourceWorkbook": {
+    "title": "Eden Skye Auto Social MAX Revised OS v1 - 2026-06-07",
+    "spreadsheetId": "16abS0dwSDs1H33P4FE05RBBukWAHpxq1mWMq3B4H2qA",
+    "url": "https://docs.google.com/spreadsheets/d/16abS0dwSDs1H33P4FE05RBBukWAHpxq1mWMq3B4H2qA/edit?usp=drivesdk",
+    "localSourceFile": "user_files/01-AUTO_SOCIAL_MAX_REVISED-1-.xlsx"
+  },
+  "workflow": [
+    "trend_discovery",
+    "hook_generation",
+    "prompt_generation",
+    "media_generation_queue",
+    "drive_supabase_storage",
+    "scoring",
+    "approval",
+    "scheduled_publishing",
+    "analytics",
+    "winner_replication"
+  ],
+  "dailyTargets": {
+    "tiktok": 60,
+    "instagram": 40,
+    "youtube_shorts": 40,
+    "x": 30,
+    "pinterest": 25,
+    "total": 195
+  },
+  "sevenDayQueueSize": 1365,
+  "connectedPublishing": {
+    "metricoolBrandId": "6316987",
+    "metricoolBrandLabel": "thereal_edenskye",
+    "timezone": "America/New_York",
+    "connectedNetworks": ["facebook", "instagram", "tiktok"],
+    "queueOnlyNetworks": ["youtube_shorts", "x", "pinterest"]
+  },
+  "approvalGates": {
+    "publicPublishing": "locked",
+    "productionDeploy": "locked",
+    "shopifyMutation": "locked",
+    "paymentOrDiscountChanges": "locked",
+    "massEmail": "locked",
+    "storefrontOfferChanges": "locked"
+  },
+  "routes": {
+    "adminPreview": "/autopilot/max-os",
+    "statusApi": "/api/autopilot/max-os/status",
+    "sourceSocialLandingPattern": "/social/[platform]"
+  },
+  "supabaseTargetTables": [
+    "hooks",
+    "prompts",
+    "assets",
+    "performance",
+    "leads",
+    "campaigns",
+    "winners",
+    "content_queue",
+    "agent_runs",
+    "tool_receipts",
+    "approval_requests",
+    "social_posts",
+    "media_assets",
+    "shopify_sync_events"
+  ],
+  "mediaTools": {
+    "gpt": "research_hooks_prompts_captions_scoring_replication",
+    "higgsfield": "queue_ready_direct_execution_blocked_until_connector_or_api",
+    "heygen": "winner_avatar_video_conversion_after_approval"
+  },
+  "governance": {
+    "previewBranch": "shopify/v1-website-preview",
+    "productionLocked": true,
+    "publicPostingLocked": true,
+    "receiptsRequired": true,
+    "visualProofRequired": true
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "version": "2026-06-07",
+  "name": "Eden Skye Auto Builder 100 Percent Enhancement Packet",
+  "branch": "shopify/v1-website-preview",
+  "mode": "preview_only",
+  "vercelCron": "*/5 * * * *",
+  "productionLocked": true,
+  "postingLocked": true,
+  "shopifyMutationLocked": true,
+  "paymentDiscountLocked": true,
+  "requiredDocs": [
+    "00_EXECUTIVE_APPROVAL_PACKET.md",
+    "01_END_TO_END_ENHANCEMENT_MAP.md",
+    "02_BLOCKERS_AND_BRIDGES_MATRIX.md",
+    "03_AUTO_BUILDER_5_MINUTE_WORKFLOW_SPEC.md",
+    "04_RULE_BASED_APPROVAL_POLICY.md",
+    "05_IMPLEMENTATION_TICKETS.md",
+    "07_FINAL_APPROVAL_CHECKLIST.md"
+  ],
+  "operatingLoop": [
+    "discover",
+    "plan",
+    "generate",
+    "store",
+    "score",
+    "draft",
+    "approve",
+    "analyze",
+    "evolve"
+  ],
+  "driveApprovalDocument": "https://docs.google.com/document/d/1jIkb7YKlQDTHdubgtiQnlcOOWb_CKmRtb4-CK-Xi5v8/edit?usp=drivesdk"
+}

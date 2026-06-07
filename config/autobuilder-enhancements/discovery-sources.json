@@ -1,0 +1,23 @@
+{
+  "version": "2026-06-07",
+  "sources": [
+    "metricool_best_times",
+    "metricool_analytics",
+    "semrush_keywords",
+    "social_search_trends",
+    "platform_hashtags",
+    "competitor_patterns",
+    "content_library_performance",
+    "shopify_offer_context"
+  ],
+  "dailyOutputs": [
+    "top_subjects",
+    "top_keywords",
+    "top_hashtags",
+    "top_phrases",
+    "best_times",
+    "psychology_angles",
+    "content_gaps",
+    "winner_clone_candidates"
+  ]
+}

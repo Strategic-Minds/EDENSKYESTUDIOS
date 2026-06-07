@@ -6,21 +6,36 @@ The public Shopify page is the black/champagne website mockup shown in Drive: `E
 
 Auto Builder is used as the factory and bridge guide, but the sandbox repo is not the source of truth for Eden Skye Studios.
 
+## Dedicated Shopify V1 Branch
+
+All Shopify V1 public website edits must happen on:
+
+```text
+shopify/v1-website-preview
+```
+
+This branch exists so agents can preview, edit, validate, and compare the Shopify website continuously without confusing it with the Vercel Eden Closet app branch.
+
+Agents editing Shopify website/theme/source files must use this branch and must take screenshot proof after every meaningful visual edit. Screenshot proof should include desktop, mobile, and mockup comparison or diff evidence when available.
+
+No Shopify V1 website work is complete until it has proof against the approved Drive mockup `EDENSKYEWEBSITEV2.png`.
+
 ## Start Here
 
 Read these files before making changes:
 
 1. `START_HERE.md` - first-run operating sequence for every agent.
 2. `AGENTS.md` - repo-level execution rules and approval locks.
-3. `docs/PLAN_MODE_BUILD_MODE.md` - mandatory to-do list format for every new task, workflow, system, or idea.
-4. `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md` - corrected split: Shopify page plus Vercel Closet.
-5. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - Auto Builder packet for the corrected architecture.
-6. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Shopify GitHub theme path and Vercel app routing.
-7. `docs/SITE_FINISH_NOW_CHECKLIST.md` - Shopify page, Vercel app, routing, preview, and approval checklist.
-8. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
-9. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
-10. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
-11. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
+3. `docs/SHOPIFY_V1_PREVIEW_BRANCH.md` - mandatory Shopify V1 preview branch and screenshot-proof contract.
+4. `docs/PLAN_MODE_BUILD_MODE.md` - mandatory to-do list format for every new task, workflow, system, or idea.
+5. `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md` - corrected split: Shopify page plus Vercel Closet.
+6. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - Auto Builder packet for the corrected architecture.
+7. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Shopify GitHub theme path and Vercel app routing.
+8. `docs/SITE_FINISH_NOW_CHECKLIST.md` - Shopify page, Vercel app, routing, preview, and approval checklist.
+9. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
+10. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
+11. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
+12. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
 
 ## Mandatory Operating Rule
 
@@ -37,10 +52,12 @@ Every material build must update the relevant docs before the work is called com
 
 Shopify owns the public commerce website:
 
+- Required branch: `shopify/v1-website-preview`
 - Drive mockup: `EDENSKYEWEBSITEV2.png`
 - Store: `eden-skye-studios.myshopify.com`
 - Surfaces: home page, products, collections, memberships, downloads, licenses, services, checkout
 - Required path: create a Shopify theme-compatible branch/repo before using Shopify GitHub theme integration
+- Required proof: desktop screenshot, mobile screenshot, and mockup comparison/diff evidence after meaningful visual edits
 
 Vercel owns Edens Closet and app/control surfaces:
 
