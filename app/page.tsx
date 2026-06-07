@@ -1,110 +1,84 @@
-const creatorImages = ['eden', 'solara', 'liora', 'nova', 'celeste', 'maya'] as const;
+const libraryUrl = 'https://docs.google.com/spreadsheets/d/1B7tJ46arQP59WnfpEWgXxkG0Drlbsn3ObqS7Tq37mUg/edit?usp=drivesdk';
 
-const navItems = [
-  ['Home', '/'],
-  ['Creators', '#creators'],
-  ['Downloads', '#downloads'],
-  ['Chat', '/login'],
-  ['Video Chat', '/login'],
-  ['Licenses', '#licenses'],
-  ['Products', '#products'],
-  ['Services', '#services']
-] as const;
-
-const railItems = [
-  ['Chat', 'Talk to your favorite creators in real time.', 'Chat Now', '/login', 'chat'],
-  ['Video Chat', 'Face-to-face conversations.', 'Start Video Chat', '/login', 'video'],
-  ['Downloads', 'High-quality images and videos.', 'Browse Content', '#downloads', 'downloads'],
-  ['Licenses', 'Commercial licenses for your projects.', 'View Licenses', '#licenses', 'licenses'],
-  ['Membership', 'Join for unlimited access, exclusive content and VIP perks.', 'Join Now', '/payment', 'membership']
+const models = [
+  ['F01','Eden Skye','Primary icon','#d7a75b','Luxury creator'],
+  ['F02','Solara Vane','Bombshell creator','#f0c978','Resort glow'],
+  ['F03','Liora Vale','Quiet luxury creator','#b78b56','Quiet luxury'],
+  ['F04','Nova Rain','Nightlife creator','#c75f8d','Night luxe'],
+  ['F05','Celeste Noir','Editorial creator','#9d86ff','Couture'],
+  ['F06','Maya Velvet','Soft glamour creator','#c47d6d','Soft glam'],
+  ['F07','Isla Vey','Wellness glamour','#d19b6a','Wellness'],
+  ['F08','Marina Vale','Quiet luxury nightlife','#be8a48','VIP night'],
+  ['F09','Elena Sol','Resort beauty','#edbd66','Travel'],
+  ['F10','Nadia Rose','Fitness elegance','#bb6247','Fitness'],
+  ['F11','Camille Noa','Business beauty','#c19160','Business'],
+  ['F12','Sasha Lumi','Fashion social','#e9d6ad','Social'],
+  ['F13','Priya Saint','Luxury tech','#9cc8c4','Tech'],
+  ['F14','Bianca Hart','Dating confidence','#d8b47a','Confidence'],
+  ['F15','Aurelia Knox','Cinematic fashion','#d86b44','Fashion'],
+  ['F16','Leah Sable','Luxury interiors','#b6a26b','Interior'],
+  ['F17','Aspyn Vale','Supermodel blonde','#e7c475','Runway'],
+  ['F18','Imani Vale','Creator culture','#ff5bb7','Pink streak'],
+  ['M01','Atlas Vale','Luxury fitness lead','#b8a074','Fitness'],
+  ['M02','Roman Skye','Executive luxury','#cfa05d','Executive'],
+  ['M03','Cassian Grey','Cinematic rebel','#a7a7ad','Nightlife'],
+  ['M04','Kai Mercer','Warm lifestyle','#d0a06f','Lifestyle'],
+  ['M05','Dante Lux','High-fashion nightlife','#d6a24e','VIP'],
+  ['M06','Julian Cross','Creative director','#c9b287','Director'],
+  ['M07','Orion Saint','Wellness calm','#98bfa7','Wellness'],
+  ['M08','Nico Voss','European editorial','#b89c7c','Gallery'],
+  ['M09','Rafael Stone','Resort luxury','#e0b76f','Resort'],
+  ['M10','Soren Black','Minimalist couture','#8e9fb7','Couture'],
+  ['M11','Malik Sterling','Silver couture','#c0c4cc','Silver'],
+  ['M12','Theo Hart','Romantic lifestyle','#d5a86f','Lounge']
 ] as const;
 
 const features = [
-  ['Chat', 'Real-time messaging'],
-  ['Video Chat', 'Live face-to-face'],
-  ['Downloads', 'Images & Videos'],
-  ['Licenses', 'Commercial use'],
-  ['Products', 'Digital & Physical'],
-  ['Services', 'Custom solutions'],
-  ['Secure', 'Private & safe'],
-  ['Support', '24/7 Assistance']
+  ['Chat','Real-time messaging'], ['Video Chat','Live face-to-face'], ['Downloads','Images and videos'], ['Licenses','Commercial use'],
+  ['Products','Digital and physical'], ['Services','Custom solutions'], ['Secure','Private and safe'], ['Support','24/7 assistance']
 ] as const;
 
-const creators = [
-  ['Eden Skye', 'eden'],
-  ['Solara Vane', 'solara'],
-  ['Liora Vale', 'liora'],
-  ['Nova Rain', 'nova'],
-  ['Celeste Noir', 'celeste'],
-  ['Maya Velvet', 'maya']
-] as const;
+function initials(name: string) {
+  return name.split(' ').map((part) => part[0]).join('');
+}
 
-const downloads = [
-  ['Beach Day Set', '$24.99', 'beach'],
-  ['Luxury Living', '$24.99', 'luxury'],
-  ['Night Out', '$24.99', 'night'],
-  ['Pool Side 4K', '$24.99', 'pool']
-] as const;
-
-const products = [
-  ['Creator Starter Pack', '$29.00', 'starter'],
-  ['Content Creator Toolkit', '$49.00', 'toolkit'],
-  ['Video Content Pack', '$97.00', 'video-pack'],
-  ['Behind The Scenes Pack', '$79.00', 'bts']
-] as const;
-
-const services = [
-  ['Custom Creator Build', 'Starting at $499', 'custom'],
-  ['Content Creation Service', 'Starting at $999', 'content'],
-  ['Brand Collaborations & Sponsorships', 'Custom Pricing', 'brand']
-] as const;
-
-const trust = [
-  ['100% Secure', 'Your data is protected'],
-  ['Private & Encrypted', 'Bank-level security'],
-  ['Safe Payments', 'Trusted payment processing'],
-  ['24/7 Support', "We're here anytime"],
-  ['Cancel Anytime', 'No contracts. Ever.']
-] as const;
-
-function Sprite({ name, label }: { name: string; label: string }) {
-  return <span className={`sprite sprite-${name}`} aria-label={label} role="img" />;
+function Visual({ model, large = false }: { model: typeof models[number]; large?: boolean }) {
+  const [id, name, role, accent, look] = model;
+  return (
+    <span
+      className={large ? 'avatar avatarLarge' : 'avatar'}
+      style={{ background: `radial-gradient(circle at 50% 22%, ${accent}88, transparent 34%), linear-gradient(140deg, #040404 0%, #17110d 48%, ${accent} 100%)` }}
+      aria-label={`${name} ${look} visual preview`}
+      role="img"
+    >
+      <i>{id}</i><b>{initials(name)}</b><em>{look}</em><small>{role}</small>
+    </span>
+  );
 }
 
 export default function HomePage() {
   return (
     <main className="storefront">
       <header className="siteHeader">
-        <a className="brand" href="/" aria-label="Eden Skye Studios home">
-          <span className="brandMonogram">ES</span>
-          <span className="brandText"><b>EDEN SKYE</b><small>STUDIOS</small></span>
-        </a>
+        <a className="brand" href="/" aria-label="Eden Skye Studios home"><span className="brandMonogram">ES</span><span><b>EDEN SKYE</b><small>STUDIOS</small></span></a>
         <nav className="mainNav" aria-label="Storefront navigation">
-          {navItems.map(([label, href]) => <a key={label} href={href}>{label}</a>)}
+          {['Home','Creators','Downloads','Chat','Video Chat','Licenses','Products','Services'].map((item) => <a key={item} href={item === 'Home' ? '/' : `#${item.toLowerCase().replaceAll(' ', '-')}`}>{item}</a>)}
         </nav>
-        <div className="headerActions">
-          <a className="searchAction" href="#downloads" aria-label="Search downloads">Search</a>
-          <a className="outlineBtn" href="/login">Sign In</a>
-          <a className="goldBtn" href="/payment">Join Now</a>
-        </div>
+        <div className="headerActions"><a className="outlineBtn" href="/login">Sign In</a><a className="goldBtn" href="/payment">Join Now</a></div>
       </header>
 
       <section className="hero" id="home">
-        <div className="heroArt" aria-hidden="true"><Sprite name="hero" label="Eden Skye hero portrait" /></div>
+        <div className="heroArt"><Visual model={models[0]} large /></div>
         <div className="heroCopy">
+          <span className="kicker">30-model Drive library connected</span>
           <h1><span>Creator Experience.</span><strong>Real. Beautiful.<br />Unforgettable.</strong></h1>
           <p>Connect, chat, video chat, download content, unlock exclusive images and videos, and enjoy premium experiences with your favorite creators.</p>
-          <div className="heroCtas">
-            <a className="goldBtn large" href="#creators">Explore Creators</a>
-            <a className="outlineBtn large" href="/payment">Join Now</a>
-          </div>
+          <div className="heroCtas"><a className="goldBtn large" href="#creators">Explore Creators</a><a className="outlineBtn large" href="/payment">Join Now</a></div>
         </div>
-        <aside className="actionRail" aria-label="Eden Skye membership actions">
-          {railItems.map(([title, copy, cta, href, image], index) => (
-            <a className="railCard" href={href} key={title}>
-              <span className="circleIcon">{index + 1}</span>
-              <span className="railCopy"><b>{title}</b><small>{copy}</small><em>{cta}</em></span>
-              <Sprite name={image} label={`${title} preview`} />
+        <aside className="actionRail" aria-label="Membership actions">
+          {['Chat','Video Chat','Downloads','Licenses','Membership'].map((title, index) => (
+            <a className="railCard" href={index < 2 ? '/login' : index === 4 ? '/payment' : '#downloads'} key={title}>
+              <span className="circleIcon">{index + 1}</span><span className="railCopy"><b>{title}</b><small>{index < 2 ? 'Private member access.' : 'Premium creator content.'}</small><em>Open -&gt;</em></span><Visual model={models[index]} />
             </a>
           ))}
         </aside>
@@ -115,58 +89,19 @@ export default function HomePage() {
       </section>
 
       <section className="panel creatorsPanel" id="creators">
-        <div className="sectionHead"><h2>Meet Our Creators</h2><a href="/login">View All</a></div>
+        <div className="sectionHead"><div><span className="eyebrow">Female and male fictional AI creator roster</span><h2>Meet Our Creators</h2></div><a href={libraryUrl}>Open Drive Library</a></div>
         <div className="creatorGrid">
-          {creators.map(([name, image]) => (
-            <a className="creatorCard" href="/login" key={name}>
-              <Sprite name={image} label={`${name} portrait`} />
-              <span><b>{name}</b><small><i />Online</small></span>
-            </a>
-          ))}
+          {models.map((model) => <a className="creatorCard" href="/login" key={model[0]}><Visual model={model} /><span><b>{model[1]}</b><small><i />{model[2]}</small></span></a>)}
         </div>
       </section>
 
       <div className="commerceGrid">
-        <section className="panel" id="downloads">
-          <div className="sectionHead"><h2>Popular Downloads</h2><a href="/payment">View All</a></div>
-          <div className="downloadGrid">
-            {downloads.map(([title, price, image]) => (
-              <a className="commerceCard" href="/payment" key={title}>
-                <Sprite name={image} label={`${title} download`} />
-                <b>{title}</b><span>{price}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel" id="products">
-          <div className="sectionHead"><h2>Top Products</h2><a href="/payment">View All</a></div>
-          <div className="productGrid">
-            {products.map(([title, price, image]) => (
-              <a className="commerceCard productCard" href="/payment" key={title}>
-                <Sprite name={image} label={`${title} product`} />
-                <b>{title}</b><span>{price}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel servicesPanel" id="services">
-          <div className="sectionHead"><h2>Premium Services</h2><a href="/login">View All</a></div>
-          <div className="serviceGrid">
-            {services.map(([title, price, image]) => (
-              <a className="serviceCard" href="/login" key={title}>
-                <Sprite name={image} label={`${title} service`} />
-                <b>{title}</b><span>{price}</span>
-              </a>
-            ))}
-          </div>
-        </section>
+        <section className="panel" id="downloads"><div className="sectionHead"><h2>Popular Downloads</h2><a href="/payment">View All</a></div><div className="downloadGrid">{models.slice(0, 4).map((model) => <a className="commerceCard" href="/payment" key={model[0]}><Visual model={model} /><b>{model[4]} Set</b><span>$24.99</span></a>)}</div></section>
+        <section className="panel" id="products"><div className="sectionHead"><h2>Top Products</h2><a href="/payment">View All</a></div><div className="productGrid">{[['Creator Starter Pack','$29.00',models[0]],['Content Creator Toolkit','$49.00',models[12]],['Video Content Pack','$97.00',models[3]],['Behind The Scenes Pack','$79.00',models[5]]].map(([title, price, model]) => <a className="commerceCard" href="/payment" key={title as string}><Visual model={model as typeof models[number]} /><b>{title as string}</b><span>{price as string}</span></a>)}</div></section>
+        <section className="panel servicesPanel" id="services"><div className="sectionHead"><h2>Premium Services</h2><a href="/login">View All</a></div><div className="serviceGrid">{[['Custom Creator Build','Starting at $499',models[0]],['Content Creation Service','Starting at $999',models[12]],['Brand Collaborations','Custom Pricing',models[18]]].map(([title, price, model]) => <a className="serviceCard" href="/login" key={title as string}><Visual model={model as typeof models[number]} /><b>{title as string}</b><span>{price as string}</span></a>)}</div></section>
       </div>
 
-      <section className="trustStrip" id="licenses" aria-label="Storefront trust signals">
-        {trust.map(([title, copy]) => <div key={title}><b>{title}</b><small>{copy}</small></div>)}
-      </section>
+      <section className="trustStrip" id="licenses">{[['100% Secure','Your data is protected'],['Private and Encrypted','Bank-level security'],['Safe Payments','Trusted payment processing'],['24/7 Support',"We're here anytime"],['Approval Gated','Production stays locked']].map(([title, copy]) => <div key={title}><b>{title}</b><small>{copy}</small></div>)}</section>
     </main>
   );
 }
