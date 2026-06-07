@@ -1,0 +1,16 @@
+{
+  "version": "2026-06-07",
+  "providers": ["higgsfield", "heygen", "metricool", "drive", "supabase", "shopify", "vercel", "github"],
+  "retry": {
+    "maxAttempts": 3,
+    "backoffSeconds": [60, 300, 900],
+    "deadLetterAfterAttempts": 3
+  },
+  "fallbacks": {
+    "higgsfield": ["runway", "openai_image_generation"],
+    "heygen": ["invideo", "descript"],
+    "metricool": ["drive_draft_queue"],
+    "drive": ["supabase_storage_receipt"]
+  },
+  "receiptRequired": true
+}
