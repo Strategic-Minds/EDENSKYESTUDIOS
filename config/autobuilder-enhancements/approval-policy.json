@@ -1,0 +1,46 @@
+{
+  "version": "2026-06-07",
+  "mode": "preview_only",
+  "hardLocks": {
+    "productionDeploy": true,
+    "publicPosting": true,
+    "shopifyMutation": true,
+    "paymentDiscountChanges": true,
+    "massEmail": true,
+    "paidAdSpend": true
+  },
+  "autoApproval": {
+    "level": 1,
+    "allowedActions": [
+      "discover_trends",
+      "create_content_plan",
+      "create_caption_draft",
+      "create_prompt_draft",
+      "queue_image_generation",
+      "queue_video_generation",
+      "store_assets_in_drive",
+      "prepare_metricool_draft",
+      "score_quality",
+      "clone_winner_pattern"
+    ],
+    "requiredChecks": [
+      "brand_safety_pass",
+      "platform_format_pass",
+      "visual_url_present",
+      "quality_score_pass",
+      "non_spam_caption",
+      "approved_category",
+      "timing_window_valid"
+    ]
+  },
+  "manualReviewRequiredFor": [
+    "public_publish",
+    "production_deploy",
+    "shopify_mutation",
+    "payment_or_discount_change",
+    "new_model_persona",
+    "low_quality_score",
+    "policy_risk",
+    "missing_visual"
+  ]
+}
