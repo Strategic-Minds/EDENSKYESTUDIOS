@@ -1,0 +1,71 @@
+{
+  "provider": "higgsfield",
+  "displayName": "Higgsfield MCP",
+  "mcpEndpoint": "https://mcp.higgsfield.ai/mcp",
+  "officialSetupUrl": "https://higgsfield.ai/mcp",
+  "transport": "remote_mcp_streamable_http",
+  "authMode": "oauth_via_mcp_client",
+  "apiKeyRequired": false,
+  "directBrowserAutomation": false,
+  "connectionModes": [
+    {
+      "id": "native_mcp_client",
+      "name": "Native MCP client",
+      "status": "preferred",
+      "instructions": [
+        "Add custom MCP connector named Higgsfield",
+        "Use URL https://mcp.higgsfield.ai/mcp",
+        "Sign in with the Higgsfield account",
+        "List tools to confirm generation tools are available"
+      ]
+    },
+    {
+      "id": "browser_handoff_surface",
+      "name": "Browser handoff surface",
+      "status": "installed",
+      "routes": ["/higgsfield/bridge", "/api/bridge/higgsfield/mcp/status", "/api/bridge/higgsfield/mcp/packet"]
+    },
+    {
+      "id": "dedicated_worker",
+      "name": "Dedicated MCP worker",
+      "status": "future_approval_required",
+      "requirements": ["secure OAuth/session storage", "budget caps", "queue lock", "receipt logging", "approval gates"]
+    }
+  ],
+  "toolFamilies": [
+    "image_generation",
+    "video_generation",
+    "video_analysis",
+    "marketing_video_generation",
+    "soul_character_training",
+    "image_to_video",
+    "viral_clip_generation",
+    "virality_prediction",
+    "generation_history"
+  ],
+  "queueContract": {
+    "sourceWorkbookId": "16abS0dwSDs1H33P4FE05RBBukWAHpxq1mWMq3B4H2qA",
+    "sourceWorkbookUrl": "https://docs.google.com/spreadsheets/d/16abS0dwSDs1H33P4FE05RBBukWAHpxq1mWMq3B4H2qA/edit?usp=drivesdk",
+    "sourceSheet": "CONTENT_QUEUE_7DAY",
+    "requiredFields": [
+      "queue_id",
+      "platform",
+      "model_or_persona",
+      "format",
+      "hook",
+      "prompt",
+      "aspect_ratio",
+      "approval_status",
+      "receipt_destination"
+    ]
+  },
+  "governance": {
+    "publicPublishing": "locked",
+    "productionDeploy": "locked",
+    "shopifyMutation": "locked",
+    "paymentsAndDiscounts": "locked",
+    "massEmail": "locked",
+    "receiptsRequired": true,
+    "visualProofRequired": true
+  }
+}
