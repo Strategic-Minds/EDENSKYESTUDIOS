@@ -1,0 +1,16 @@
+{
+  "version": "2026-06-07",
+  "defaultMix": {
+    "glamour_editorial": 25,
+    "behind_the_scenes": 15,
+    "faceless_luxury": 15,
+    "avatar_voice": 10,
+    "shopify_soft_sell": 10,
+    "relationship_psychology": 10,
+    "trend_reactive": 10,
+    "international_localized": 5
+  },
+  "platforms": ["instagram", "facebook", "tiktok", "x", "pinterest", "snapchat"],
+  "primaryConnectedPlatforms": ["instagram", "facebook", "tiktok"],
+  "postingMode": "draft_only_until_approved"
+}
