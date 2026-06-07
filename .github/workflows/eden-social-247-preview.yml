@@ -1,5 +1,7 @@
 name: Eden Social 24/7 Preview
 
+# Installer workflow for the Eden Auto Builder 100 percent enhancement packet.
+
 on:
   push:
     branches:
