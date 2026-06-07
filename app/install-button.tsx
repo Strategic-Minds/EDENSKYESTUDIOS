@@ -1,0 +1,54 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+};
+
+export default function InstallButton() {
+  const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installed, setInstalled] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setInstalled(true);
+    }
+
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setPromptEvent(event as BeforeInstallPromptEvent);
+    };
+
+    const handleInstalled = () => {
+      setInstalled(true);
+      setPromptEvent(null);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleInstalled);
+    };
+  }, []);
+
+  const install = async () => {
+    if (!promptEvent) return;
+    await promptEvent.prompt();
+    await promptEvent.userChoice;
+    setPromptEvent(null);
+  };
+
+  if (installed) {
+    return <span className="installBadge">App installed</span>;
+  }
+
+  return (
+    <button className="installButton" type="button" onClick={install} aria-label="Install Eden Skye Studios mobile app">
+      Install Mobile App
+    </button>
+  );
+}
