@@ -1,6 +1,6 @@
-const approvedMockup = 'https://drive.google.com/uc?export=view&id=1xaDrBNIaXSwmtdothIZvZSczDjqX6qTR';
+const creatorImages = ['eden', 'solara', 'liora', 'nova', 'celeste', 'maya'] as const;
 
-const navLinks = [
+const navItems = [
   ['Home', '/'],
   ['Creators', '#creators'],
   ['Downloads', '#downloads'],
@@ -11,83 +11,161 @@ const navLinks = [
   ['Services', '#services']
 ] as const;
 
-const creatorNames = ['Eden Skye', 'Solara Vane', 'Liora Vale', 'Nova Rain', 'Celeste Noir', 'Maya Velvet'] as const;
-
-const downloads = ['Beach Day Set', 'Luxury Living', 'Night Out', 'Pool Side 4K'] as const;
-
-const products = [
-  ['Creator Starter Pack', '$29.00'],
-  ['Content Creator Toolkit', '$49.00'],
-  ['Video Content Pack', '$97.00'],
-  ['Behind The Scenes Pack', '$79.00']
+const railItems = [
+  ['Chat', 'Talk to your favorite creators in real time.', 'Chat Now', '/login', 'chat'],
+  ['Video Chat', 'Face-to-face conversations.', 'Start Video Chat', '/login', 'video'],
+  ['Downloads', 'High-quality images and videos.', 'Browse Content', '#downloads', 'downloads'],
+  ['Licenses', 'Commercial licenses for your projects.', 'View Licenses', '#licenses', 'licenses'],
+  ['Membership', 'Join for unlimited access, exclusive content and VIP perks.', 'Join Now', '/payment', 'membership']
 ] as const;
 
-const services = ['Custom Creator Build', 'Content Creation Service', 'Brand Collaborations & Sponsorships'] as const;
+const features = [
+  ['Chat', 'Real-time messaging'],
+  ['Video Chat', 'Live face-to-face'],
+  ['Downloads', 'Images & Videos'],
+  ['Licenses', 'Commercial use'],
+  ['Products', 'Digital & Physical'],
+  ['Services', 'Custom solutions'],
+  ['Secure', 'Private & safe'],
+  ['Support', '24/7 Assistance']
+] as const;
+
+const creators = [
+  ['Eden Skye', 'eden'],
+  ['Solara Vane', 'solara'],
+  ['Liora Vale', 'liora'],
+  ['Nova Rain', 'nova'],
+  ['Celeste Noir', 'celeste'],
+  ['Maya Velvet', 'maya']
+] as const;
+
+const downloads = [
+  ['Beach Day Set', '$24.99', 'beach'],
+  ['Luxury Living', '$24.99', 'luxury'],
+  ['Night Out', '$24.99', 'night'],
+  ['Pool Side 4K', '$24.99', 'pool']
+] as const;
+
+const products = [
+  ['Creator Starter Pack', '$29.00', 'starter'],
+  ['Content Creator Toolkit', '$49.00', 'toolkit'],
+  ['Video Content Pack', '$97.00', 'video-pack'],
+  ['Behind The Scenes Pack', '$79.00', 'bts']
+] as const;
+
+const services = [
+  ['Custom Creator Build', 'Starting at $499', 'custom'],
+  ['Content Creation Service', 'Starting at $999', 'content'],
+  ['Brand Collaborations & Sponsorships', 'Custom Pricing', 'brand']
+] as const;
+
+const trust = [
+  ['100% Secure', 'Your data is protected'],
+  ['Private & Encrypted', 'Bank-level security'],
+  ['Safe Payments', 'Trusted payment processing'],
+  ['24/7 Support', "We're here anytime"],
+  ['Cancel Anytime', 'No contracts. Ever.']
+] as const;
+
+function Sprite({ name, label }: { name: string; label: string }) {
+  return <span className={`sprite sprite-${name}`} aria-label={label} role="img" />;
+}
 
 export default function HomePage() {
   return (
-    <main className="approvedSite" aria-label="Eden Skye Studios approved Shopify V1 website mockup">
-      <section className="mockupFrame" aria-label="Approved Eden Skye storefront preview">
-        <img className="approvedMockup" src={approvedMockup} alt="Approved Eden Skye Studios Shopify V1 website mockup" />
+    <main className="storefront">
+      <header className="siteHeader">
+        <a className="brand" href="/" aria-label="Eden Skye Studios home">
+          <span className="brandMonogram">ES</span>
+          <span className="brandText"><b>EDEN SKYE</b><small>STUDIOS</small></span>
+        </a>
+        <nav className="mainNav" aria-label="Storefront navigation">
+          {navItems.map(([label, href]) => <a key={label} href={href}>{label}</a>)}
+        </nav>
+        <div className="headerActions">
+          <a className="searchAction" href="#downloads" aria-label="Search downloads">Search</a>
+          <a className="outlineBtn" href="/login">Sign In</a>
+          <a className="goldBtn" href="/payment">Join Now</a>
+        </div>
+      </header>
 
-        <a className="hotspot brandHotspot" href="/" aria-label="Eden Skye Studios home" />
-        {navLinks.map(([label, href], index) => (
-          <a key={label} className={`hotspot navHotspot navHotspot${index + 1}`} href={href} aria-label={label} />
-        ))}
-        <a className="hotspot searchHotspot" href="#downloads" aria-label="Search downloads" />
-        <a className="hotspot signInHotspot" href="/login" aria-label="Sign in" />
-        <a className="hotspot joinHotspot" href="/payment" aria-label="Join now" />
-        <a className="hotspot exploreHotspot" href="#creators" aria-label="Explore creators" />
-        <a className="hotspot heroJoinHotspot" href="/payment" aria-label="Join now" />
-
-        {['chat', 'video-chat', 'downloads', 'licenses', 'membership'].map((id, index) => (
-          <a key={id} className={`hotspot railHotspot railHotspot${index + 1}`} href={index < 2 ? '/login' : index === 4 ? '/payment' : `#${id}`} aria-label={id.replace('-', ' ')} />
-        ))}
-
-        {creatorNames.map((name, index) => (
-          <a key={name} className={`hotspot creatorHotspot creatorHotspot${index + 1}`} href="/login" aria-label={`${name} creator profile`} />
-        ))}
-
-        {downloads.map((name, index) => (
-          <a key={name} className={`hotspot downloadHotspot downloadHotspot${index + 1}`} href="/payment" aria-label={`${name} download`} />
-        ))}
-
-        {products.map(([name], index) => (
-          <a key={name} className={`hotspot productHotspot productHotspot${index + 1}`} href="/payment" aria-label={`${name} product`} />
-        ))}
-
-        {services.map((name, index) => (
-          <a key={name} className={`hotspot serviceHotspot serviceHotspot${index + 1}`} href="/login" aria-label={`${name} service`} />
-        ))}
+      <section className="hero" id="home">
+        <div className="heroArt" aria-hidden="true"><Sprite name="hero" label="Eden Skye hero portrait" /></div>
+        <div className="heroCopy">
+          <h1><span>Creator Experience.</span><strong>Real. Beautiful.<br />Unforgettable.</strong></h1>
+          <p>Connect, chat, video chat, download content, unlock exclusive images and videos, and enjoy premium experiences with your favorite creators.</p>
+          <div className="heroCtas">
+            <a className="goldBtn large" href="#creators">Explore Creators</a>
+            <a className="outlineBtn large" href="/payment">Join Now</a>
+          </div>
+        </div>
+        <aside className="actionRail" aria-label="Eden Skye membership actions">
+          {railItems.map(([title, copy, cta, href, image], index) => (
+            <a className="railCard" href={href} key={title}>
+              <span className="circleIcon">{index + 1}</span>
+              <span className="railCopy"><b>{title}</b><small>{copy}</small><em>{cta}</em></span>
+              <Sprite name={image} label={`${title} preview`} />
+            </a>
+          ))}
+        </aside>
       </section>
 
-      <section className="mobileStorefront" aria-label="Mobile Eden Skye storefront">
-        <header>
-          <span>ES</span>
-          <div><b>EDEN SKYE</b><small>STUDIOS</small></div>
-        </header>
-        <img src={approvedMockup} alt="Approved Eden Skye Studios website design" />
-        <h1>Creator Experience. <strong>Real. Beautiful. Unforgettable.</strong></h1>
-        <p>Connect, chat, video chat, download content, unlock exclusive images and videos, and enjoy premium experiences with your favorite creators.</p>
-        <div className="mobileActions">
-          <a href="#creators">Explore Creators</a>
-          <a href="/payment">Join Now</a>
+      <section className="featureStrip" aria-label="Primary features">
+        {features.map(([title, copy]) => <a href={`#${title.toLowerCase().replaceAll(' ', '-')}`} key={title}><b>{title}</b><small>{copy}</small></a>)}
+      </section>
+
+      <section className="panel creatorsPanel" id="creators">
+        <div className="sectionHead"><h2>Meet Our Creators</h2><a href="/login">View All</a></div>
+        <div className="creatorGrid">
+          {creators.map(([name, image]) => (
+            <a className="creatorCard" href="/login" key={name}>
+              <Sprite name={image} label={`${name} portrait`} />
+              <span><b>{name}</b><small><i />Online</small></span>
+            </a>
+          ))}
         </div>
-        <nav>
-          {navLinks.map(([label, href]) => <a key={label} href={href}>{label}</a>)}
-        </nav>
-        <div className="mobileSections" id="creators">
-          <h2>Meet Our Creators</h2>
-          {creatorNames.map((name) => <a href="/login" key={name}>{name}<small>Online</small></a>)}
-        </div>
-        <div className="mobileSections" id="downloads">
-          <h2>Popular Downloads</h2>
-          {downloads.map((name) => <a href="/payment" key={name}>{name}<small>$24.99</small></a>)}
-        </div>
-        <div className="mobileSections" id="products">
-          <h2>Top Products</h2>
-          {products.map(([name, price]) => <a href="/payment" key={name}>{name}<small>{price}</small></a>)}
-        </div>
+      </section>
+
+      <div className="commerceGrid">
+        <section className="panel" id="downloads">
+          <div className="sectionHead"><h2>Popular Downloads</h2><a href="/payment">View All</a></div>
+          <div className="downloadGrid">
+            {downloads.map(([title, price, image]) => (
+              <a className="commerceCard" href="/payment" key={title}>
+                <Sprite name={image} label={`${title} download`} />
+                <b>{title}</b><span>{price}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="panel" id="products">
+          <div className="sectionHead"><h2>Top Products</h2><a href="/payment">View All</a></div>
+          <div className="productGrid">
+            {products.map(([title, price, image]) => (
+              <a className="commerceCard productCard" href="/payment" key={title}>
+                <Sprite name={image} label={`${title} product`} />
+                <b>{title}</b><span>{price}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="panel servicesPanel" id="services">
+          <div className="sectionHead"><h2>Premium Services</h2><a href="/login">View All</a></div>
+          <div className="serviceGrid">
+            {services.map(([title, price, image]) => (
+              <a className="serviceCard" href="/login" key={title}>
+                <Sprite name={image} label={`${title} service`} />
+                <b>{title}</b><span>{price}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <section className="trustStrip" id="licenses" aria-label="Storefront trust signals">
+        {trust.map(([title, copy]) => <div key={title}><b>{title}</b><small>{copy}</small></div>)}
       </section>
     </main>
   );
