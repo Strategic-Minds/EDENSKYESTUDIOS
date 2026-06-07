@@ -1,0 +1,13 @@
+{
+  "version": "2026-06-07",
+  "enabled": true,
+  "mode": "platform_safe_localization",
+  "regions": ["US", "Canada", "UK", "Australia", "EU", "Latin America"],
+  "requirements": [
+    "preserve fictional AI disclosure boundary",
+    "avoid stereotypes",
+    "adapt hooks and timing by platform data",
+    "keep visuals premium and non-explicit",
+    "route new locale strategies to review before scale"
+  ]
+}
