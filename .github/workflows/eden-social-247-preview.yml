@@ -1,0 +1,104 @@
+name: Eden Social 24/7 Preview
+
+on:
+  push:
+    branches:
+      - shopify/v1-website-preview
+    paths:
+      - autobuilder/eden-enhancement-install.zip.b64
+      - .github/workflows/eden-social-247-preview.yml
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        default: preview
+      production_locked:
+        description: Must remain true unless separately approved
+        required: true
+        default: "true"
+      posting_locked:
+        description: Must remain true unless separate posting policy is approved
+        required: true
+        default: "true"
+      reason:
+        description: Reason for preview run
+        required: false
+        default: "Eden social 24/7 enhancement preview"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  install-preview-enhancements:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || (github.event.inputs.environment == 'preview' && github.event.inputs.production_locked == 'true' && github.event.inputs.posting_locked == 'true') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: shopify/v1-website-preview
+          fetch-depth: 0
+
+      - name: Apply Eden enhancement installer packet
+        run: |
+          set -euo pipefail
+          test -f autobuilder/eden-enhancement-install.zip.b64
+          base64 -d autobuilder/eden-enhancement-install.zip.b64 > /tmp/eden-enhancement-install.zip
+          unzip -o /tmp/eden-enhancement-install.zip -d .
+          test -f docs/eden-skye/autobuilder-enhancements/00_EXECUTIVE_APPROVAL_PACKET.md
+          test -f docs/eden-skye/autobuilder-enhancements/01_END_TO_END_ENHANCEMENT_MAP.md
+          test -f docs/eden-skye/autobuilder-enhancements/02_BLOCKERS_AND_BRIDGES_MATRIX.md
+          test -f docs/eden-skye/autobuilder-enhancements/03_AUTO_BUILDER_5_MINUTE_WORKFLOW_SPEC.md
+          test -f docs/eden-skye/autobuilder-enhancements/04_RULE_BASED_APPROVAL_POLICY.md
+          test -f docs/eden-skye/autobuilder-enhancements/05_IMPLEMENTATION_TICKETS.md
+          test -f docs/eden-skye/autobuilder-enhancements/07_FINAL_APPROVAL_CHECKLIST.md
+          test -f config/autobuilder-enhancements/approval-policy.json
+          test -f config/autobuilder-enhancements/content-mix-policy.json
+          test -f config/autobuilder-enhancements/discovery-sources.json
+          test -f config/autobuilder-enhancements/international-content-policy.json
+          test -f config/autobuilder-enhancements/provider-retry-policy.json
+          test -f config/autobuilder-enhancements/eden-100-percent-enhancement-manifest.json
+          test -f vercel.json
+
+      - name: Validate approval locks and 5-minute preview cadence
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
+          const schedules = (vercel.crons || []).map((cron) => cron.schedule);
+          if (!schedules.includes('*/5 * * * *')) {
+            throw new Error('Vercel cron must include */5 * * * * for preview cadence');
+          }
+          const approval = JSON.parse(fs.readFileSync('config/autobuilder-enhancements/approval-policy.json', 'utf8'));
+          if (approval.hardLocks.productionDeploy !== true) throw new Error('Production deploy lock missing');
+          if (approval.hardLocks.publicPosting !== true) throw new Error('Public posting lock missing');
+          if (approval.hardLocks.shopifyMutation !== true) throw new Error('Shopify mutation lock missing');
+          if (approval.hardLocks.paymentDiscountChanges !== true) throw new Error('Payment/discount lock missing');
+          const manifest = JSON.parse(fs.readFileSync('config/autobuilder-enhancements/eden-100-percent-enhancement-manifest.json', 'utf8'));
+          if (manifest.productionLocked !== true || manifest.postingLocked !== true) {
+            throw new Error('Manifest locks missing');
+          }
+          console.log('Eden preview enhancement locks validated. Production and posting remain locked.');
+          NODE
+
+      - name: Commit installed packet files
+        run: |
+          set -euo pipefail
+          git config user.name "eden-autobuilder[bot]"
+          git config user.email "eden-autobuilder[bot]@users.noreply.github.com"
+          git add docs/eden-skye/autobuilder-enhancements config/autobuilder-enhancements vercel.json
+          if git diff --cached --quiet; then
+            echo "No installer changes to commit."
+          else
+            git commit -m "Install Eden Auto Builder 100 percent enhancement packet"
+            git push origin HEAD:shopify/v1-website-preview
+          fi
+
+      - name: Preview completion receipt
+        run: |
+          echo "Eden Auto Builder enhancement packet installed in preview branch."
+          echo "Production deploy locked: true"
+          echo "Public posting locked: true"
+          echo "Vercel preview cron requested: */5 * * * *"
