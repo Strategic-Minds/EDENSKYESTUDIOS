@@ -1,0 +1,137 @@
+name: Eden Visual Layer Browser QA
+
+on:
+  push:
+    branches:
+      - feature/eden-skye-automation-v1
+    paths:
+      - app/page.tsx
+      - public/eden-assets/**
+      - .github/workflows/eden-visual-layer-browser-qa.yml
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: Preview URL to verify
+        required: false
+        default: https://edenskyestudios-ii9nsu5nb-strategic-minds-advisory.vercel.app/
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  browser-qa:
+    name: Desktop and mobile visual layer verification
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.48.2-noble
+    env:
+      PREVIEW_URL: ${{ github.event.inputs.preview_url || 'https://edenskyestudios-ii9nsu5nb-strategic-minds-advisory.vercel.app/' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Playwright package
+        run: npm install --no-save playwright@1.48.2
+
+      - name: Verify Eden image lanes and capture screenshots
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
+
+          const previewUrl = process.env.PREVIEW_URL;
+          const expected = [
+            { lane: 'hero', src: '/eden-assets/eden-hero.svg', section: '.hero' },
+            { lane: 'female', src: '/eden-assets/eden-female-roster.svg', section: '#models' },
+            { lane: 'international', src: '/eden-assets/eden-international-roster.svg', section: '#models' },
+            { lane: 'mature', src: '/eden-assets/eden-mature-roster.svg', section: '#models' },
+            { lane: 'male', src: '/eden-assets/eden-male-roster.svg', section: '#models' },
+            { lane: 'faceless', src: '/eden-assets/eden-faceless-themes.svg', section: '#services' }
+          ];
+
+          function normalizePath(value) {
+            if (!value) return '';
+            try {
+              return new URL(value, previewUrl).pathname;
+            } catch {
+              return value;
+            }
+          }
+
+          async function verifyAtViewport(page, label, viewport) {
+            await page.setViewportSize(viewport);
+            const response = await page.goto(previewUrl, { waitUntil: 'networkidle', timeout: 90000 });
+            if (!response || response.status() >= 400) {
+              throw new Error(`${label}: preview returned ${response ? response.status() : 'no response'}`);
+            }
+            await page.waitForSelector('img[src="/eden-assets/eden-hero.svg"]', { timeout: 30000 });
+            await page.evaluate(() => Promise.all(Array.from(document.images).map((img) => {
+              if (img.complete && img.naturalWidth > 0) return true;
+              return new Promise((resolve, reject) => {
+                img.addEventListener('load', () => resolve(true), { once: true });
+                img.addEventListener('error', () => reject(new Error(`Image failed: ${img.getAttribute('src')}`)), { once: true });
+              });
+            })));
+
+            const imageInfo = await page.evaluate((expected) => expected.map((item) => {
+              const img = Array.from(document.images).find((candidate) => new URL(candidate.currentSrc || candidate.src, window.location.href).pathname === item.src);
+              if (!img) return { ...item, found: false };
+              const rect = img.getBoundingClientRect();
+              return {
+                ...item,
+                found: true,
+                currentPath: new URL(img.currentSrc || img.src, window.location.href).pathname,
+                naturalWidth: img.naturalWidth,
+                naturalHeight: img.naturalHeight,
+                renderedWidth: Math.round(rect.width),
+                renderedHeight: Math.round(rect.height),
+                visible: rect.width > 20 && rect.height > 20
+              };
+            }), expected);
+
+            const missing = imageInfo.filter((item) => !item.found || !item.visible || item.naturalWidth <= 0 || item.naturalHeight <= 0);
+            if (missing.length) {
+              throw new Error(`${label}: invalid lane images ${JSON.stringify(missing, null, 2)}`);
+            }
+
+            await page.screenshot({ path: `artifacts/eden-${label}-full-page.png`, fullPage: true });
+            await page.locator('.hero').screenshot({ path: `artifacts/eden-${label}-hero.png` });
+            await page.locator('#models').screenshot({ path: `artifacts/eden-${label}-model-rail.png` });
+            await page.locator('#services').screenshot({ path: `artifacts/eden-${label}-service-cards.png` });
+            return imageInfo;
+          }
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage();
+            const failedRequests = [];
+            page.on('requestfailed', request => failedRequests.push({ url: request.url(), error: request.failure()?.errorText || 'unknown' }));
+
+            const desktop = await verifyAtViewport(page, 'desktop', { width: 1440, height: 1200 });
+            const mobile = await verifyAtViewport(page, 'mobile', { width: 390, height: 1200 });
+
+            const summary = {
+              ok: true,
+              previewUrl,
+              verifiedAt: new Date().toISOString(),
+              expectedAssetPaths: expected.map((item) => item.src),
+              desktop,
+              mobile,
+              failedRequests
+            };
+            fs.writeFileSync('artifacts/eden-visual-layer-browser-qa.json', JSON.stringify(summary, null, 2));
+            await browser.close();
+          })().catch(async (error) => {
+            fs.writeFileSync('artifacts/eden-visual-layer-browser-qa-error.txt', error.stack || String(error));
+            throw error;
+          });
+          NODE
+
+      - name: Upload browser QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-visual-layer-browser-qa
+          path: artifacts/
+          if-no-files-found: error
