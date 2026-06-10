@@ -1,56 +1,88 @@
 <main id="MainContent" class="ess-page" data-xyla-page="home">
   <header class="ess-header" data-xyla-section="site-header">
-    <a class="ess-brand" href="/">
-      <span>EDEN <strong>SKYE</strong> STUDIOS</span>
-      <em>Digital Modeling & Content Creator Agency</em>
+    <a class="ess-brand" href="/" aria-label="Eden Skye Studios home">
+      <span class="ess-logo">EDEN <span>SKYE</span> STUDIOS</span>
+      <em>DIGITAL MODELING & CONTENT CREATOR AGENCY</em>
     </a>
     <nav class="ess-nav" aria-label="Main navigation">
       <a href="/">Home</a>
-      <a href="/pages/models">Models</a>
+      <a href="/#about">About</a>
+      <a href="/#models">Models</a>
+      <a href="/#services">Services</a>
       <a href="/pages/auto-social">Auto Social</a>
       <a href="/pages/brand-partners">Brand Partners</a>
-      <a href="/pages/image-library">Image Library</a>
       <a href="/pages/apply">Apply</a>
+      <a href="/pages/pwa-app">PWA App</a>
       <a href="/pages/contact">Contact</a>
     </nav>
     <a class="ess-apply" href="/pages/apply">Apply Now</a>
+    <a class="ess-download" href="/pages/image-library" aria-label="Open image library">v</a>
   </header>
 
-  <section class="ess-hero" data-xyla-section="hero">
+  <section class="ess-hero" data-xyla-section="hero" data-xyla-image-key="drive-home-reference">
     <div class="ess-hero-copy">
-      <p>Welcome to Eden Skye Studios</p>
+      <p class="ess-kicker">Welcome to Eden Skye Studios</p>
       <h1>Beauty.<br><strong>Influence.</strong><br>Impact.</h1>
-      <div class="ess-sub">We represent digital models and content creators. We build iconic brands, create viral content, and prepare governed content feeds for Shopify and Xyla AI.</div>
+      <div class="ess-sub">We represent elite digital models and content creators. We build iconic brands. We create viral content. We drive results.</div>
       <div class="ess-cta">
         <a href="/pages/apply">Apply Now</a>
-        <a href="/pages/models">View Our Models</a>
+        <a href="/#models">View Our Models</a>
+      </div>
+      <div class="ess-stats">
+        <div><span>100+</span><b>Models</b></div>
+        <div><span>24/7</span><b>Content</b></div>
+        <div><span>Global</span><b>Reach</b></div>
+        <div><span>Premium</span><b>Brands</b></div>
       </div>
     </div>
   </section>
 
-  <section class="ess-difference" data-xyla-section="difference">
-    <h2>The Eden Skye Studios Difference</h2>
+  <section class="ess-difference" id="about" data-xyla-section="difference">
+    <h2>The <span>Eden Skye Studios</span> Difference</h2>
     <div class="ess-diff-grid">
-      <article data-xyla-card="elite-talent"><b>Elite Talent</b><p>Model and creator profiles mapped to approved content lanes.</p></article>
-      <article data-xyla-card="viral-content"><b>Viral Content</b><p>Draft-first campaign content built for review and approval.</p></article>
-      <article data-xyla-card="shopify-bridge"><b>Shopify Bridge</b><p>Pages, product content, collections, and image assets structured for Xyla AI.</p></article>
-      <article data-xyla-card="image-library"><b>Image Library</b><p>Reusable visual assets connected to automation-safe metadata.</p></article>
+      <article data-xyla-card="elite-talent"><span class="icon">01</span><div><b>Elite Talent</b><p>Top 1% of digital models and content creators.</p></div></article>
+      <article data-xyla-card="viral-content"><span class="icon">02</span><div><b>Viral Content</b><p>High-converting content that drives engagement.</p></div></article>
+      <article data-xyla-card="global-reach"><span class="icon">03</span><div><b>Global Reach</b><p>Worldwide audience. Limitless opportunity.</p></div></article>
+      <article data-xyla-card="premium-brands"><span class="icon">04</span><div><b>Premium Brands</b><p>We connect talent with iconic brands.</p></div></article>
+      <article data-xyla-card="maximum-profit"><span class="icon">05</span><div><b>Maximum Profit</b><p>Built for creators. Designed for results.</p></div></article>
     </div>
   </section>
 
-  <section class="ess-services" data-xyla-section="services">
-    <a href="/pages/auto-social" data-xyla-card="auto-social"><h3>Auto Social</h3><p>Shopify content automation for Xyla AI, image reuse, video prompts, and campaign drafts.</p><span>Open Workflow</span></a>
-    <a href="/pages/brand-partners" data-xyla-card="brand-partners"><h3>Brand Partnerships</h3><p>Creator, campaign, and product surfaces for brands and content partners.</p><span>Start Partnership</span></a>
-    <a href="/pages/image-library" data-xyla-card="image-library"><h3>Image Library</h3><p>Human-readable page plus JSON manifest for automation systems.</p><span>View Library</span></a>
+  <section class="ess-models" id="models" data-xyla-section="models">
+    <div class="ess-section-head"><h2>Our Models</h2><a href="/pages/models">View all models -></a></div>
+    <div class="ess-model-wrap">
+      <button class="ess-scroll" type="button" data-eden-scroll="left" aria-label="Scroll models left">‹</button>
+      <div class="ess-model-row" data-eden-carousel>
+        <a class="ess-model model-1" href="/pages/models#luna-moretti" data-xyla-model="luna-moretti"><span><b>Luna Moretti</b><em>The Mystery</em></span></a>
+        <a class="ess-model model-2" href="/pages/models#sienna-cole" data-xyla-model="sienna-cole"><span><b>Sienna Cole</b><em>The Sunshine</em></span></a>
+        <a class="ess-model model-3" href="/pages/models#natalia-vega" data-xyla-model="natalia-vega"><span><b>Natalia Vega</b><em>The Temptress</em></span></a>
+        <a class="ess-model model-4" href="/pages/models#zoey-parker" data-xyla-model="zoey-parker"><span><b>Zoey Parker</b><em>The Girl Next Door</em></span></a>
+        <a class="ess-model model-5" href="/pages/models#aria-reyes" data-xyla-model="aria-reyes"><span><b>Aria Reyes</b><em>The Driver</em></span></a>
+        <a class="ess-model model-6" href="/pages/models#camila-santos" data-xyla-model="camila-santos"><span><b>Camila Santos</b><em>The Exotic</em></span></a>
+        <a class="ess-model model-7" href="/pages/models#hailey-james" data-xyla-model="hailey-james"><span><b>Hailey James</b><em>The Athlete</em></span></a>
+        <a class="ess-model model-8" href="/pages/models#isabella-ruiz" data-xyla-model="isabella-ruiz"><span><b>Isabella Ruiz</b><em>The Beach Girl</em></span></a>
+        <a class="ess-model model-9" href="/pages/models#viviana-osa" data-xyla-model="viviana-osa"><span><b>Viviana Osa</b><em>The Bombshell</em></span></a>
+        <a class="ess-model model-10" href="/pages/models#kayla-brooks" data-xyla-model="kayla-brooks"><span><b>Kayla Brooks</b><em>The Wild Card</em></span></a>
+        <a class="ess-model model-11" href="/pages/models#raven-hart" data-xyla-model="raven-hart"><span><b>Raven Hart</b><em>The Rebel</em></span></a>
+        <a class="ess-model model-12" href="/pages/models#alexa-monroe" data-xyla-model="alexa-monroe"><span><b>Alexa Monroe</b><em>The It Girl</em></span></a>
+      </div>
+      <button class="ess-scroll" type="button" data-eden-scroll="right" aria-label="Scroll models right">›</button>
+    </div>
+  </section>
+
+  <section class="ess-services" id="services" data-xyla-section="services">
+    <a class="ess-service" href="/pages/apply" data-xyla-card="creator-production"><div><h3>Creator<br><strong>Production</strong></h3><p>Full-service content creation. Photoshoots, video production, editing, and strategy.</p><span>Learn More</span></div></a>
+    <a class="ess-service" href="/pages/auto-social" data-xyla-card="auto-social"><div><h3><strong>Auto Social</strong></h3><p>Your 24/7 content engine. We create. We post. We grow. You profit.</p><span>Learn More</span></div></a>
+    <a class="ess-service" href="/pages/brand-partners" data-xyla-card="brand-partnerships"><div><h3>Brand<br><strong>Partnerships</strong></h3><p>Strategic collaborations with iconic brands that elevate talent.</p><span>Learn More</span></div></a>
+  </section>
+
+  <section class="ess-app" data-xyla-section="pwa-app">
+    <div class="ess-phone">ES</div>
+    <div><h2>The Eden Skye App</h2><p>Your agency, in your pocket.</p><div class="ess-chips"><span>Exclusive Content</span><span>Model Updates</span><span>Early Access</span><span>Direct Connection</span></div></div>
+    <a class="ess-install" href="/pages/pwa-app">Install Now</a>
   </section>
 </main>
 
 {% schema %}
-{
-  "name": "Eden Skye Home",
-  "settings": [],
-  "presets": [
-    { "name": "Eden Skye Home" }
-  ]
-}
+{"name":"Eden Skye Home","settings":[],"presets":[{"name":"Eden Skye Home"}]}
 {% endschema %}
