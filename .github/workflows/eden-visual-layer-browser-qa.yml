@@ -36,6 +36,7 @@ jobs:
 
       - name: Verify Eden image lanes and capture screenshots
         run: |
+          # This browser worker keeps the Eden automation pipeline paused until screenshots pass.
           mkdir -p artifacts
           node <<'NODE'
           const fs = require('fs');
@@ -50,15 +51,6 @@ jobs:
             { lane: 'male', src: '/eden-assets/eden-male-roster.svg', section: '#models' },
             { lane: 'faceless', src: '/eden-assets/eden-faceless-themes.svg', section: '#services' }
           ];
-
-          function normalizePath(value) {
-            if (!value) return '';
-            try {
-              return new URL(value, previewUrl).pathname;
-            } catch {
-              return value;
-            }
-          }
 
           async function verifyAtViewport(page, label, viewport) {
             await page.setViewportSize(viewport);
