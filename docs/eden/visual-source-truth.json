@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0.0",
+  "system": "Eden Skye Studios",
+  "mode": "branch_sandbox_only",
+  "production_deploy": false,
+  "drive_upload_status": "not_available_from_current_chat_surface",
+  "auto_builder_2_upload_capability": {
+    "verified_online": true,
+    "verified_tools": [
+      "drive_list_tree",
+      "drive_create_folder",
+      "drive_move_folder",
+      "drive_move_file",
+      "drive_write_receipt"
+    ],
+    "verified_missing_or_removed": [
+      "drive upload tools"
+    ],
+    "note": "Auto Builder 2 health check reports Drive move/folder/receipt tools, but drive upload tools are removed from the primary route. Uploaded chat images must be manually uploaded or handled by an upload-capable surface before Auto Builder can move/index them."
+  },
+  "drive_root_policy": {
+    "target_root": "EDEN SKYE STUDIOS / 10 Model System",
+    "duplicate_root_rule": "Use the active root that contains 10 Model System and Auto Social structure. Do not scatter source truth across duplicate Eden Skye roots.",
+    "file_status_default": "pending_upload",
+    "image_asset_status_default": "missing_source_truth"
+  },
+  "assets": [
+    {
+      "asset_id": "ess_faceless_20_themes",
+      "local_file": "ChatGPT Image Jun 7, 2026, 10_44_55 PM(1).png",
+      "file_id": "file_000000004a60722fb0aae8d392cf826d",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / Faceless Accounts / 20 Viral Faceless Social Media Account Themes",
+      "automation_purpose": "Source truth for faceless social media niches and Auto Social seed themes.",
+      "record_type": "faceless_account_themes",
+      "page_mapping": ["Faceless Accounts", "Auto Social"],
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_international_male_roster_v1",
+      "local_file": "ChatGPT Image Jun 7, 2026, 10_33_36 PM(1).png",
+      "file_id": "file_000000004b0471f5b53f082603fef746",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / International Models 18-35 / Roster References",
+      "automation_purpose": "International male model roster, countries, market mapping, and folder structure.",
+      "record_type": "model_roster_templates",
+      "page_mapping": ["International Models"],
+      "model_category": "international_models_18_35",
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_international_mixed_roster_v2",
+      "local_file": "ChatGPT Image Jun 7, 2026, 10_32_28 PM(1).png",
+      "file_id": "file_00000000ac48722fa2b31278e8e04581",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / International Models 18-35 / Roster References",
+      "automation_purpose": "International mixed model roster and top social markets.",
+      "record_type": "model_roster_templates",
+      "page_mapping": ["International Models"],
+      "model_category": "international_models_18_35",
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_mature_model_roster",
+      "local_file": "ChatGPT Image Jun 7, 2026, 10_28_10 PM(1).png",
+      "file_id": "file_000000006fc4722f9405033323aae987",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / Mature Models 50-80 / Roster References",
+      "automation_purpose": "Mature male and female roster source truth for age 50-80 campaign categories.",
+      "record_type": "model_roster_templates",
+      "page_mapping": ["50-80 Models"],
+      "model_category": "mature_models_50_80",
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_male_model_roster",
+      "local_file": "ChatGPT Image Jun 7, 2026, 10_27_26 PM(1).png",
+      "file_id": "file_00000000605871f5b74518a4b716e71e",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / Male Models Primary / 25-50 / Roster References",
+      "automation_purpose": "Male model roster and commercial archetype source truth.",
+      "record_type": "model_roster_templates",
+      "page_mapping": ["Men", "Models"],
+      "model_category": "male_models_primary_25_50",
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_homepage_reference",
+      "local_file": "ChatGPT Image Jun 7, 2026, 08_02_35 PM(7).png",
+      "file_id": "file_0000000083f8720c9007e36249739beb",
+      "target_drive_path": "EDEN SKYE STUDIOS / Website Visual Source Truth / Homepage Reference",
+      "automation_purpose": "Public homepage visual target and front-door UX reference.",
+      "record_type": "website_page_specs",
+      "page_mapping": ["Home"],
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_content_creation_pack",
+      "local_file": "ChatGPT Image Jun 7, 2026, 07_52_17 PM(3).png",
+      "file_id": "file_00000000344871f5b817f226e40f328b",
+      "target_drive_path": "EDEN SKYE STUDIOS / Website Visual Source Truth / Content Creation Pack",
+      "automation_purpose": "Website and campaign image section guide for content creation and social examples.",
+      "record_type": "content_pack_assets",
+      "page_mapping": ["Services", "Auto Social", "Brand Partners"],
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_female_model_cards",
+      "local_file": "ChatGPT Image Jun 4, 2026, 01_18_27 PM(4).png",
+      "file_id": "file_0000000059dc71f5ae72e6d1014d90b4",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / Female Models / 25-50 / Roster References",
+      "automation_purpose": "Female model card naming, archetypes, bios, and visual style.",
+      "record_type": "model_profiles",
+      "page_mapping": ["Women", "Models", "Home"],
+      "model_category": "female_models_25_50",
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_avatar_video_prompt",
+      "local_file": "ChatGPT Image Jun 4, 2026, 12_02_18 AM(1).png",
+      "file_id": "file_0000000024b0722fb104511bc94dbc5e",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / Avatar Video Generator Assets / Prompt References",
+      "automation_purpose": "Ultra-realistic avatar generation prompt and required image types.",
+      "record_type": "avatar_generation_prompts",
+      "page_mapping": ["AI Video", "Xyla Feed", "Auto Social"],
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    },
+    {
+      "asset_id": "ess_avatar_angles_reference",
+      "local_file": "ChatGPT Image Jun 3, 2026, 11_27_37 PM(1).png",
+      "file_id": "file_000000008eb071f58f452837e974e395",
+      "target_drive_path": "EDEN SKYE STUDIOS / 10 Model System / Avatar Video Generator Assets / Angle References",
+      "automation_purpose": "Consistent avatar pose and angle requirements for video/avatar generation.",
+      "record_type": "avatar_generation_prompts",
+      "page_mapping": ["AI Video", "Xyla Feed", "Auto Social"],
+      "file_status": "pending_upload",
+      "image_asset_status": "missing_source_truth"
+    }
+  ],
+  "model_categories": [
+    "male_models_primary_25_50",
+    "female_models_25_50",
+    "international_models_18_35",
+    "mature_models_50_80",
+    "faceless_accounts"
+  ],
+  "website_pages": [
+    "Home",
+    "Models",
+    "Men",
+    "Women",
+    "International",
+    "50-80 Models",
+    "Faceless Accounts",
+    "Eden Closet",
+    "Auto Social",
+    "Brand Partners",
+    "PWA App",
+    "Xyla Feed",
+    "Apply",
+    "Contact",
+    "Black Card Gate"
+  ],
+  "supabase_tables": [
+    "visual_source_assets",
+    "website_page_specs",
+    "model_roster_templates",
+    "model_profiles",
+    "faceless_account_themes",
+    "avatar_generation_prompts",
+    "content_pack_assets",
+    "auto_social_seed_themes",
+    "drive_folder_targets",
+    "source_truth_receipts"
+  ],
+  "governance": {
+    "production_deploy": false,
+    "social_publish": false,
+    "customer_messages": false,
+    "dns_changes": false,
+    "payments": false,
+    "shopify_live_publish": false,
+    "destructive_actions": false,
+    "secrets_in_code": false,
+    "approval_required": true
+  }
+}
