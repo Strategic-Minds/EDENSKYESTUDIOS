@@ -12,6 +12,7 @@ export type ShopifyFeedReadiness = {
   configured: boolean;
   storeDomainConfigured: boolean;
   accountEmailConfigured: boolean;
+  serviceAccountConfigured: boolean;
   adminTokenConfigured: boolean;
   automationTokenConfigured: boolean;
   capabilityMode: 'not_configured' | 'admin_ready' | 'admin_and_automation_ready';
@@ -56,6 +57,10 @@ function hasEnv(key: string) {
   return Boolean(process.env[key]);
 }
 
+function hasAnyEnv(keys: string[]) {
+  return keys.some(hasEnv);
+}
+
 function getCapabilityMode(adminTokenConfigured: boolean, automationTokenConfigured: boolean) {
   if (adminTokenConfigured && automationTokenConfigured) {
     return 'admin_and_automation_ready' as const;
@@ -71,6 +76,7 @@ function getCapabilityMode(adminTokenConfigured: boolean, automationTokenConfigu
 export function buildShopifyFeedReadiness(): ShopifyFeedReadiness {
   const storeDomainConfigured = hasEnv('SHOPIFY_STORE_DOMAIN');
   const accountEmailConfigured = hasEnv('SHOPIFY_ACCOUNT_EMAIL');
+  const serviceAccountConfigured = hasAnyEnv(['SHOPIFY_SERVICE_ACCOUNT_EMAIL', 'SHOPIFY_SERVICE_ACCOUNT_ADDRESS']);
   const adminTokenConfigured = hasEnv('SHOPIFY_ADMIN_ACCESS_TOKEN');
   const automationTokenConfigured = hasEnv('SHOPIFY_AUTOMATION_TOKEN');
   const preparedItems = PREPARED_ITEMS.map((item) => ({ ...item }));
@@ -81,6 +87,7 @@ export function buildShopifyFeedReadiness(): ShopifyFeedReadiness {
     configured: storeDomainConfigured && adminTokenConfigured,
     storeDomainConfigured,
     accountEmailConfigured,
+    serviceAccountConfigured,
     adminTokenConfigured,
     automationTokenConfigured,
     capabilityMode,
