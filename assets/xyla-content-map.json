@@ -1,0 +1,9 @@
+{
+  "site": "eden-skye-studios",
+  "pages": [
+    {"handle":"models","template":"page.models","purpose":"Model registry"},
+    {"handle":"auto-social","template":"page.auto-social","purpose":"Xyla AI content automation"},
+    {"handle":"image-library","template":"page.image-library","purpose":"Image library"}
+  ],
+  "xyla_payloads": ["window.EDEN_XYLA_CONTENT", "assets/xyla-image-library.json"]
+}
