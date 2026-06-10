@@ -1,0 +1,37 @@
+name: Eden Manual Scaffold
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type RUN to generate branch scaffold
+        required: true
+        default: RUN
+
+permissions:
+  contents: write
+
+jobs:
+  scaffold:
+    if: github.ref == 'refs/heads/feature/eden-skye-automation-v1' && inputs.confirm == 'RUN'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/eden-skye-automation-v1
+
+      - name: Run scaffold generator
+        run: node scripts/eden-generate-scaffold.mjs
+
+      - name: Commit generated scaffold
+        run: |
+          git config user.name "eden-automation-bot"
+          git config user.email "strategicmindsadvisory@gmail.com"
+          git add app lib supabase tests docs vercel.json scripts
+          if git diff --cached --quiet; then
+            echo "No scaffold changes to commit."
+          else
+            git commit -m "Generate Eden branch scaffold"
+            git push origin HEAD:feature/eden-skye-automation-v1
+          fi
