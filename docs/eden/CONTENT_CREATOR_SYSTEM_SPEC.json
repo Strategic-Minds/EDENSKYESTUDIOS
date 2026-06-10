@@ -1,0 +1,20 @@
+{
+  "schema_version":"1.0.0",
+  "packet_id":"ESS-CONTENT-CREATOR-SYSTEM-SPEC-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "dependencies":["docs/eden/visual-source-truth.json","docs/eden/IMAGE_TO_MODEL_SYSTEM_MAP.json","docs/eden/IMAGE_REGISTRY_SPEC.json","docs/eden/MODEL_PERSONA_REGISTRY_SPEC.json"],
+  "purpose":"Define creator identities, content permissions, channel mapping, lifecycle states, validation, receipts, repair rules, approval gates, and autonomous governance for Eden Skye digital creator operations.",
+  "primary_records":["creator_identities","creator_channels","content_permissions","content_queue_items","creator_receipts"],
+  "creator_identity_schema":["creator_id","persona_id","lane_id","creator_type","display_name","handle","bio","visual_asset_ids","primary_image_asset_id","content_pillars","allowed_platforms","restricted_platforms","verification_status","profile_status","receipt_id","created_at","updated_at"],
+  "channel_mapping_schema":["channel_id","creator_id","platform","account_handle","brand_id","metricool_network","posting_status","approval_status","last_sync_at","receipt_id"],
+  "content_permission_schema":["permission_id","creator_id","allowed_content_types","blocked_content_types","brand_safe_rules","usage_scope","approval_required","expires_at","receipt_id"],
+  "creator_types":["digital_model","faceless_theme","avatar_creator","brand_partner_creator","auto_social_seed_account"],
+  "allowed_platforms":["instagram","tiktok","youtube","facebook","x","threads","linkedin","pinterest","snapchat"],
+  "lifecycle_states":["source_truth_pending","draft","review_required","approved_for_sandbox","active_after_approval","paused","quarantined","retired"],
+  "validation_rules":["creator_requires_persona_or_faceless_theme","active_creator_requires_primary_image_or_theme_reference","handle_pending_until_verified","no_platform_publish_without_approval","no_unverified_bio_public","all_channel_links_require_receipt"],
+  "auto_heal_rules":["missing_persona_sets_creator_review_required","missing_image_sets_creator_inactive","missing_channel_sets_posting_status_paused","invalid_platform_sets_channel_quarantined","count_mismatch_blocks_generation","missing_receipt_blocks_write"],
+  "approval_gates":{"production_deploy":false,"social_publish":false,"customer_messages":false,"dns_changes":false,"shopify_live_publish":false,"secret_exposure":false,"metricool_scheduling_requires_approval":true},
+  "receipt_requirements":["creator_created","channel_mapped","permission_changed","content_queue_created","status_changed","auto_heal_performed"],
+  "validation_tests":["all_active_creators_have_valid_persona_or_theme","all_active_creators_have_visual_source","all_public_fields_verified_or_pending","no_social_publish_without_approval","all_mutations_have_receipts"]
+}
