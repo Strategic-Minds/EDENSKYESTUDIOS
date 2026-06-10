@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ff0a78">
+  <title>{{ page_title | default: shop.name }}</title>
+  {{ content_for_header }}
+  {{ 'eden-skye.css' | asset_url | stylesheet_tag }}
+</head>
+<body class="ess-body" data-xyla-site="eden-skye-studios" data-xyla-platform="shopify">
+  {{ content_for_layout }}
+  {{ 'eden-skye.js' | asset_url | script_tag }}
+</body>
+</html>
