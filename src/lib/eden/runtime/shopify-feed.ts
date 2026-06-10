@@ -11,7 +11,10 @@ export type ShopifyFeedReadiness = {
   checkedAt: string;
   configured: boolean;
   storeDomainConfigured: boolean;
+  accountEmailConfigured: boolean;
   adminTokenConfigured: boolean;
+  automationTokenConfigured: boolean;
+  capabilityMode: 'not_configured' | 'admin_ready' | 'admin_and_automation_ready';
   publishStatus: 'blocked_until_approval';
   blockedActions: string[];
   preparedItems: ShopifyFeedItem[];
@@ -53,16 +56,34 @@ function hasEnv(key: string) {
   return Boolean(process.env[key]);
 }
 
+function getCapabilityMode(adminTokenConfigured: boolean, automationTokenConfigured: boolean) {
+  if (adminTokenConfigured && automationTokenConfigured) {
+    return 'admin_and_automation_ready' as const;
+  }
+
+  if (adminTokenConfigured) {
+    return 'admin_ready' as const;
+  }
+
+  return 'not_configured' as const;
+}
+
 export function buildShopifyFeedReadiness(): ShopifyFeedReadiness {
   const storeDomainConfigured = hasEnv('SHOPIFY_STORE_DOMAIN');
+  const accountEmailConfigured = hasEnv('SHOPIFY_ACCOUNT_EMAIL');
   const adminTokenConfigured = hasEnv('SHOPIFY_ADMIN_ACCESS_TOKEN');
+  const automationTokenConfigured = hasEnv('SHOPIFY_AUTOMATION_TOKEN');
   const preparedItems = PREPARED_ITEMS.map((item) => ({ ...item }));
+  const capabilityMode = getCapabilityMode(adminTokenConfigured, automationTokenConfigured);
 
   return {
     checkedAt: new Date().toISOString(),
     configured: storeDomainConfigured && adminTokenConfigured,
     storeDomainConfigured,
+    accountEmailConfigured,
     adminTokenConfigured,
+    automationTokenConfigured,
+    capabilityMode,
     publishStatus: 'blocked_until_approval',
     blockedActions: ['shopify_live_publish', 'customer_messages', 'secret_exposure'],
     preparedItems,
