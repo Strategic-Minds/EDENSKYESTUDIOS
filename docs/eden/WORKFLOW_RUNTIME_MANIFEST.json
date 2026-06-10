@@ -1,0 +1,17 @@
+{
+  "schema_version":"1.0.0",
+  "manifest_id":"ESS-WORKFLOW-RUNTIME-MANIFEST-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "owner":"Vercel Workflow",
+  "purpose":"Define runtime queues, 5-minute cron behavior, AI Gateway routing, provider strategy, Vercel Agent responsibilities, validation checkpoints, governance locks, and runtime blockers.",
+  "dependencies":["docs/eden/PACKET_MANIFEST.json","docs/eden/RECEIPT_SCHEMA_MANIFEST.json","docs/eden/AUTONOMOUS_HARDENING_SPEC.md","docs/eden/AUTO_BUILDER_DRIVE_UPLOAD_HANDOFF.md"],
+  "cron":{"interval":"5 minutes","enabled_status":"planned_not_verified","allowed_actions":["inventory_check","validation_check","receipt_check","sandbox_queue_check","auto_heal_check"],"blocked_actions":["production_deploy","social_publish","customer_messages","dns_changes","shopify_live_publish","destructive_actions"]},
+  "runtime_queues":["source_truth_inventory_queue","drive_sync_queue","image_registry_queue","model_persona_queue","creator_queue","avatar_queue","website_sandbox_build_queue","receipt_queue","auto_heal_queue","hardening_audit_queue"],
+  "ai_gateway_routing":{"status":"planned_not_verified","providers":[{"name":"OpenAI","use_cases":["reasoning","registry extraction","governance validation","copy drafting"]},{"name":"Groq","use_cases":["fast classification","low-latency queue triage","bulk validation drafts"]}],"rule":"provider_output_must_remain_draft_until_registry_validation_and_approval"},
+  "vercel_agent_responsibilities":["read PACKET_MANIFEST.json","load dependency packets in order","run validation checkpoints","create sandbox artifacts","write receipts","pause invalid records","never invent model facts","never deploy production without approval"],
+  "validation_checkpoints":["packet_manifest_loaded","dependencies_loaded","drive_targets_verified","image_registry_checked","persona_registry_checked","creator_registry_checked","avatar_registry_checked","receipt_integrity_checked","approval_gates_checked","sandbox_output_checked"],
+  "governance_locks":{"production_deploy":false,"social_publish":false,"customer_messages":false,"dns_changes":false,"shopify_live_publish":false,"secret_exposure":false,"destructive_actions":false},
+  "execution_status":"manifest_verified_runtime_pending",
+  "missing_runtime_dependencies":["Vercel Workflow runtime implementation","5-minute cron route","AI Gateway configuration","OpenAI key target if required","Groq key target if required","receipt writer runtime","Supabase registry tables","Drive upload execution"]
+}
