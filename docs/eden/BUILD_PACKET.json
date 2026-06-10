@@ -1,0 +1,111 @@
+{
+  "packet_id": "ESS-VERCEL-WORKFLOW-BUILD-001",
+  "system": "Eden Skye Studios",
+  "mode": "branch_sandbox_only",
+  "builder": "Vercel Workflow",
+  "governor": "Auto Builder",
+  "branch": "feature/eden-skye-automation-v1",
+  "base_branch": "main",
+  "repo": "Strategic-Minds/EDENSKYESTUDIOS",
+  "vercel_project": "edenskyestudios",
+  "rules": {
+    "production_deploy": false,
+    "social_publish": false,
+    "customer_messages": false,
+    "dns_changes": false,
+    "payments": false,
+    "shopify_live_publish": false,
+    "destructive_actions": false,
+    "secrets_in_code": false
+  },
+  "safe_defaults": {
+    "CRON_ENABLED": "false",
+    "SHOPIFY_DRAFT_MODE_ONLY": "true",
+    "SOCIAL_PUBLISHING_ENABLED": "false",
+    "SHOPIFY_LIVE_PUBLISHING_ENABLED": "false",
+    "CUSTOMER_MESSAGING_ENABLED": "false",
+    "OPERATOR_APPROVAL_REQUIRED": "true"
+  },
+  "required_files_total": 31,
+  "already_created": [
+    "docs/eden/BUILD_RECEIPT.md",
+    "docs/eden/PRE_BUILD_PROVISIONING_PLAN.md",
+    "lib/env.ts"
+  ],
+  "files_to_generate": [
+    "app/api/health/route.ts",
+    "app/api/intake/model-application/route.ts",
+    "app/api/intake/brand-partner/route.ts",
+    "app/api/cron/eden-workflow-heartbeat/route.ts",
+    "app/api/auto-social/draft/route.ts",
+    "app/api/approvals/update/route.ts",
+    "app/api/shopify/draft-product/route.ts",
+    "lib/supabase/admin.ts",
+    "lib/workflows/process-queue.ts",
+    "lib/workflows/status.ts",
+    "lib/ai-gateway/router.ts",
+    "lib/agents/index.ts",
+    "lib/auto-social/create-draft.ts",
+    "lib/shopify/create-draft-product.ts",
+    "lib/google-chat/notify.ts",
+    "lib/receipts/write-receipt.ts",
+    "supabase/migrations/001_eden_workflow_core.sql",
+    "supabase/migrations/002_eden_intake_tables.sql",
+    "supabase/migrations/003_eden_ai_tasks.sql",
+    "supabase/migrations/004_eden_social_shopify.sql",
+    "supabase/migrations/005_eden_rls_policies.sql",
+    "tests/smoke/health.test.ts",
+    "tests/smoke/cron-auth.test.ts",
+    "tests/smoke/intake.test.ts",
+    "tests/smoke/ai-gateway.test.ts",
+    "tests/smoke/no-live-actions.test.ts",
+    "docs/eden/MANUAL_IMPLEMENTATION_STOPLIST.md",
+    "vercel.json"
+  ],
+  "cron": {
+    "route": "/api/cron/eden-workflow-heartbeat",
+    "schedule": "*/5 * * * *",
+    "default_mode": "disabled_dry_run",
+    "auth": "CRON_SECRET required"
+  },
+  "ai_gateway": {
+    "providers": ["openai", "groq"],
+    "openai_tasks": ["validation", "risk_check", "approval_summary", "final_public_copy"],
+    "groq_tasks": ["caption_draft", "queue_summary", "first_pass_content_variations"],
+    "required_output": ["task_id", "provider", "model", "prompt_version", "output_json", "risk_flags", "approval_required", "blocked_actions", "next_safe_action"]
+  },
+  "vercel_agents": [
+    "Eden Build Packet Validator",
+    "Eden Source Truth Agent",
+    "Eden Workflow Router",
+    "Eden Auto Social Validator",
+    "Eden Shopify Draft Validator",
+    "Eden Smoke Test Agent",
+    "Eden Metrics Improvement Agent"
+  ],
+  "supabase_migrations": [
+    "workflow_queue/workflow_runs/receipts",
+    "leads/model_applications/brand_partners/contact_requests",
+    "ai_tasks/ai_prompt_versions/ai_cost_events",
+    "social_drafts/social_posts/shopify_draft_actions",
+    "rls policies with public insert only for intake and service-role workflow processing"
+  ],
+  "smoke_tests": [
+    "health route returns OK",
+    "cron rejects invalid secret",
+    "cron valid secret dry-runs only",
+    "AI Gateway returns JSON contract",
+    "no live actions enabled by defaults"
+  ],
+  "stop_conditions": [
+    "secret detected in code or logs",
+    "production branch write attempted",
+    "production deploy attempted",
+    "social publishing enabled",
+    "Shopify live publishing enabled",
+    "customer messaging enabled",
+    "DNS change attempted",
+    "payment action attempted"
+  ],
+  "handoff_instruction": "Vercel Workflow or Codex should generate the missing scaffold files on the feature branch only, run checks, create or update a draft PR, and write a build receipt. No production actions are authorized."
+}
