@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "packet_id": "ESS-IMAGE-REGISTRY-SPEC-001",
+  "system": "Eden Skye Studios",
+  "mode": "branch_sandbox_only",
+  "purpose": "Define the image registry for digital media, model, avatar, content, website, and Auto Social operations.",
+  "authoritative_sources": ["docs/eden/visual-source-truth.json", "docs/eden/IMAGE_TO_MODEL_SYSTEM_MAP.json", "Google Drive canonical folders", "uploaded visual references"],
+  "required_records": ["image_registry", "image_manifest"],
+  "image_registry_fields": ["image_asset_id", "source_file_id", "source_filename", "drive_file_id", "drive_url", "model_lane_id", "model_profile_id", "theme_id", "avatar_asset_id", "source_truth_status", "image_status", "quality_status", "validation_status", "receipt_id", "created_at", "updated_at"],
+  "image_manifest_fields": ["manifest_id", "lane_id", "folder_id", "expected_count", "verified_count", "missing_count", "blocked_count", "last_inventory_at", "receipt_id"],
+  "validation_rules": ["file_must_exist_in_drive_before_active_use", "active_model_profile_requires_image", "missing_images_mark_profile_inactive", "no_placeholder_public_images", "no_private_runtime_paths_in_public_pages", "all_derivatives_link_to_source_asset"],
+  "statuses": {
+    "source_truth_status": ["uploaded_visual_reference", "drive_verified", "pending_upload", "pending_verification", "rejected"],
+    "image_status": ["active", "inactive", "missing", "quarantined", "pending_review"],
+    "quality_status": ["approved", "needs_crop", "needs_upscale", "needs_alt_text", "failed_validation"]
+  },
+  "repair_rules": ["missing_drive_file_sets_image_missing", "profile_without_image_sets_profile_inactive", "missing_alt_text_sets_pending_review", "duplicate_image_flags_duplicate", "folder_count_change_updates_manifest_and_receipt"],
+  "approval_gates": {"production_deploy": false, "social_publish": false, "customer_messages": false, "dns_changes": false, "shopify_live_publish": false, "secret_exposure": false, "drive_upload_requires_explicit_approval": true},
+  "validation_tests": ["active_images_have_drive_file_id", "public_images_have_safe_url", "active_profiles_have_image", "missing_values_marked_pending_verification", "registry_changes_have_receipts"]
+}
