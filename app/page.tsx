@@ -1,77 +1,64 @@
 const campaignImage = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-studios-homepage-campaign.png?v=1780873477';
 
-const panels = [
-  { title: 'Beauty. Influence. Impact.', body: 'Campaign visuals for brands that need attention.', className: 'panelTopRight' },
-  { title: 'Content that connects.', body: 'High-quality creator content built for engagement.', className: 'panelMidLeft' },
-  { title: 'License. Publish. Profit.', body: 'Commercial-use assets for ads, social, ecommerce, and brand campaigns.', className: 'panelMidCenter' },
-  { title: 'AUTO SOCIAL', body: 'Your discovery-to-posting content engine.', className: 'panelMidRight' },
-  { title: 'Full-service creator production', body: 'Photoshoots, video production, brand collabs, UGC, editing, retouching, and campaign strategy.', className: 'panelBottomLeft' },
-  { title: 'Products that sell.', body: 'Beauty, fashion, lifestyle, and campaign-ready product content.', className: 'panelBottomCenter' },
-  { title: 'Create the next big thing.', body: 'Apply to work with Eden Skye Studios.', className: 'panelBottomRight' }
+const models = [
+  ['Sienna Rose', 'pending_verification'],
+  ['Luna Skye', 'pending_verification'],
+  ['Alexis Voss', 'pending_verification'],
+  ['Claire Montel', 'pending_verification'],
+  ['Natalia Bliss', 'pending_verification'],
+  ['Zoe Saint', 'pending_verification']
 ];
 
-const services = ['Model Campaigns', 'Creator Production', 'Commercial Licensing', 'AUTO SOCIAL', 'Product Campaigns', 'Brand Launches'];
+const difference = [
+  ['Elite Talent', 'Registry-backed model and creator profiles.'],
+  ['Viral Content', 'Draft-first content engine with approval gates.'],
+  ['Global Reach', 'International lanes mapped through source truth.'],
+  ['Premium Brands', 'Brand-safe campaign and Shopify feed layer.'],
+  ['Maximum Profit', 'Automation designed for measurable outputs.']
+];
+
+const systemCards = [
+  ['Creator Production', 'Photoshoots, video production, editing, content systems, and campaign strategy.', 'RT-010'],
+  ['Auto Social', '5-minute validation loop, draft queue, approval center, and scheduled publishing controls.', 'RT-013'],
+  ['Brand Partnerships', 'Creator, product, Shopify, and campaign records feeding the autonomous system.', 'RT-011']
+];
 
 export default function Home() {
   return (
-    <main className="site">
-      <header className="nav">
-        <a className="brand" href="#top">EDEN <span>SKYE</span> STUDIOS</a>
-        <nav>
-          <a href="#models">Models</a>
-          <a href="#services">Services</a>
-          <a href="#licensing">Licensing</a>
-          <a href="#autosocial">Auto Social</a>
-          <a className="navCta" href="#apply">Apply</a>
+    <main className="edenSite">
+      <header className="topbar">
+        <a className="logo" href="#top">EDEN <span>SKYE</span> STUDIOS<small>Digital Modeling & Content Creator Agency</small></a>
+        <nav className="navlinks">
+          {['Home','About','Models','Services','Auto Social','Brand Partners','Apply','PWA App','Contact'].map((item) => <a key={item} href={`#${item.toLowerCase().replaceAll(' ', '-')}`}>{item}</a>)}
         </nav>
+        <a className="applyBtn" href="#apply">Apply Now</a>
       </header>
 
-      <section id="top" className="heroTheme">
-        <div className="heroCopy">
-          <h1>EDEN <span>SKYE</span> STUDIOS</h1>
-          <p className="subhead">Digital Modeling Agency & Content Creator Agency</p>
-          <p className="micro">Models. Creators. Campaigns. Content.</p>
-          <a className="pinkButton" href="#apply">Apply Now</a>
+      <section id="top" className="hero">
+        <div className="heroTextBlock">
+          <p className="welcome">Welcome to Eden Skye Studios</p>
+          <h1>Beauty.<span>Influence.</span>Impact.</h1>
+          <p>We represent digital models and content creators. We build iconic brands, create viral content, and feed governed automation systems.</p>
+          <div className="heroActions"><a href="#apply">Apply Now</a><a href="#models">View Our Models</a></div>
+          <div className="stats"><b>100+<small>Models</small></b><b>24/7<small>Content</small></b><b>Global<small>Reach</small></b><b>Premium<small>Brands</small></b></div>
         </div>
-        <div className="themeCrop heroModel" aria-label="Eden Skye Studios campaign model" />
-        <div className="heroGlow" />
+        <div className="heroImage" />
       </section>
 
-      <section id="models" className="productionGrid">
-        <article className="panel wideTop"><div className="themeCrop panelTopRight"/><div className="panelText bottomCenter"><h2>Beauty. <span>Influence.</span> Impact.</h2></div></article>
-        {panels.slice(1).map((panel) => (
-          <article className="panel" key={panel.title}>
-            <div className={`themeCrop ${panel.className}`} />
-            <div className="panelOverlay" />
-            <div className="panelText"><h2>{panel.title}</h2><p>{panel.body}</p></div>
-          </article>
-        ))}
-      </section>
+      <section id="about" className="difference"><p>The Eden Skye Studios Difference</p>{difference.map(([title, body]) => <article key={title}><strong>{title}</strong><span>{body}</span></article>)}</section>
 
-      <section id="services" className="section services">
-        <p className="eyebrow">Agency Services</p>
-        <h2>Built like a campaign house. Operated like a content machine.</h2>
-        <div className="serviceGrid">{services.map((service) => <div key={service}><strong>{service}</strong><p>Premium, image-heavy assets designed for launches, social, commerce, and brand growth.</p></div>)}</div>
-      </section>
+      <section id="models" className="models"><div className="sectionTitle"><h2>Our Models</h2><a href="#apply">View all models</a></div><div className="modelRail">{models.map(([name, status], index) => <article className="modelCard" key={name}><div className={`crop crop${index}`} /><div><strong>{name}</strong><span>{status}</span></div></article>)}</div></section>
 
-      <section id="licensing" className="splitSection">
-        <div><p className="eyebrow">Licensing</p><h2>License. Publish. <span>Profit.</span></h2><p>Commercial-use visual packages for ad campaigns, social media, ecommerce, print, web, and brand storytelling.</p><a className="pinkButton" href="#apply">Request Licensing</a></div>
-        <div className="themeCard"><div className="themeCrop panelMidCenter" /></div>
-      </section>
+      <section id="services" className="systemGrid">{systemCards.map(([title, body, tag], index) => <article key={title} className="systemCard"><div className={`serviceCrop service${index}`} /><div><h3>{title}</h3><p>{body}</p><small>{tag}</small><a href="#control-plane">Learn More</a></div></article>)}</section>
 
-      <section id="autosocial" className="splitSection flip">
-        <div className="themeCard"><div className="themeCrop panelMidRight" /></div>
-        <div><p className="eyebrow">AUTO SOCIAL</p><h2>Your 24/7 content engine.</h2><p>We create, post, grow, analyze, and improve content systems for brands that need constant attention without chaos.</p><div className="stepGrid">{['Content Creation','Daily Posting','Engagement Growth','Analytics Optimization'].map((x) => <span key={x}>{x}</span>)}</div></div>
-      </section>
+      <section id="pwa-app" className="appBand"><div className="phoneMock"><span>ES</span><small>Eden Skye PWA</small></div><div><h2>The Eden Skye App</h2><p>Your agency, automation queue, approvals, receipts, creators, and Shopify feeds in one installable PWA shell.</p><ul><li>Exclusive content</li><li>Model updates</li><li>Approval center</li><li>Direct control</li></ul></div><a className="installBtn" href="/manifest.webmanifest">Install Now</a></section>
 
-      <section id="apply" className="finalCta">
-        <div className="themeCrop panelBottomRight" />
-        <div className="finalOverlay" />
-        <div className="finalText"><h2>Let’s create the next <span>big thing.</span></h2><p>Models, creators, brands. Together we build icons.</p><a className="pinkButton" href="mailto:strategicmindsadvisory@gmail.com">Apply Now</a></div>
-      </section>
+      <section id="control-plane" className="automationPanel"><p className="welcome">Autonomous System Control Plane</p><h2>Website feeds the system.</h2><div className="runtimeGrid">{['Packet Manifest','Supabase Registry','Receipt Writer','5-Minute Vercel Cron','Validation Agent','Shopify Feed Bridge'].map((item) => <article key={item}><strong>{item}</strong><span>sandbox_ready_pending_runtime</span></article>)}</div></section>
+
+      <section id="apply" className="final"><h2>Apply Now</h2><p>All applications enter the governed source-truth queue before activation. No public profile goes live without approval.</p><a href="mailto:strategicmindsadvisory@gmail.com">Start Application</a></section>
 
       <style>{`
-        *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif}.site{min-height:100vh;background:#000;color:#fff}.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 28px;background:rgba(0,0,0,.82);backdrop-filter:blur(22px);border-bottom:1px solid rgba(255,255,255,.16)}.brand{color:#fff;text-decoration:none;font-weight:950;letter-spacing:.08em}.brand span,h1 span,h2 span{color:#ff1493}.nav nav{display:flex;align-items:center;gap:18px}.nav a{color:#fff;text-decoration:none;font-size:13px;font-weight:900;text-transform:uppercase}.navCta,.pinkButton{display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:#ff1493;color:#fff!important;border:1px solid #ff1493;padding:13px 19px;text-decoration:none;font-weight:950;text-transform:uppercase;box-shadow:0 0 34px rgba(255,20,147,.42)}.heroTheme{position:relative;min-height:100vh;display:grid;grid-template-columns:1fr 1.2fr;align-items:stretch;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.28)}.heroCopy{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:110px 24px 70px 32px;background:linear-gradient(90deg,#000 0%,rgba(0,0,0,.94) 62%,rgba(0,0,0,.08) 100%)}.heroCopy h1{margin:0;font-size:72px;line-height:.92;font-weight:1000;letter-spacing:-.06em}.subhead{margin:18px 0 0;font-size:20px;text-transform:uppercase;font-weight:900}.micro{margin:28px 0 24px;color:#ddd;font-size:14px;text-transform:uppercase;letter-spacing:.08em}.heroGlow{position:absolute;inset:auto 0 0 auto;width:55vw;height:80vh;background:radial-gradient(circle,rgba(255,20,147,.35),transparent 58%);filter:blur(20px);pointer-events:none}.themeCrop{width:100%;height:100%;background-image:url(${campaignImage});background-repeat:no-repeat;background-size:1402px 1024px;background-color:#050005}.heroModel{background-position:-330px 0;min-height:100vh}.productionGrid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(360px,42vw);border-top:1px solid rgba(255,255,255,.32);border-left:1px solid rgba(255,255,255,.32)}.panel{position:relative;overflow:hidden;border-right:1px solid rgba(255,255,255,.32);border-bottom:1px solid rgba(255,255,255,.32);background:#050005}.wideTop{grid-column:span 3;min-height:430px}.panelOverlay,.finalOverlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.75),rgba(0,0,0,.12) 58%,rgba(0,0,0,.55))}.panelText{position:absolute;z-index:3;left:28px;bottom:28px;max-width:360px}.panelText.bottomCenter{left:50%;transform:translateX(-50%);text-align:center;max-width:900px}.panelText h2{margin:0 0 12px;font-size:38px;line-height:.96;text-transform:uppercase;font-weight:1000}.panelText p{margin:0;color:#eee;font-size:15px;line-height:1.45;text-transform:uppercase}.panelTopRight{background-position:-700px 0}.panelMidLeft{background-position:0 -410px}.panelMidCenter{background-position:-467px -410px}.panelMidRight{background-position:-934px -410px}.panelBottomLeft{background-position:0 -690px}.panelBottomCenter{background-position:-467px -690px}.panelBottomRight{background-position:-934px -690px}.section{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:96px 0}.eyebrow{margin:0 0 12px;color:#ff1493;text-transform:uppercase;font-size:12px;font-weight:1000;letter-spacing:.16em}.section h2,.splitSection h2,.finalText h2{margin:0 0 26px;font-size:58px;line-height:.95;text-transform:uppercase;letter-spacing:-.05em}.serviceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.serviceGrid div,.stepGrid span{border:1px solid rgba(255,20,147,.4);background:linear-gradient(145deg,#080008,#16000e);border-radius:20px;padding:24px}.serviceGrid strong{font-size:22px;text-transform:uppercase}.serviceGrid p,.splitSection p,.finalText p{color:#ddd;line-height:1.55}.splitSection{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:96px 0;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;border-top:1px solid rgba(255,255,255,.18)}.themeCard{height:540px;overflow:hidden;border:1px solid rgba(255,20,147,.45);border-radius:24px;box-shadow:0 30px 90px rgba(255,20,147,.16)}.stepGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}.finalCta{position:relative;min-height:660px;overflow:hidden;border-top:1px solid rgba(255,255,255,.25)}.finalCta .themeCrop{position:absolute;inset:0;background-size:1402px 1024px}.finalText{position:relative;z-index:4;max-width:640px;padding:120px 32px}.finalText h2{font-size:64px}@media(max-width:900px){.nav nav{display:none}.heroTheme,.splitSection{grid-template-columns:1fr}.heroCopy h1{font-size:54px}.productionGrid{grid-template-columns:1fr;grid-auto-rows:430px}.wideTop{grid-column:span 1}.serviceGrid{grid-template-columns:1fr}.themeCrop{background-size:980px 716px}.heroModel{min-height:520px;background-position:-220px 0}.panelTopRight{background-position:-490px 0}.panelMidLeft{background-position:0 -287px}.panelMidCenter{background-position:-326px -287px}.panelMidRight{background-position:-653px -287px}.panelBottomLeft{background-position:0 -482px}.panelBottomCenter{background-position:-326px -482px}.panelBottomRight{background-position:-653px -482px}}
+        *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif}.edenSite{background:#000;color:#fff;min-height:100vh}.topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;align-items:center;gap:24px;padding:8px 28px;background:rgba(0,0,0,.9);border-bottom:1px solid rgba(255,255,255,.25);backdrop-filter:blur(18px)}.logo{font-size:28px;font-weight:1000;letter-spacing:.04em;color:#fff;text-decoration:none;line-height:.9}.logo span,.hero h1 span,.sectionTitle a,.welcome,.systemCard h3,.difference strong,.models span{color:#ff1493}.logo small{display:block;font-size:11px;font-weight:500;color:#ddd;letter-spacing:.08em;text-transform:uppercase}.navlinks{margin-left:auto;display:flex;gap:22px;align-items:center}.navlinks a{font-size:12px;font-weight:900;color:#fff;text-decoration:none;text-transform:uppercase}.applyBtn,.heroActions a:first-child,.installBtn,.final a{background:#ff1493;color:#fff;text-decoration:none;text-transform:uppercase;font-weight:1000;border-radius:5px;padding:13px 24px;border:1px solid #ff1493;box-shadow:0 0 34px rgba(255,20,147,.4)}.hero{min-height:560px;height:70vh;display:grid;grid-template-columns:43% 57%;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.3);padding-top:64px}.heroTextBlock{position:relative;z-index:3;padding:55px 0 0 12vw;background:linear-gradient(90deg,#000 0%,rgba(0,0,0,.95) 70%,rgba(0,0,0,0));max-width:620px}.welcome{text-transform:uppercase;font-size:12px;font-weight:1000;letter-spacing:.14em}.hero h1{font-size:58px;line-height:.95;text-transform:uppercase;margin:12px 0 10px;font-weight:1000}.hero h1 span{display:block}.hero p{font-size:17px;line-height:1.45;color:#f1f1f1}.heroImage{background-image:linear-gradient(90deg,rgba(0,0,0,.25),rgba(0,0,0,.1)),url(${campaignImage});background-size:cover;background-position:center top;filter:saturate(1.08)}.heroActions{display:flex;gap:18px;margin:24px 0}.heroActions a:last-child{color:#fff;border:1px solid #fff;border-radius:5px;padding:13px 24px;text-decoration:none;text-transform:uppercase;font-weight:1000}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:20px;text-align:center}.stats b{font-size:18px}.stats small{display:block;font-size:12px;text-transform:uppercase;color:#fff}.difference{padding:20px 8vw 10px;border-bottom:1px solid rgba(255,255,255,.18);display:grid;grid-template-columns:1.2fr repeat(5,1fr);gap:14px;align-items:center}.difference p{text-transform:uppercase;letter-spacing:.32em;text-align:center;font-weight:900}.difference article,.runtimeGrid article{border:1px solid rgba(255,20,147,.45);background:linear-gradient(145deg,rgba(255,20,147,.08),rgba(255,255,255,.03));border-radius:10px;padding:18px}.difference article span,.runtimeGrid span{display:block;color:#ddd;font-size:13px;margin-top:6px}.models,.automationPanel,.final{padding:28px 7vw}.sectionTitle{text-align:center;text-transform:uppercase}.sectionTitle h2{font-size:24px;letter-spacing:.28em;margin:0}.sectionTitle a{font-size:12px;text-decoration:none;font-weight:1000}.modelRail{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:8px}.modelCard{border:1px solid rgba(255,255,255,.38);border-radius:10px;overflow:hidden;background:#070007}.modelCard>div:last-child{padding:12px;background:rgba(0,0,0,.72);text-align:center;text-transform:uppercase}.modelCard strong{display:block}.crop,.serviceCrop{background-image:url(${campaignImage});background-size:1400px 1024px;background-repeat:no-repeat;background-color:#0b0008}.crop{height:230px}.crop0{background-position:-90px -80px}.crop1{background-position:-250px -120px}.crop2{background-position:-540px -60px}.crop3{background-position:-720px -80px}.crop4{background-position:-880px -120px}.crop5{background-position:-1030px -100px}.systemGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;padding:20px 3vw;border-top:1px solid rgba(255,255,255,.2)}.systemCard{display:grid;grid-template-columns:1.1fr 1fr;min-height:210px;border:1px solid rgba(255,255,255,.45);border-radius:8px;overflow:hidden;background:#070007}.systemCard div:last-child{padding:32px}.systemCard h3{font-size:26px;text-transform:uppercase;margin:0 0 12px}.systemCard p{color:#eee}.systemCard small{display:block;color:#999}.systemCard a{display:inline-block;margin-top:16px;border:1px solid #ff1493;color:#ff1493;padding:10px 22px;text-transform:uppercase;text-decoration:none;border-radius:4px}.serviceCrop{min-height:210px;background-size:1100px 805px}.service0{background-position:0 -510px}.service1{background-position:-330px -500px}.service2{background-position:-650px -500px}.appBand{display:grid;grid-template-columns:170px 1fr 170px;gap:36px;align-items:center;padding:26px 12vw;background:radial-gradient(circle at 30% 30%,rgba(255,20,147,.35),transparent 44%),#100009;border-top:1px solid rgba(255,255,255,.25);border-bottom:1px solid rgba(255,255,255,.25)}.phoneMock{height:220px;border:2px solid rgba(255,255,255,.5);border-radius:28px;background:#050005;display:grid;place-items:center;text-align:center}.phoneMock span{font-size:50px;color:#ff1493;font-weight:1000}.phoneMock small{display:block}.appBand h2,.automationPanel h2,.final h2{font-size:34px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px}.appBand ul{display:flex;gap:24px;list-style:none;padding:0;margin:10px 0;color:#eee}.runtimeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.automationPanel{background:#040404}.final{text-align:center;padding-bottom:70px}.final p{color:#ddd}@media(max-width:1000px){.navlinks{display:none}.hero{grid-template-columns:1fr;height:auto}.heroTextBlock{padding:80px 24px 30px}.heroImage{min-height:420px}.difference,.modelRail,.systemGrid,.appBand,.runtimeGrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
       `}</style>
     </main>
   );
