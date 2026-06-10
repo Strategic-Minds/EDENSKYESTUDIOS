@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "packet_id": "ESS-IMAGE-MODEL-SYSTEM-MAP-001",
+  "system": "Eden Skye Studios",
+  "mode": "branch_sandbox_only",
+  "purpose": "Hardened image registry and model-system map for autonomous digital media, digital modeling, and digital content creator operations.",
+  "source_truth_policy": {
+    "uploaded_images_are_authoritative": true,
+    "drive_inventory_is_authoritative_after_upload": true,
+    "do_not_cap_model_system_at_10": true,
+    "do_not_invent_model_names_bios_ages_countries_handles_pricing_claims_or_customer_promises": true,
+    "unverified_values": "pending_verification",
+    "persona_generation_rule": "Generate only placeholder personas from verified visual lane, age range, and category metadata until exact model facts are verified from image registry or Drive inventory.",
+    "image_required_for_active_profile": true,
+    "inactive_without_image": true
+  },
+  "canonical_drive_root": {
+    "eden_skye_studios_root_folder_id": "1uCsLaebFWtiMQ3T6A8i_NvgzWB6Kmxgk",
+    "model_system_folder_id": "1nVGU4p4mCosBzcqMYoXYwafHGGMej62P"
+  },
+  "canonical_model_lanes": [
+    {"lane_id":"male_models_primary_25_50","label":"Male Models Primary / 25-50","folder_id":"1Insi8xinpCD8NWtNazIHas5DbmfMj1yg","parent_folder_id":"1axSX6o76J8iRy0Jcg25lMxhVC_nFNK9l","visual_asset_ids":["ess_male_model_roster"],"count_source":"drive_inventory_required","target_count":"pending_verified_drive_inventory","source_truth_status":"partial_visual_reference_available"},
+    {"lane_id":"male_models_primary_50_80","label":"Male Models Primary / 50-80","folder_id":"1UCeLimPJBw0ULFtGGE0mGRex64LWE0PW","parent_folder_id":"1axSX6o76J8iRy0Jcg25lMxhVC_nFNK9l","visual_asset_ids":["ess_mature_model_roster"],"count_source":"drive_inventory_required","target_count":"pending_verified_drive_inventory","source_truth_status":"drive_inventory_required"},
+    {"lane_id":"male_models_primary_international_18_35","label":"Male Models Primary / International 18-35","folder_id":"1H3i7v4Tx_To72igjyOUarDGN4DAvnevN","parent_folder_id":"1axSX6o76J8iRy0Jcg25lMxhVC_nFNK9l","visual_asset_ids":["ess_international_male_roster_v1"],"count_source":"visual_reference_and_drive_inventory","minimum_verified_count":20,"target_count":"at_least_20_or_drive_inventory_higher","source_truth_status":"visual_reference_available"},
+    {"lane_id":"female_models_25_50","label":"Female Models / 25-50","folder_id":"1oouhBrukwcGUpEZzIEgHyNmgHr0dsQHD","parent_folder_id":"1cryZzHKZHGXOycpahVpYYdhORk1XdM-G","visual_asset_ids":["ess_female_model_cards"],"count_source":"drive_inventory_required","target_count":"pending_verified_drive_inventory","source_truth_status":"partial_visual_reference_available"},
+    {"lane_id":"female_models_50_80","label":"Female Models / 50-80","folder_id":"1bOO4P_4w6L8uD5VQapU_YoVzerkV9keS","parent_folder_id":"1cryZzHKZHGXOycpahVpYYdhORk1XdM-G","visual_asset_ids":["ess_mature_model_roster"],"count_source":"drive_inventory_required","target_count":"pending_verified_drive_inventory","source_truth_status":"drive_inventory_required"},
+    {"lane_id":"female_models_international_18_35","label":"Female Models / International 18-35","folder_id":"1s-swjjCrST0q7CartX6JUkPQOLewxzkt","parent_folder_id":"1cryZzHKZHGXOycpahVpYYdhORk1XdM-G","visual_asset_ids":["ess_international_mixed_roster_v2"],"count_source":"visual_reference_and_drive_inventory","minimum_verified_count":20,"target_count":"at_least_20_or_drive_inventory_higher","source_truth_status":"visual_reference_available"},
+    {"lane_id":"international_models_18_35","label":"International Models 18-35","folder_id":"1YY9y5Ycm2zDDV_MdptdBGsVuY_3bao7_","parent_folder_id":"1nVGU4p4mCosBzcqMYoXYwafHGGMej62P","visual_asset_ids":["ess_international_male_roster_v1","ess_international_mixed_roster_v2"],"count_source":"visual_reference_required","required_exact_count":20,"source_truth_status":"visual_reference_available"},
+    {"lane_id":"mature_models_50_80","label":"Mature Models 50-80","folder_id":"1QyjlUQ_Iq4rABahigFKpP3c-CFoiii3f","parent_folder_id":"1nVGU4p4mCosBzcqMYoXYwafHGGMej62P","visual_asset_ids":["ess_mature_model_roster"],"count_source":"visual_reference_required","required_exact_count":20,"source_truth_status":"visual_reference_available"},
+    {"lane_id":"faceless_accounts","label":"Faceless Accounts","folder_id":"1oJ_7ijaJ9QrJVkW7BErz5ctOPl4jX7IE","parent_folder_id":"1nVGU4p4mCosBzcqMYoXYwafHGGMej62P","visual_asset_ids":["ess_faceless_20_themes"],"count_source":"visual_reference_required","required_exact_count":20,"source_truth_status":"visual_reference_available"}
+  ],
+  "required_registry_tables": [
+    "image_registry",
+    "image_manifest",
+    "model_personas",
+    "model_images",
+    "model_descriptions",
+    "model_lanes",
+    "content_creator_accounts",
+    "faceless_account_themes",
+    "website_visual_references",
+    "drive_folder_targets",
+    "source_truth_receipts",
+    "automation_health_checks",
+    "auto_heal_events",
+    "hardening_findings"
+  ],
+  "autonomous_operations": {
+    "auto_inventory_drive": true,
+    "auto_detect_missing_images": true,
+    "auto_mark_incomplete_profiles_inactive": true,
+    "auto_create_receipts": true,
+    "auto_heal_missing_metadata_with_pending_verification_only": true,
+    "auto_harden_schema_before_publish": true,
+    "never_publish_unverified_profiles": true
+  },
+  "approval_gates": {
+    "production_deploy": false,
+    "social_publish": false,
+    "customer_messages": false,
+    "dns_changes": false,
+    "shopify_live_publish": false,
+    "secret_exposure": false,
+    "payment_changes": false,
+    "drive_upload_requires_explicit_approval": true
+  },
+  "validation_requirements": [
+    "all_model_lanes_have_folder_id",
+    "all_active_model_profiles_have_at_least_one_verified_image",
+    "faceless_accounts_required_exact_count_20",
+    "international_models_required_exact_count_20",
+    "mature_models_required_exact_count_20",
+    "uncounted_lanes_have_count_source_drive_inventory_required",
+    "no_unverified_profile_is_public_active",
+    "no_invented_model_facts",
+    "all_writes_generate_receipts",
+    "all_missing_data_uses_pending_verification",
+    "all_autonomous_operations_respect_approval_gates"
+  ]
+}
