@@ -1,13 +1,17 @@
 const imageLibrary = {
   hero: '/eden-assets/eden-hero.svg',
-  roster: '/eden-assets/eden-female-roster.svg'
+  female: '/eden-assets/eden-female-roster.svg',
+  international: '/eden-assets/eden-international-roster.svg',
+  mature: '/eden-assets/eden-mature-roster.svg',
+  male: '/eden-assets/eden-male-roster.svg',
+  faceless: '/eden-assets/eden-faceless-themes.svg'
 };
 
 const modelLanes = [
-  ['Female Model Roster', 'Uploaded library asset staged for registry mapping.', imageLibrary.roster],
-  ['International Models', 'Drive lane mapped; public image awaits registry asset.', imageLibrary.roster],
-  ['Mature Model Roster', 'Drive lane mapped; public image awaits registry asset.', imageLibrary.roster],
-  ['Male Model Roster', 'Drive lane mapped; public image awaits registry asset.', imageLibrary.roster]
+  ['Female Model Roster', 'Uploaded Eden library roster mapped for the primary model lane.', imageLibrary.female],
+  ['International Models', 'Uploaded Eden library roster mapped for the global model lane.', imageLibrary.international],
+  ['Mature Model Roster', 'Uploaded Eden library roster mapped for the mature model lane.', imageLibrary.mature],
+  ['Male Model Roster', 'Uploaded Eden library roster mapped for the male model lane.', imageLibrary.male]
 ];
 
 const difference = [
@@ -19,9 +23,9 @@ const difference = [
 ];
 
 const systemCards = [
-  ['Creator Production', 'Photoshoots, video production, editing, content systems, and campaign strategy.', 'RT-010', imageLibrary.roster],
-  ['Auto Social', 'Drive-fed model lanes, multi-network drafts, Supabase receipts, and approval-controlled scheduling.', 'RT-013', imageLibrary.hero],
-  ['Brand Partnerships', 'Creator, product, Shopify, and campaign records feeding the autonomous system.', 'RT-011', imageLibrary.roster]
+  ['Creator Production', 'Photoshoots, video production, editing, content systems, and campaign strategy.', 'RT-010', imageLibrary.female],
+  ['Auto Social', 'Drive-fed faceless themes, model lanes, multi-network drafts, Supabase receipts, and approval-controlled scheduling.', 'RT-013', imageLibrary.faceless],
+  ['Brand Partnerships', 'Creator, product, Shopify, and campaign records feeding the autonomous system.', 'RT-011', imageLibrary.international]
 ];
 
 const runtimeGrid = [
@@ -29,7 +33,7 @@ const runtimeGrid = [
   ['Supabase Registry', 'Model personas, creator channels, content queues, receipts, and health checks are schema-ready.'],
   ['Git Build Queue', 'Website, runtime, docs, and branch-safe automation files build from the feature branch.'],
   ['Vercel Workflow', 'The 5-minute cron calls Eden runtime endpoints and reports readiness receipts.'],
-  ['Auto Social Models', 'Faceless, international, mature, and Drive inventory lanes feed draft content generation.'],
+  ['Auto Social Models', 'Faceless, international, mature, male, and female content lanes feed draft generation.'],
   ['Shopify Bridge', 'Admin-token bridge prepares product, collection, image, page, and metaobject payloads.']
 ];
 
@@ -77,7 +81,7 @@ export default function Home() {
 
       <section id="pwa-app" className="appBand"><div className="phoneMock"><span>ES</span><small>Eden Skye PWA</small></div><div><h2>The Eden Skye App</h2><p>Your agency, automation queue, approvals, receipts, creators, and Shopify feeds in one installable PWA shell.</p><ul><li>Exclusive content</li><li>Model updates</li><li>Approval center</li><li>Direct control</li></ul></div><a className="installBtn" href="/manifest.json">Install Now</a></section>
 
-      <section id="control-plane" className="automationPanel"><p className="welcome">Autonomous System Control Plane</p><h2>Website feeds the system.</h2><p className="panelLead">This site now uses Eden uploaded-library visuals instead of a single cropped Shopify mockup. The next image layer is to register the remaining lane images in Supabase Storage and swap the local staged assets to registry URLs.</p><div className="runtimeGrid">{runtimeGrid.map(([item, body]) => <article key={item}><strong>{item}</strong><span>{body}</span></article>)}</div><div className="pipelineStrip">{pipelineSteps.map((step, index) => <span key={step}>{index + 1}. {step}</span>)}</div><div className="controlActions"><a href="/api/eden/auto-social">Test Auto Social Pipeline</a><a href="/api/eden/status">Runtime Status</a><a href="/api/eden/shopify-bridge">Shopify Bridge</a></div></section>
+      <section id="control-plane" className="automationPanel"><p className="welcome">Autonomous System Control Plane</p><h2>Website feeds the system.</h2><p className="panelLead">This site now uses exact Eden uploaded-library visuals for the homepage hero, female roster, international roster, mature roster, male roster, and faceless social theme lanes. Supabase can become the long-term image registry when live storage mutation is approved, but the website no longer depends on the broken Shopify crop fallback.</p><div className="runtimeGrid">{runtimeGrid.map(([item, body]) => <article key={item}><strong>{item}</strong><span>{body}</span></article>)}</div><div className="pipelineStrip">{pipelineSteps.map((step, index) => <span key={step}>{index + 1}. {step}</span>)}</div><div className="controlActions"><a href="/api/eden/auto-social">Test Auto Social Pipeline</a><a href="/api/eden/status">Runtime Status</a><a href="/api/eden/shopify-bridge">Shopify Bridge</a></div></section>
 
       <section id="apply" className="final"><h2>Apply Now</h2><p>All applications enter the governed source-truth queue before activation. No public profile goes live without approval.</p><a href="mailto:strategicmindsadvisory@gmail.com">Start Application</a></section>
 
