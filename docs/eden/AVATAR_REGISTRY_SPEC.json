@@ -1,0 +1,18 @@
+{
+  "schema_version":"1.0.0",
+  "packet_id":"ESS-AVATAR-REGISTRY-SPEC-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "dependencies":["docs/eden/IMAGE_REGISTRY_SPEC.json","docs/eden/MODEL_PERSONA_REGISTRY_SPEC.json","docs/eden/CONTENT_CREATOR_SYSTEM_SPEC.json"],
+  "purpose":"Define avatar schemas, avatar-image relationships, lifecycle states, validation, governance, and repair logic for autonomous avatar operations.",
+  "primary_records":["avatar_registry","avatar_image_links","avatar_voice_links","avatar_video_profiles","avatar_receipts"],
+  "avatar_schema":["avatar_id","persona_id","creator_id","avatar_type","display_name","avatar_slug","primary_image_asset_id","reference_image_asset_ids","voice_profile_id","video_profile_id","platform_targets","status","verification_status","receipt_id","created_at","updated_at"],
+  "avatar_types":["digital_human","faceless_avatar","brand_avatar","narrator_avatar","training_avatar"],
+  "avatar_image_relationship_rules":["avatar_requires_primary_image","all_reference_images_must_exist_in_image_registry","rejected_images_cannot_be_avatar_sources","missing_primary_image_sets_avatar_inactive"],
+  "lifecycle_states":["draft","pending_validation","approved_for_sandbox","active_after_approval","paused","quarantined","retired"],
+  "validation_rules":["avatar_requires_persona_or_creator","avatar_requires_image_registry_reference","voice_profile_optional_until_verified","no_public_avatar_without_source_truth_reference","all_avatar_changes_require_receipts"],
+  "auto_heal_rules":["missing_image_sets_avatar_inactive","broken_persona_link_sets_avatar_review_required","missing_receipt_blocks_activation","duplicate_avatar_slug_receives_safe_suffix","quarantined_source_image_quarantines_avatar"],
+  "approval_gates":{"production_deploy":false,"social_publish":false,"customer_messages":false,"dns_changes":false,"shopify_live_publish":false,"secret_exposure":false,"avatar_video_generation_requires_approval":true},
+  "receipt_requirements":["avatar_created","avatar_updated","avatar_linked_to_persona","avatar_linked_to_image","avatar_status_changed","auto_heal_performed"],
+  "validation_tests":["all_active_avatars_have_primary_image","all_avatar_images_exist_in_registry","all_active_avatars_have_receipts","no_unverified_avatar_public","all_missing_values_marked_pending_verification"]
+}
