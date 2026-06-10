@@ -1,0 +1,24 @@
+{
+  "schema_version":"1.0.0",
+  "plan_id":"ESS-AUTONOMOUS-INSTALL-PLAN-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "owner":"Auto Builder 2 + Vercel Workflow",
+  "source_truth":["docs/eden/PACKET_MANIFEST.json","docs/eden/RUNTIME_IMPLEMENTATION_BACKLOG.json","docs/eden/WORKFLOW_RUNTIME_MANIFEST.json","docs/eden/CONTROL_PLANE_MANIFEST.json"],
+  "governance_locks":{"production_deploy":false,"social_publish":false,"customer_messages":false,"dns_changes":false,"shopify_live_publish":false,"secret_exposure":false,"destructive_actions":false},
+  "install_loop":{"trigger":"vercel_cron_every_5_minutes","route":"/api/eden/cron","status":"installed_skeleton_pending_runtime_connections","agents":["packet_validation_agent","receipt_validation_agent","runtime_readiness_agent","shopify_feed_validation_agent"]},
+  "required_files":["vercel.json","app/api/eden/cron/route.ts","app/api/eden/status/route.ts","app/api/eden/install/route.ts","src/lib/eden/runtime/locks.ts","src/lib/eden/runtime/packet-loader.ts","src/lib/eden/runtime/receipt-writer.ts","src/lib/eden/runtime/validation-agent.ts","src/lib/eden/runtime/workflow-runner.ts","src/lib/eden/runtime/shopify-feed.ts"],
+  "runtime_tasks":[
+    {"task_id":"INSTALL-001","file":"vercel.json","owner":"Vercel Workflow","validation":"cron_path_exists","status":"planned_for_install"},
+    {"task_id":"INSTALL-002","file":"app/api/eden/cron/route.ts","owner":"Vercel Agent","validation":"returns_sandbox_status","status":"planned_for_install"},
+    {"task_id":"INSTALL-003","file":"app/api/eden/status/route.ts","owner":"Vercel Agent","validation":"returns_readiness_percentages","status":"planned_for_install"},
+    {"task_id":"INSTALL-004","file":"app/api/eden/install/route.ts","owner":"Auto Builder 2","validation":"reports_missing_runtime_files","status":"planned_for_install"},
+    {"task_id":"INSTALL-005","file":"src/lib/eden/runtime/packet-loader.ts","owner":"Vercel Workflow","validation":"loads_packet_order","status":"planned_for_install"},
+    {"task_id":"INSTALL-006","file":"src/lib/eden/runtime/receipt-writer.ts","owner":"Auto Builder 2","validation":"creates_draft_receipt_payload","status":"planned_for_install"},
+    {"task_id":"INSTALL-007","file":"src/lib/eden/runtime/validation-agent.ts","owner":"Vercel Agent","validation":"blocks_locked_actions","status":"planned_for_install"},
+    {"task_id":"INSTALL-008","file":"src/lib/eden/runtime/workflow-runner.ts","owner":"Vercel Workflow","validation":"runs_sandbox_loop","status":"planned_for_install"},
+    {"task_id":"INSTALL-009","file":"src/lib/eden/runtime/shopify-feed.ts","owner":"Auto Builder 2","validation":"draft_feed_only","status":"planned_for_install"}
+  ],
+  "readiness":{"governance":98,"runtime":15,"autonomous_execution":20,"production":0},
+  "next_install_action":"create_runtime_skeleton_files_and_verify_commits"
+}
