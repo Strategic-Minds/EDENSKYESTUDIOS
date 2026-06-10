@@ -29,3 +29,10 @@ The scaffold generator is implemented on the feature branch and is ready to writ
 
 ## Verification Needed
 Confirm generated scaffold files exist after the generator command is run in the Auto Builder 2 app execution environment.
+
+## Preview Redeploy Receipt
+- Timestamp: 2026-06-10T09:11:00Z
+- Branch: feature/eden-skye-automation-v1
+- Purpose: trigger a fresh Vercel preview build after confirming required runtime secrets are already configured in the Vercel project.
+- Expected validation routes: /api/eden/install and /api/eden/status
+- Production-gated actions remain blocked: production deploy, social publish, customer messages, DNS changes, payments, Shopify live publish, and secret exposure.
