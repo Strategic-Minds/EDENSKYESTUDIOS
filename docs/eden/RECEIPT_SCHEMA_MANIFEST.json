@@ -1,0 +1,16 @@
+{
+  "schema_version":"1.0.0",
+  "manifest_id":"ESS-RECEIPT-SCHEMA-MANIFEST-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "owner":"Auto Builder",
+  "purpose":"Define receipt schemas, audit retention, validation, and receipt generation rules for Eden autonomous operations.",
+  "dependencies":["docs/eden/PACKET_MANIFEST.json","docs/eden/SUPABASE_SCHEMA_MANIFEST.json","docs/eden/AUTONOMOUS_HARDENING_SPEC.md"],
+  "receipt_schema":["receipt_id","receipt_type","actor","action","target_type","target_id","source_truth_reference","previous_state","next_state","validation_result","approval_id","runtime_context","created_at"],
+  "receipt_types":["source_truth_added","drive_inventory_completed","image_record_created","model_persona_created","creator_record_created","avatar_record_created","website_section_generated","asset_uploaded","asset_promoted","asset_paused","asset_quarantined","asset_retired","auto_heal_performed","schema_hardened","validation_failed","workflow_run_started","workflow_run_completed"],
+  "retention_policy":{"minimum_retention":"indefinite_until_replaced_by_company_policy","deletion_allowed":false,"export_required_before_archive":true},
+  "validation_rules":["all_mutations_require_receipt","receipt_requires_source_truth_reference","approval_actions_require_approval_id","failed_validation_must_write_receipt","auto_heal_must_write_before_and_after_state"],
+  "approval_gates":{"production_deploy":false,"social_publish":false,"customer_messages":false,"dns_changes":false,"shopify_live_publish":false,"secret_exposure":false,"destructive_actions":false},
+  "execution_status":"schema_verified_runtime_pending",
+  "missing_runtime_dependencies":["receipt writer runtime","Supabase source_truth_receipts table","audit export job","runtime actor identity"]
+}
