@@ -6,18 +6,15 @@ export const metadata: Metadata = {
   title: 'Eden Skye Studios',
   description: 'Digital modeling, creator production, Auto Social, and governed automation control surface.',
   applicationName: 'Eden Skye Studios',
-  manifest: '/manifest.webmanifest',
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     title: 'Eden Skye',
     statusBarStyle: 'black-translucent'
   },
   icons: {
-    icon: [
-      { url: '/icon-192.svg', sizes: '192x192', type: 'image/svg+xml' },
-      { url: '/icon-512.svg', sizes: '512x512', type: 'image/svg+xml' }
-    ],
-    apple: [{ url: '/icon-192.svg', sizes: '192x192', type: 'image/svg+xml' }]
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/icon.svg', type: 'image/svg+xml' }]
   }
 };
 
