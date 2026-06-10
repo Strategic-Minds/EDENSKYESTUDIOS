@@ -1,0 +1,8 @@
+{
+  "library": "eden-skye-studios-image-library",
+  "version": "v2-master-auto-builder",
+  "platform": "shopify",
+  "automation_app": "xyla-ai",
+  "approval_policy": "Draft content only until operator approval.",
+  "assets": []
+}
