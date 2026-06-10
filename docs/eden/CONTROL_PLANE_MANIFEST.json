@@ -1,0 +1,22 @@
+{
+  "schema_version":"1.0.0",
+  "manifest_id":"ESS-CONTROL-PLANE-MANIFEST-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "owner":"Auto Builder",
+  "purpose":"Define the Admin Control Plane architecture, editor UI, approval center, receipt viewer, workflow builder, generation modules, Auto Social controls, governance locks, validation tests, and runtime blockers.",
+  "dependencies":["docs/eden/PACKET_MANIFEST.json","docs/eden/SUPABASE_SCHEMA_MANIFEST.json","docs/eden/RECEIPT_SCHEMA_MANIFEST.json","docs/eden/WORKFLOW_RUNTIME_MANIFEST.json","docs/eden/AUTONOMOUS_HARDENING_SPEC.md"],
+  "admin_control_plane":{"status":"planned_not_verified","modules":["chatbot_editor_ui","approval_center","receipt_viewer","workflow_builder","packet_viewer","registry_explorer","image_generation_module","video_generation_module","content_generation_module","auto_social_controls","governance_dashboard","runtime_health_dashboard"]},
+  "chatbot_editor_ui":{"style":"v0_style_admin_builder","allowed_actions":["draft_specs","inspect_packets","create_sandbox_requests","review_registry_records","prepare_approval_requests"],"blocked_actions":["production_deploy","social_publish","customer_messages","dns_changes","shopify_live_publish","secret_exposure","destructive_actions"]},
+  "approval_center":{"required_for":["drive_upload","public_activation","avatar_video_generation","metricool_scheduling","shopify_live_publish","production_deploy","destructive_actions"],"approval_record_fields":["approval_id","request_type","requested_by","target_id","risk_level","status","approved_by","created_at","resolved_at","receipt_id"]},
+  "receipt_viewer":{"sources":["source_truth_receipts","creator_receipts","avatar_receipts","workflow_receipts"],"features":["filter_by_type","filter_by_target","filter_by_status","export_audit_log","view_before_after_state"]},
+  "workflow_builder":{"queues":["source_truth_inventory_queue","drive_sync_queue","image_registry_queue","model_persona_queue","creator_queue","avatar_queue","website_sandbox_build_queue","receipt_queue","auto_heal_queue","hardening_audit_queue"],"schedule":"5_minute_cron_planned_not_verified","output_mode":"sandbox_only"},
+  "generation_modules":{"image_generation":{"status":"planned_not_verified","requires_source_truth":true,"requires_approval_for_public_use":true},"video_generation":{"status":"planned_not_verified","requires_avatar_registry":true,"requires_approval":true},"content_generation":{"status":"planned_not_verified","requires_persona_or_faceless_theme":true,"draft_only_until_approved":true}},
+  "auto_social_controls":{"status":"planned_not_verified","networks":["instagram","tiktok","youtube","facebook","x","threads","linkedin","pinterest","snapchat"],"rules":["draft_first","approval_required_for_schedule","no_unverified_bio_public","no_customer_messages_without_approval"]},
+  "packet_viewer":{"required":true,"entrypoint":"docs/eden/PACKET_MANIFEST.json","features":["dependency_order","packet_status","runtime_blockers","validation_tests","approval_gates"]},
+  "registry_explorer":{"required":true,"sources":["image_registry","model_personas","creator_identities","avatar_registry","website_page_specs","source_truth_receipts"],"blocked_until":"Supabase schema applied and runtime tables verified"},
+  "governance_locks":{"production_deploy":false,"social_publish":false,"customer_messages":false,"dns_changes":false,"shopify_live_publish":false,"secret_exposure":false,"destructive_actions":false},
+  "validation_tests":["control_plane_reads_packet_manifest","approval_center_blocks_locked_actions","receipt_viewer_reads_receipts","workflow_builder_sandbox_only","registry_explorer_requires_verified_tables","generation_modules_require_source_truth","auto_social_requires_approval"],
+  "execution_status":"manifest_verified_runtime_pending",
+  "missing_runtime_dependencies":["control plane UI implementation","Supabase registry tables","receipt viewer runtime","approval center runtime","workflow builder runtime","image generation provider setup","video generation provider setup","Metricool scheduling approval flow","Drive upload execution","Vercel Workflow runtime"]
+}
