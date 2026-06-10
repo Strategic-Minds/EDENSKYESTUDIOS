@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Eden Skye Studios",
+    "settings": [
+      {
+        "type": "text",
+        "id": "xyla_library_version",
+        "label": "Xyla image library version",
+        "default": "v2-master-auto-builder"
+      }
+    ]
+  }
+]
