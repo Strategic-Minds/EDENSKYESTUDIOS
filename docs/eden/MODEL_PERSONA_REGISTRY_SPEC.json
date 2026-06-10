@@ -1,0 +1,17 @@
+{
+  "schema_version":"1.0.0",
+  "packet_id":"ESS-MODEL-PERSONA-REGISTRY-SPEC-001",
+  "system":"Eden Skye Studios",
+  "mode":"branch_sandbox_only",
+  "dependencies":["docs/eden/visual-source-truth.json","docs/eden/IMAGE_TO_MODEL_SYSTEM_MAP.json","docs/eden/IMAGE_REGISTRY_SPEC.json"],
+  "purpose":"Define the model persona registry for autonomous digital modeling and content operations without inventing unverified facts.",
+  "primary_table":"model_personas",
+  "required_fields":["model_profile_id","lane_id","display_name","persona_slug","age_range","market_category","country_or_region","visual_asset_ids","primary_image_asset_id","bio_short","bio_long","content_style","brand_fit","allowed_content_types","verification_status","profile_status","source_truth_receipt_id","created_at","updated_at"],
+  "field_rules":{"display_name":"pending_verified_name_until_verified","country_or_region":"pending_verification_unless_visible_in_source_truth","bio_short":"draft_only_until_approved","bio_long":"draft_only_until_approved","primary_image_asset_id":"required_for_active_profile"},
+  "lane_count_policy":{"faceless_accounts":{"required_exact_count":20},"international_models_18_35":{"required_exact_count":20},"mature_models_50_80":{"required_exact_count":20},"other_lanes":{"count_source":"drive_inventory_required","target_count":"pending_verified_drive_inventory","do_not_cap_at_10":true}},
+  "status_values":{"verification_status":["verified_from_image_registry","pending_verification","needs_human_review","rejected"],"profile_status":["draft","inactive","active_after_approval","quarantined"]},
+  "no_invention_rules":["no invented names","no invented ages","no invented countries","no invented handles","no invented personal claims","no invented income claims","no invented customer promises"],
+  "auto_heal_rules":["profile_without_image_becomes_inactive","missing_required_field_becomes_pending_verification","lane_count_mismatch_blocks_publish","duplicate_slug_gets_safe_suffix_and_receipt","rejected_image_quarantines_profile"],
+  "approval_gates":{"public_activation_requires_approval":true,"production_deploy":false,"social_publish":false,"customer_messages":false,"shopify_live_publish":false,"dns_changes":false,"secret_exposure":false},
+  "validation_tests":["all_active_profiles_have_primary_image","all_profiles_have_lane_id","all_unverified_fields_pending_verification","required_exact_count_lanes_match","no_public_profile_from_unverified_persona","all_changes_have_receipts"]
+}
