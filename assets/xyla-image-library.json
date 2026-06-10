@@ -3,6 +3,23 @@
   "version": "v2-master-auto-builder",
   "platform": "shopify",
   "automation_app": "xyla-ai",
+  "source_drive_folder": "https://drive.google.com/drive/folders/13uLhv0NRhmdCdJCCLrroLzyRRttoXtpr",
   "approval_policy": "Draft content only until operator approval.",
-  "assets": []
+  "assets": [
+    {"key":"drive-home-reference","file_id":"1uUEfDYNnnDguAzXqSRm-vaJOEiofjLTK","type":"homepage_reference","usage":["hero","design reference","campaign opener"]},
+    {"key":"drive-content-board","file_id":"1_HB1XhQkIqbHG7cx9fbThKAx-4xRyWP4","type":"content_board","usage":["service panels","social content system"]},
+    {"key":"drive-model-card-board","file_id":"1ebOQrVEc7NrJhNJeJeYrBzxTzLJMfFxQ","type":"model_board","usage":["interactive model cards","Xyla model prompts","video seed library"]},
+    {"key":"model-luna-moretti","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-sienna-cole","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-natalia-vega","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-zoey-parker","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-aria-reyes","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-camila-santos","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-hailey-james","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-isabella-ruiz","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-viviana-osa","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-kayla-brooks","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-raven-hart","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"},
+    {"key":"model-alexa-monroe","source":"drive-model-card-board","lane":"model profile","status":"approved_for_theme"}
+  ]
 }
