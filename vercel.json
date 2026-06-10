@@ -1,12 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "destination": "https://edenskyestudios.com/$1",
-      "permanent": true
-    }
-  ],
   "crons": [
     {
       "path": "/api/cron/eden-media-preview",
