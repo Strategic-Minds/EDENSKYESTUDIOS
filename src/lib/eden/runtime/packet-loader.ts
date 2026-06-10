@@ -16,12 +16,14 @@ export const requiredRuntimeFiles = [
   'app/api/eden/status/route.ts',
   'app/api/eden/install/route.ts',
   'app/api/eden/shopify-bridge/route.ts',
+  'app/api/eden/auto-social/route.ts',
   'src/lib/eden/runtime/packet-loader.ts',
   'src/lib/eden/runtime/receipt-writer.ts',
   'src/lib/eden/runtime/validation-agent.ts',
   'src/lib/eden/runtime/workflow-runner.ts',
   'src/lib/eden/runtime/shopify-feed.ts',
   'src/lib/eden/runtime/shopify-bridge.ts',
+  'src/lib/eden/runtime/auto-social-orchestrator.ts',
   'supabase/migrations/001_eden_core_schema.sql'
 ];
 
