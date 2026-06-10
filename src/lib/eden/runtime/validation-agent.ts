@@ -54,6 +54,8 @@ const REQUIRED_ENV: EdenEnvCheck[] = [
 const OPTIONAL_ENV: EdenEnvCheck[] = [
   { key: 'SHOPIFY_STORE_DOMAIN', present: false, requiredFor: 'shopify', state: 'warn' },
   { key: 'SHOPIFY_ACCOUNT_EMAIL', present: false, requiredFor: 'shopify', state: 'warn' },
+  { key: 'SHOPIFY_SERVICE_ACCOUNT_EMAIL', present: false, requiredFor: 'shopify', state: 'warn' },
+  { key: 'SHOPIFY_SERVICE_ACCOUNT_ADDRESS', present: false, requiredFor: 'shopify', state: 'warn' },
   { key: 'SHOPIFY_ADMIN_ACCESS_TOKEN', present: false, requiredFor: 'shopify', state: 'warn' },
   { key: 'SHOPIFY_AUTOMATION_TOKEN', present: false, requiredFor: 'shopify', state: 'warn' },
   { key: 'OPENAI_API_KEY', present: false, requiredFor: 'ai_gateway', state: 'warn' },
