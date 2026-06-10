@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "packet_id": "ESS-VERCEL-VISUAL-BUILD-001",
+  "system": "Eden Skye Studios",
+  "branch": "feature/eden-skye-automation-v1",
+  "builder": "Vercel Workflow",
+  "governor": "Auto Builder",
+  "mode": "branch_sandbox_only",
+  "purpose": "Machine-readable instructions to build the Eden Skye website, model system, and records from uploaded visual references.",
+  "source_truth_policy": {
+    "uploaded_images_are_authoritative_visual_source_truth": true,
+    "do_not_invent_model_facts": true,
+    "missing_or_unclear_values": "pending_verification",
+    "image_upload_status": "pending_drive_upload"
+  },
+  "required_outputs": {
+    "faceless_account_themes": 20,
+    "international_models": 20,
+    "mature_models_age_50_plus": 20
+  },
+  "visual_reference_assets": [
+    {"asset_id":"ess_homepage_reference","file_id":"file_0000000083f8720c9007e36249739beb","controls":["Home","global_navigation","hero","stats","models_preview","services","pwa_app"]},
+    {"asset_id":"ess_faceless_20_themes","file_id":"file_000000004a60722fb0aae8d392cf826d","controls":["Faceless Accounts","Auto Social","faceless_account_themes"],"required_records":20},
+    {"asset_id":"ess_international_male_roster_v1","file_id":"file_000000004b0471f5b53f082603fef746","controls":["International Models","international_models_18_35"],"required_records":20},
+    {"asset_id":"ess_international_mixed_roster_v2","file_id":"file_00000000ac48722fa2b31278e8e04581","controls":["International Models","international_models_18_35"],"required_records":20},
+    {"asset_id":"ess_mature_model_roster","file_id":"file_000000006fc4722f9405033323aae987","controls":["50-80 Models","mature_models_50_80"],"required_records":20}
+  ],
+  "build_sequence": [
+    "Read docs/eden/visual-source-truth.json.",
+    "Read docs/eden/IMAGE_TO_MODEL_SYSTEM_MAP.json.",
+    "Read docs/eden/MODEL_SOURCE_TRUTH_EXTRACTION_SPEC.md.",
+    "Generate records without invented facts.",
+    "Generate website pages and sections from records.",
+    "Run validation tests for exact record counts and governance locks.",
+    "Write receipts before approved write operations."
+  ],
+  "approval_gates": {
+    "production_deploy": false,
+    "social_publish": false,
+    "customer_messages": false,
+    "dns_changes": false,
+    "shopify_live_publish": false,
+    "payments": false,
+    "secret_exposure": false,
+    "drive_upload_requires_explicit_approval": true
+  },
+  "validation_tests": [
+    "faceless_account_themes_count_equals_20",
+    "international_models_count_equals_20",
+    "mature_models_50_plus_count_equals_20",
+    "no_production_deploy",
+    "no_social_publish",
+    "no_customer_messages",
+    "no_dns_changes",
+    "no_shopify_live_publish",
+    "no_secret_values_in_repo",
+    "all_unverified_fields_marked_pending_verification"
+  ]
+}
