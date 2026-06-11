@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 const baseUrl = (process.env.VISUAL_PREVIEW_URL || 'https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app').replace(/\/$/, '');
 const outputDir = process.env.VISUAL_OUTPUT_DIR || 'visual-evidence/eden-preview';
 
-const standaloneAssetIds = [
+const disqualifiedDriveAssetIds = [
   '1I-1CTZ7U6ofbJw5YTd4e6jy29XpvxK5u',
   '1eTCl3D6f1Z9nTLLlBVGjHmEt8CsDwWHW',
   '1hnY2MM1ATr8kv9QXK9GkVaozflydCyj6',
@@ -16,6 +16,8 @@ const standaloneAssetIds = [
 ];
 
 const forbiddenReferenceMarkers = [
+  ...disqualifiedDriveAssetIds,
+  'drive.google.com/thumbnail',
   'reference-full-system-board',
   'reference-home-hero-board',
   'reference-page-collage-board',
@@ -25,17 +27,17 @@ const forbiddenReferenceMarkers = [
 ];
 
 const pages = [
-  { name: 'home', path: '/', requireStandalone: true },
-  { name: 'models', path: '/models', requireStandalone: true },
-  { name: 'model-profile-alexis-voss', path: '/models/alexis-voss', requireStandalone: true },
+  { name: 'home', path: '/', allowMissingAsset: true },
+  { name: 'models', path: '/models', allowMissingAsset: true },
+  { name: 'model-profile-alexis-voss', path: '/models/alexis-voss', allowMissingAsset: true },
   { name: 'pricing', path: '/pricing' },
   { name: 'checkout', path: '/checkout' },
   { name: 'dashboard', path: '/dashboard' },
-  { name: 'closet-home', path: '/closet', requireStandalone: true, allowMissingAsset: true },
-  { name: 'closet-outfit-selector', path: '/closet/alexis-voss', requireStandalone: true, allowMissingAsset: true },
+  { name: 'closet-home', path: '/closet', allowMissingAsset: true },
+  { name: 'closet-outfit-selector', path: '/closet/alexis-voss', allowMissingAsset: true },
   { name: 'closet-environment-viewer', path: '/closet/alexis-voss/viewer', allowMissingAsset: true },
-  { name: 'ai-video-chat', path: '/closet/alexis-voss/video', requireStandalone: true },
-  { name: 'ai-chat', path: '/closet/alexis-voss/chat', requireStandalone: true },
+  { name: 'ai-video-chat', path: '/closet/alexis-voss/video', allowMissingAsset: true },
+  { name: 'ai-chat', path: '/closet/alexis-voss/chat', allowMissingAsset: true },
   { name: 'pwa-app', path: '/pwa-app', allowMissingAsset: true }
 ];
 
@@ -47,13 +49,7 @@ const viewports = [
 function assertNoReferenceBoardUsage(html, pageName) {
   const found = forbiddenReferenceMarkers.filter((marker) => html.includes(marker));
   if (found.length) {
-    throw new Error(`${pageName} rendered forbidden reference-board markers: ${found.join(', ')}`);
-  }
-}
-
-function assertStandaloneAssetUsage(html, pageName) {
-  if (!standaloneAssetIds.some((id) => html.includes(id))) {
-    throw new Error(`${pageName} did not render any approved standalone Drive asset id`);
+    throw new Error(`${pageName} rendered forbidden reference/collage asset markers: ${found.join(', ')}`);
   }
 }
 
@@ -82,7 +78,6 @@ try {
 
       const html = await page.content();
       assertNoReferenceBoardUsage(html, spec.name);
-      if (spec.requireStandalone) assertStandaloneAssetUsage(html, spec.name);
       if (spec.allowMissingAsset) assertMissingAssetCallout(html, spec.name);
 
       const screenshotName = `${viewport.name}-${spec.name}.png`;
@@ -114,7 +109,7 @@ const markdown = [
   '## Guardrails',
   '',
   '- Reference boards are layout references only.',
-  '- Collage-board markers are forbidden in rendered HTML.',
+  '- Rejected Drive thumbnails and collage-board markers are forbidden in rendered HTML.',
   '- Pages with missing standalone assets must show MISSING_ASSET.',
   '- This artifact does not approve visuals by itself.',
   '',
