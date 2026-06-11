@@ -26,19 +26,30 @@ const forbiddenReferenceMarkers = [
   '03-ChatGPT-Image-Jun-10-2026-09_01_29-PM-2-.png'
 ];
 
+const forbiddenPlaceholderMarkers = [
+  'MISSING_ASSET',
+  'MissingAssetNotice',
+  'VisualAssetSlot',
+  'missing-env'
+];
+
+const generatedAssetMarkers = [
+  'cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-'
+];
+
 const pages = [
-  { name: 'home', path: '/', allowMissingAsset: true },
-  { name: 'models', path: '/models', allowMissingAsset: true },
-  { name: 'model-profile-alexis-voss', path: '/models/alexis-voss', allowMissingAsset: true },
+  { name: 'home', path: '/', requireGeneratedAsset: true },
+  { name: 'models', path: '/models', requireGeneratedAsset: true },
+  { name: 'model-profile-alexis-voss', path: '/models/alexis-voss', requireGeneratedAsset: true },
   { name: 'pricing', path: '/pricing' },
   { name: 'checkout', path: '/checkout' },
   { name: 'dashboard', path: '/dashboard' },
-  { name: 'closet-home', path: '/closet', allowMissingAsset: true },
-  { name: 'closet-outfit-selector', path: '/closet/alexis-voss', allowMissingAsset: true },
-  { name: 'closet-environment-viewer', path: '/closet/alexis-voss/viewer', allowMissingAsset: true },
-  { name: 'ai-video-chat', path: '/closet/alexis-voss/video', allowMissingAsset: true },
-  { name: 'ai-chat', path: '/closet/alexis-voss/chat', allowMissingAsset: true },
-  { name: 'pwa-app', path: '/pwa-app', allowMissingAsset: true }
+  { name: 'closet-home', path: '/closet', requireGeneratedAsset: true },
+  { name: 'closet-outfit-selector', path: '/closet/alexis-voss', requireGeneratedAsset: true },
+  { name: 'closet-environment-viewer', path: '/closet/alexis-voss/viewer', requireGeneratedAsset: true },
+  { name: 'ai-video-chat', path: '/closet/alexis-voss/video', requireGeneratedAsset: true },
+  { name: 'ai-chat', path: '/closet/alexis-voss/chat', requireGeneratedAsset: true },
+  { name: 'pwa-app', path: '/pwa-app', requireGeneratedAsset: true }
 ];
 
 const viewports = [
@@ -53,9 +64,17 @@ function assertNoReferenceBoardUsage(html, pageName) {
   }
 }
 
-function assertMissingAssetCallout(html, pageName) {
-  if (!html.includes('MISSING_ASSET')) {
-    throw new Error(`${pageName} expected an explicit MISSING_ASSET callout`);
+function assertNoMissingAssetPlaceholder(html, pageName) {
+  const found = forbiddenPlaceholderMarkers.filter((marker) => html.includes(marker));
+  if (found.length) {
+    throw new Error(`${pageName} rendered forbidden missing-asset placeholder markers: ${found.join(', ')}`);
+  }
+}
+
+function assertGeneratedAssetUsage(html, pageName) {
+  const found = generatedAssetMarkers.some((marker) => html.includes(marker));
+  if (!found) {
+    throw new Error(`${pageName} did not render generated standalone CDN assets`);
   }
 }
 
@@ -78,11 +97,12 @@ try {
 
       const html = await page.content();
       assertNoReferenceBoardUsage(html, spec.name);
-      if (spec.allowMissingAsset) assertMissingAssetCallout(html, spec.name);
+      assertNoMissingAssetPlaceholder(html, spec.name);
+      if (spec.requireGeneratedAsset) assertGeneratedAssetUsage(html, spec.name);
 
       const screenshotName = `${viewport.name}-${spec.name}.png`;
       await page.screenshot({ path: join(outputDir, screenshotName), fullPage: true });
-      rows.push({ viewport: viewport.name, page: spec.name, path: spec.path, status, screenshot: screenshotName });
+      rows.push({ viewport: viewport.name, page: spec.name, path: spec.path, status, generated_assets_required: Boolean(spec.requireGeneratedAsset), screenshot: screenshotName });
     }
 
     await context.close();
@@ -110,14 +130,15 @@ const markdown = [
   '',
   '- Reference boards are layout references only.',
   '- Rejected Drive thumbnails and collage-board markers are forbidden in rendered HTML.',
-  '- Pages with missing standalone assets must show MISSING_ASSET.',
+  '- Generated standalone CDN assets are required on visual pages.',
+  '- Missing-asset placeholders are forbidden after standalone generation.',
   '- This artifact does not approve visuals by itself.',
   '',
   '## Screenshots',
   '',
-  '| Viewport | Page | Route | Screenshot |',
-  '| --- | --- | --- | --- |',
-  ...rows.map((row) => `| ${row.viewport} | ${row.page} | ${row.path} | ${row.screenshot} |`),
+  '| Viewport | Page | Route | Generated assets required | Screenshot |',
+  '| --- | --- | --- | --- | --- |',
+  ...rows.map((row) => `| ${row.viewport} | ${row.page} | ${row.path} | ${row.generated_assets_required ? 'yes' : 'no'} | ${row.screenshot} |`),
   ''
 ].join('\n');
 
