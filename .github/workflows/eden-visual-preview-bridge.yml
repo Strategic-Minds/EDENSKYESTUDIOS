@@ -7,6 +7,16 @@ on:
         description: Vercel preview URL to capture
         required: false
         default: https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app
+  push:
+    branches:
+      - eden/readiness-scaffold-20260604
+    paths:
+      - app/**
+      - public/**
+      - scripts/capture-eden-visual-preview.mjs
+      - tests/visual-source-truth.test.mjs
+      - package.json
+      - .github/workflows/eden-visual-preview-bridge.yml
   pull_request:
     paths:
       - app/**
