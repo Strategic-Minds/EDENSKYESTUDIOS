@@ -2,13 +2,29 @@ name: Eden Readiness Cloud Validation
 
 on:
   workflow_dispatch:
+    inputs:
+      generator_mode:
+        description: Generator mode for draft rebuild automation
+        required: true
+        default: reset
+        type: choice
+        options:
+          - reset
+          - scaffold_only
   pull_request:
     paths:
       - "app/**"
       - "public/**"
       - "scripts/scaffold-eden-readiness.mjs"
+      - "scripts/reset-eden-generator.mjs"
+      - "scripts/validate-*.mjs"
       - "docs/max_bootstrap/**"
+      - "docs/avatars/**"
+      - "docs/agents/**"
+      - "docs/content/**"
       - "assets/eden-agents/**"
+      - "config/**"
+      - "workflows/eden-skye/**"
       - "package.json"
       - ".github/workflows/eden-readiness-cloud.yml"
 
@@ -18,11 +34,13 @@ permissions:
 env:
   EDEN_ACTIVATION_STATUS: STUB_ONLY
   EDEN_HUMAN_GATE_REQUIRED: "true"
+  EDEN_VISUAL_SOURCE_LOCK_REQUIRED: "true"
 
 jobs:
   scaffold-and-validate:
-    name: Scaffold, build, and validate Eden site
+    name: Reset generator, build, and validate Eden system
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,11 +53,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Next.js production build
-        run: npm run build
+      - name: Verify locked visual source truth before generator reset
+        run: npm test
+
+      - name: Run draft-only generator reset
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.generator_mode == 'reset' }}
+        run: npm run generator:reset
 
       - name: Run draft-only scaffold generator
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.generator_mode == 'scaffold_only' }}
         run: npm run scaffold:eden
+
+      - name: Run Next.js production build
+        run: npm run build
 
       - name: Run validation suite
         run: |
@@ -47,6 +73,7 @@ jobs:
           npm run validate:eden:avatars
           npm run validate:eden:content
           npm run validate:eden:config
+          npm test
 
       - name: Guard generated surfaces against live activation markers
         run: |
@@ -72,4 +99,5 @@ jobs:
             app/admin/eden
             supabase/migrations/0001_eden_skye_readiness_scaffold.sql
             assets/eden-agents
+            data/factory/receipts/eden-generator-reset-latest.json
           if-no-files-found: error
