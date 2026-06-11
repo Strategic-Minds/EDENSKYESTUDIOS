@@ -33,7 +33,7 @@ jobs:
   capture-visual-preview:
     name: Capture real Chromium screenshots
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       VISUAL_PREVIEW_URL: ${{ github.event.inputs.preview_url || 'https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app' }}
       VISUAL_OUTPUT_DIR: visual-evidence/eden-preview
@@ -57,6 +57,9 @@ jobs:
 
       - name: Run source-truth guard
         run: npm test
+
+      - name: Run production build
+        run: npm run build
 
       - name: Capture preview screenshots
         run: npm run visual:preview-bridge
