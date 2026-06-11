@@ -1,3 +1,4 @@
+// Draft-only screenshot bridge. Evidence output requires human visual approval before PR promotion.
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
