@@ -8,7 +8,35 @@ export type VisualAsset = {
   allowedUse: string[];
 };
 
-export const approvedStandaloneAssets: VisualAsset[] = [];
+const cdn = (file: string, version: string) => `https://cdn.shopify.com/s/files/1/0754/8905/0678/files/${file}?v=${version}`;
+const generatedSource = 'Generated standalone source image from approved Eden Skye board reference; hosted as Shopify CDN media only, no product/payment activation';
+
+export const standaloneAssets = {
+  homeHero: { id: 'generated-home-hero-alexis-neon-es', kind: 'standalone_asset', label: 'Generated standalone home hero model with ES neon background', src: cdn('eden-standalone-home-hero-alexis-neon-es.png', '1781219008'), source: generatedSource, allowedUse: ['home.hero', 'model.profile'] },
+  lunaMoretti: { id: 'generated-luna-moretti-card', kind: 'standalone_asset', label: 'Generated standalone Luna Moretti model image', src: cdn('eden-model-luna-moretti-card.png', '1781219024'), source: generatedSource, allowedUse: ['models.grid', 'gallery'] },
+  siennaCole: { id: 'generated-sienna-cole-card', kind: 'standalone_asset', label: 'Generated standalone Sienna Cole model image', src: cdn('eden-model-sienna-cole-card.png', '1781219032'), source: generatedSource, allowedUse: ['models.grid', 'gallery'] },
+  alexisVoss: { id: 'generated-alexis-voss-profile', kind: 'standalone_asset', label: 'Generated standalone Alexis Voss profile image', src: cdn('eden-model-alexis-voss-profile.png', '1781219041'), source: generatedSource, allowedUse: ['models.grid', 'model.profile', 'gallery'] },
+  nataliaVega: { id: 'generated-natalia-vega-card', kind: 'standalone_asset', label: 'Generated standalone Natalia Vega model image', src: cdn('eden-model-natalia-vega-card.png', '1781219049'), source: generatedSource, allowedUse: ['models.grid', 'gallery'] },
+  zoeyParker: { id: 'generated-zoey-parker-card', kind: 'standalone_asset', label: 'Generated standalone Zoey Parker model image', src: cdn('eden-model-zoey-parker-card.png', '1781219065'), source: generatedSource, allowedUse: ['models.grid', 'gallery'] },
+  ariaReyes: { id: 'generated-aria-reyes-card', kind: 'standalone_asset', label: 'Generated standalone Aria Reyes model image', src: cdn('eden-model-aria-reyes-card.png', '1781219073'), source: generatedSource, allowedUse: ['models.grid', 'gallery'] },
+  closetFullBody: { id: 'generated-closet-full-body-alexis', kind: 'standalone_asset', label: 'Generated standalone full-body closet viewer model', src: cdn('eden-closet-full-body-alexis-black-look.png', '1781219081'), source: generatedSource, allowedUse: ['closet.viewer', 'closet.landing'] },
+  aiVideo: { id: 'generated-ai-video-chat-still-alexis', kind: 'standalone_asset', label: 'Generated standalone AI video chat still', src: cdn('eden-ai-video-chat-still-alexis.png', '1781219089'), source: generatedSource, allowedUse: ['ai.video'] },
+  aiChat: { id: 'generated-ai-chat-portrait-alexis', kind: 'standalone_asset', label: 'Generated standalone AI chat portrait', src: cdn('eden-ai-chat-portrait-alexis-neon.png', '1781219107'), source: generatedSource, allowedUse: ['ai.chat'] },
+  pwaHome: { id: 'generated-pwa-mobile-home', kind: 'standalone_asset', label: 'Generated standalone PWA mobile home mockup', src: cdn('eden-pwa-mobile-home-mockup.png', '1781219193'), source: generatedSource, allowedUse: ['pwa.mobile'] },
+  pwaNavigation: { id: 'generated-pwa-mobile-navigation', kind: 'standalone_asset', label: 'Generated standalone PWA mobile navigation mockup', src: cdn('eden-pwa-mobile-navigation-mockup.png', '1781219202'), source: generatedSource, allowedUse: ['pwa.mobile'] }
+} satisfies Record<string, VisualAsset>;
+
+export const environmentAssets = [
+  { key: 'modern-bedroom', label: 'Modern bedroom', src: cdn('eden-env-modern-bedroom.png', '1781219116') },
+  { key: 'walk-in-closet', label: 'Walk-in closet', src: cdn('eden-env-walk-in-closet.png', '1781219124') },
+  { key: 'penthouse-living-room', label: 'Penthouse living room', src: cdn('eden-env-penthouse-living-room.png', '1781219132') },
+  { key: 'beach-villa', label: 'Beach villa', src: cdn('eden-env-beach-villa.png', '1781219185') },
+  { key: 'luxury-hotel-suite', label: 'Luxury hotel', src: cdn('eden-env-luxury-hotel-suite.png', '1781219151') },
+  { key: 'rooftop-terrace', label: 'Rooftop terrace', src: cdn('eden-env-rooftop-terrace.png', '1781219161') },
+  { key: 'photo-studio', label: 'Photo studio', src: cdn('eden-env-photo-studio.png', '1781219169') }
+];
+
+export const approvedStandaloneAssets: VisualAsset[] = Object.values(standaloneAssets);
 
 export const disqualifiedAssets: VisualAsset[] = [
   { id: 'disqualified-drive-1I-1CTZ7', kind: 'disqualified_asset', label: 'Drive thumbnail rendered as collage-board visual in browser evidence', driveFileId: '1I-1CTZ7U6ofbJw5YTd4e6jy29XpvxK5u', source: 'Drive candidate rejected after Eden Visual Preview Bridge #3 screenshots', allowedUse: ['DO_NOT_RENDER'] },
@@ -25,27 +53,18 @@ export const referenceBoards: VisualAsset[] = [
   { id: 'reference-page-collage-board', kind: 'reference_board', label: 'Approved page collage board', source: 'Uploaded user_files/03-ChatGPT-Image-Jun-10-2026-09_01_29-PM-2-.png', allowedUse: ['layout_reference_only'] }
 ];
 
-export const missingAssets: VisualAsset[] = [
-  { id: 'missing-home-hero-model-neon-es', kind: 'missing_asset', label: 'Standalone home hero model image with ES neon background', source: 'Required by approved homepage board; current Drive candidates rejected as collage-board renderings', allowedUse: ['home.hero'] },
-  { id: 'missing-model-grid-card-images', kind: 'missing_asset', label: 'Repo-hosted standalone model card images from approved separated-card source pack', source: 'Uploaded ZIP exists locally but not yet available as repo/public assets through the current connector path', allowedUse: ['models.grid'] },
-  { id: 'missing-profile-gallery-images', kind: 'missing_asset', label: 'Standalone Alexis Voss profile hero, gallery, and video stills', source: 'Required by approved profile board; current Drive candidates rejected as collage-board renderings', allowedUse: ['model.profile', 'gallery'] },
-  { id: 'missing-closet-bedroom-environment', kind: 'missing_asset', label: 'Standalone bedroom environment image', source: 'Required by approved board 09 but not verified as standalone', allowedUse: ['environment.selector'] },
-  { id: 'missing-closet-walk-in-environment', kind: 'missing_asset', label: 'Standalone walk-in closet environment image', source: 'Required by approved board 09 but not verified as standalone', allowedUse: ['environment.selector'] },
-  { id: 'missing-full-body-viewer-model', kind: 'missing_asset', label: 'Standalone full-body viewer model image', source: 'Required by approved boards 08, 10, 11 but not verified as standalone', allowedUse: ['closet.viewer'] },
-  { id: 'missing-heygen-video-call-still', kind: 'missing_asset', label: 'Standalone AI video chat still', source: 'Required by approved board 12 but not verified as standalone', allowedUse: ['ai.video'] },
-  { id: 'missing-mobile-pwa-screens', kind: 'missing_asset', label: 'Standalone mobile PWA screen images', source: 'Required by approved boards 14 and 15 but not verified as standalone', allowedUse: ['pwa.mobile'] }
-];
-
+export const missingAssets: VisualAsset[] = [];
 export const allVisualAssets = [...approvedStandaloneAssets, ...disqualifiedAssets, ...referenceBoards, ...missingAssets];
 
 export const models = [
-  { slug: 'luna-moretti', name: 'Luna Moretti', location: 'Miami, FL', tag: 'The Mystery', requiredAsset: '01-luna-moretti__full-card__v001.png' },
-  { slug: 'sienna-cole', name: 'Sienna Cole', location: 'Los Angeles, CA', tag: 'The Sunshine', requiredAsset: '02-sienna-cole__full-card__v001.png' },
-  { slug: 'alexis-voss', name: 'Alexis Voss', location: 'New York, NY', tag: 'Neon flagship', requiredAsset: 'standalone-alexis-voss-profile-hero.png' },
-  { slug: 'natalia-vega', name: 'Natalia Vega', location: 'Miami, FL', tag: 'The Temptress', requiredAsset: '03-natalia-vega__full-card__v001.png' },
-  { slug: 'zoey-parker', name: 'Zoey Parker', location: 'Los Angeles, CA', tag: 'The Girl Next Door', requiredAsset: '04-zoey-parker__full-card__v001.png' },
-  { slug: 'aria-reyes', name: 'Aria Reyes', location: 'New York, NY', tag: 'The Driver', requiredAsset: '05-aria-reyes__full-card__v001.png' }
+  { slug: 'luna-moretti', name: 'Luna Moretti', location: 'Miami, FL', tag: 'The Mystery', image: standaloneAssets.lunaMoretti.src },
+  { slug: 'sienna-cole', name: 'Sienna Cole', location: 'Los Angeles, CA', tag: 'The Sunshine', image: standaloneAssets.siennaCole.src },
+  { slug: 'alexis-voss', name: 'Alexis Voss', location: 'New York, NY', tag: 'Neon flagship', image: standaloneAssets.alexisVoss.src },
+  { slug: 'natalia-vega', name: 'Natalia Vega', location: 'Miami, FL', tag: 'The Temptress', image: standaloneAssets.nataliaVega.src },
+  { slug: 'zoey-parker', name: 'Zoey Parker', location: 'Los Angeles, CA', tag: 'The Girl Next Door', image: standaloneAssets.zoeyParker.src },
+  { slug: 'aria-reyes', name: 'Aria Reyes', location: 'New York, NY', tag: 'The Driver', image: standaloneAssets.ariaReyes.src }
 ];
 
+export const galleryAssets = [standaloneAssets.alexisVoss, standaloneAssets.homeHero, standaloneAssets.lunaMoretti, standaloneAssets.siennaCole, standaloneAssets.nataliaVega, standaloneAssets.zoeyParker];
 export const primaryModel = models[2];
-export const heroAsset = missingAssets[0];
+export const heroAsset = standaloneAssets.homeHero;
