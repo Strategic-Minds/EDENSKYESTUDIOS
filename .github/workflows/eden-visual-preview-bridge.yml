@@ -1,0 +1,59 @@
+name: Eden Visual Preview Bridge
+
+on:
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: Vercel preview URL to capture
+        required: false
+        default: https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app
+  pull_request:
+    paths:
+      - app/**
+      - public/**
+      - scripts/capture-eden-visual-preview.mjs
+      - tests/visual-source-truth.test.mjs
+      - package.json
+      - .github/workflows/eden-visual-preview-bridge.yml
+
+permissions:
+  contents: read
+
+jobs:
+  capture-visual-preview:
+    name: Capture real Chromium screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VISUAL_PREVIEW_URL: ${{ github.event.inputs.preview_url || 'https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app' }}
+      VISUAL_OUTPUT_DIR: visual-evidence/eden-preview
+    steps:
+      - name: Checkout draft branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install app dependencies
+        run: npm install
+
+      - name: Install Playwright package for bridge
+        run: npm install --no-save playwright@1.60.0
+
+      - name: Install Chromium in runner
+        run: npx playwright install --with-deps chromium
+
+      - name: Run source-truth guard
+        run: npm test
+
+      - name: Capture preview screenshots
+        run: npm run visual:preview-bridge
+
+      - name: Upload screenshot evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-visual-preview-evidence
+          path: visual-evidence/eden-preview
+          if-no-files-found: error
