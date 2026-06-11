@@ -9,7 +9,7 @@ export function VisualAssetSlot({ label, requiredFile, className = '' }: { label
 }
 
 export function ModelCard({ model }: { model: typeof models[number] }) {
-  return <a className="model-card missing-card" href={`/models/${model.slug}`}><VisualAssetSlot label={`${model.name} standalone model card required`} requiredFile={model.requiredAsset} /><span><strong>{model.name}</strong><em>{model.location}</em></span></a>;
+  return <a className="model-card" href={`/models/${model.slug}`}><img src={model.image} alt={`${model.name} generated standalone source`} /><span><strong>{model.name}</strong><em>{model.location}</em></span></a>;
 }
 
 export function Difference() {
@@ -22,6 +22,7 @@ export function AppBanner() {
 }
 
 export function MissingAssetNotice({ compact = false }: { compact?: boolean }) {
+  if (!missingAssets.length) return null;
   return <aside className={compact ? 'missing-asset compact' : 'missing-asset'}><strong>MISSING_ASSET</strong><span>{missingAssets.map(a => a.label).join(' | ')}</span></aside>;
 }
 
