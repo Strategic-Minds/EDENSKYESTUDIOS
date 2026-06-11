@@ -8,6 +8,17 @@ export type VisualAsset = {
   allowedUse: string[];
 };
 
+export const visualSourceLock = {
+  status: 'LOCKED_BY_JEREMY',
+  lockedAt: '2026-06-11T23:20:00Z',
+  approvalText: 'thats exactly what i want. lock',
+  evidenceWorkflow: 'Eden Visual Preview Bridge #33',
+  evidenceCommit: 'bf587acddad8d121efee1f8e944239a44e19f157',
+  evidenceArtifact: 'eden-visual-preview-evidence',
+  artifactDigest: 'sha256:10c5d17b24ef2aae5495c8d65bddfaf395f56ab0bbb1a5f77807adb1e57a21c2',
+  rule: 'Render generated standalone source images only; uploaded collage/page boards remain layout references only and must never render as page/model/closet assets.'
+} as const;
+
 const cdn = (file: string, version: string) => `https://cdn.shopify.com/s/files/1/0754/8905/0678/files/${file}?v=${version}`;
 const generatedSource = 'Generated standalone source image from approved Eden Skye board reference; hosted as Shopify CDN media only, no product/payment activation';
 
