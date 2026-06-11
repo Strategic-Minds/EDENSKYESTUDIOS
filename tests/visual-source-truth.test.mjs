@@ -7,7 +7,7 @@ assert.match(manifest, /reference_board/);
 assert.match(manifest, /standalone_asset/);
 assert.match(manifest, /disqualified_asset/);
 assert.match(manifest, /generatedSource/);
-assert.match(manifest, /cdn\.shopify\.com\/s\/files\/1\/0754\/8905\/0678\/files\/eden-/);
+assert.match(manifest, /cdn\.shopify\.com\/s\/files\/1\/0754\/8905\/0678\/files\/\$\{file\}/, 'manifest must build generated assets from the Shopify CDN media helper');
 assert.match(manifest, /missingAssets:\s*VisualAsset\[\]\s*=\s*\[\]/, 'missingAssets must stay empty once generated standalone assets are wired');
 assert.doesNotMatch(manifest, /drive\.google\.com\/thumbnail/, 'Drive thumbnails must not render as page/model/closet assets');
 assert.doesNotMatch(manifest, /src:\s*driveImage|const driveImage/, 'Rejected Drive candidates must not expose renderable src URLs');
