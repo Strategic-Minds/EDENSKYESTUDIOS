@@ -3,6 +3,11 @@ import { readFileSync } from 'node:fs';
 
 const manifest = readFileSync('app/visual-source-truth.ts', 'utf8');
 
+assert.match(manifest, /visualSourceLock/);
+assert.match(manifest, /LOCKED_BY_JEREMY/);
+assert.match(manifest, /Eden Visual Preview Bridge #33/);
+assert.match(manifest, /bf587acddad8d121efee1f8e944239a44e19f157/);
+assert.match(manifest, /sha256:10c5d17b24ef2aae5495c8d65bddfaf395f56ab0bbb1a5f77807adb1e57a21c2/);
 assert.match(manifest, /reference_board/);
 assert.match(manifest, /standalone_asset/);
 assert.match(manifest, /disqualified_asset/);
