@@ -1,0 +1,2 @@
+import { Header, primaryModel } from '../../../components';
+export default function Video(){return <main className="eden-site"><Header/><section className="video-chat-page"><div><h1>AI Video Chat</h1><p className="pink">with Alexis</p><img src={primaryModel.image} alt="Approved standalone video chat source"/></div><aside><h2>Chat</h2><p>Draft HeyGen session. No live video release without approval.</p><button className="hot-btn">End Call</button></aside></section></main>}
