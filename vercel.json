@@ -1,8 +1,25 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
       "path": "/api/cron/eden-media-preview",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/workflows/eden-skye-tick",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/shopify-sync",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/autosocial",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/metricool-sync",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
