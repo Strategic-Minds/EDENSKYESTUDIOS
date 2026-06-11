@@ -1,0 +1,11 @@
+create extension if not exists "pgcrypto";
+create table if not exists profiles (id uuid primary key default gen_random_uuid(), email text, role text default 'member', created_at timestamptz default now());
+create table if not exists models (id uuid primary key default gen_random_uuid(), slug text unique, display_name text, roster text, age_band text, adult_confirmed boolean default true, bible jsonb default '{}'::jsonb);
+create table if not exists memberships (id uuid primary key default gen_random_uuid(), shopify_customer_id text, email text, tier text, status text default 'draft', created_at timestamptz default now());
+create table if not exists entitlements (id uuid primary key default gen_random_uuid(), membership_id uuid, model_slug text, access_level text, active boolean default false);
+create table if not exists image_assets (id uuid primary key default gen_random_uuid(), model_slug text, asset_type text, status text default 'planned', risk_level text default 'unknown', metadata jsonb default '{}'::jsonb, created_at timestamptz default now());
+create table if not exists admin_approval_items (id uuid primary key default gen_random_uuid(), item_type text, gate_type text, status text default 'pending', human_approval_required boolean default true, notes text, created_at timestamptz default now());
+create table if not exists validation_scores (id uuid primary key default gen_random_uuid(), asset_id uuid, realism_score numeric, brand_fit_score numeric, identity_score numeric, anatomy_score numeric, commercial_safety_score numeric, policy_flags text[] default '{}');
+create table if not exists workflow_jobs (id uuid primary key default gen_random_uuid(), job_type text, status text default 'queued', payload jsonb default '{}'::jsonb, attempts int default 0, created_at timestamptz default now());
+create table if not exists workflow_receipts (id uuid primary key default gen_random_uuid(), workflow_name text, status text, summary text, receipt jsonb default '{}'::jsonb, created_at timestamptz default now());
+create table if not exists release_gates (id uuid primary key default gen_random_uuid(), gate_name text, status text default 'locked', required_approver text default 'Jeremy');
