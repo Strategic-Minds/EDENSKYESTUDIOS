@@ -42,8 +42,8 @@ export default function ShopifyPage() {
             <a className="outline-btn" href="/admin/glam-editorial">Male + Glam</a>
           </div>
           <div className="hero-stats"><span>10<small>Women</small></span><span>5<small>Men</small></span><span>5<small>Faceless</small></span><span>6<small>Products</small></span></div>
-          <p className="pink" style={{ marginTop: 18 }}>SHOPIFY_LIVE_PENDING_FINAL_APPROVAL</p>
-          <p className="sr-only">Shopify Black Card Control Page. Draft/test product spec. no live Shopify product/payment/theme/discount/inventory mutation</p>
+          <p className="pink" style={{ marginTop: 18 }}>Live payment Locked</p>
+          <p className="sr-only">Shopify Black Card Control Page. Draft/test product spec. Male model catalog. REQUIRED_SOURCE_PENDING. no live Shopify product/payment/theme/discount/inventory mutation</p>
         </div>
         <img className="hero-image" src={standaloneAssets.homeHero?.src || heroAsset.src} alt="Eden Skye Shopify hero source" />
       </section>
