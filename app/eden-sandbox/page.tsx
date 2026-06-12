@@ -26,7 +26,7 @@ const stats = [
 const tasks = [
   ['Asset manifest', 'Complete'],
   ['Shopify CDN media hosting', 'Complete'],
-  ['Preview UI patch', 'In review'],
+  ['Preview UI patch', 'Expanded'],
   ['Connector smoke', 'Blocked']
 ];
 
@@ -71,6 +71,50 @@ const visualProof = [
   ['Mobile admin flow', assets.mobileAdmin]
 ];
 
+const launchLanes = [
+  ['Audience capture', 'Brand kit lead magnet', 'Private preview copy ready'],
+  ['Entry offer', 'AI avatar starter kit', 'Draft offer, no checkout'],
+  ['Setup service', 'Done-with-you launch setup', 'Scope pending approval'],
+  ['Retainer path', 'Monthly content operations', 'Requires signal first']
+];
+
+const contentQueue = [
+  ['Hook batch', '24 short-form hooks', 'Draft'],
+  ['Caption batch', '12 caption variants', 'Needs QA'],
+  ['Lookbook drop', '6 carousel concepts', 'Media review'],
+  ['Email sequence', '5 lead magnet emails', 'Draft']
+];
+
+const engagementDrafts = [
+  ['Inbound comment', 'Thanks for asking. The starter kit is private preview only right now.', 'Needs owner review'],
+  ['Collab inquiry', 'Send the brand kit and request usage context before quoting.', 'Draft'],
+  ['Media request', 'Route to rights review before sharing any source reference.', 'Blocked'],
+  ['Support question', 'Clarify synthetic model disclosure and approval gates.', 'Draft']
+];
+
+const experiments = [
+  ['Hero CTA', 'Brand kit vs control plane', 'Awaiting traffic'],
+  ['Offer ladder', 'Starter kit vs setup call', 'Draft only'],
+  ['Visual angle', 'Lookbook grid vs brand stack', 'Ready for preview'],
+  ['Channel test', 'Metricool vs Xyla path', 'Connector smoke required']
+];
+
+const agentOps = [
+  ['Content Agent', 'Drafts queued', 'Class 2'],
+  ['Media QA Agent', 'Rights review pending', 'Class 2'],
+  ['Distribution Agent', 'External writes locked', 'Class 4 blocked'],
+  ['Revenue Agent', 'Offer math draft', 'Class 2'],
+  ['Recovery Agent', 'No failed browser QA', 'Observe'],
+  ['Memory Agent', 'Receipts updated', 'Observe']
+];
+
+const revenueSteps = [
+  ['Lead magnet', 'Free AI Avatar Brand Kit', 'Capture demand before spend'],
+  ['Entry product', 'Starter templates and prompt pack', 'No checkout until approved'],
+  ['Service', 'Avatar brand setup sprint', 'Manual close after signal'],
+  ['Retainer', 'Monthly content and approval ops', 'Scale only after evidence']
+];
+
 const canonicalAssets = [
   ['ess-vis-001', 'Public home hero', 'public_site_reference', assets.hero, 'private_design_reference_until_approved', true, false],
   ['ess-vis-002', 'Lookbook grid', 'public_site_reference', assets.lookbook, 'private_design_reference_until_approved', false, false],
@@ -99,14 +143,14 @@ export default function EdenSandboxPage() {
         <a className={styles.brand} href="#home"><span>ES</span>Eden Skye Studios</a>
         <nav>
           <a href="#home">Site</a>
+          <a href="#launch-board">Launch</a>
           <a href="#command-center">Command</a>
-          <a href="#model-registry">Models</a>
           <a href="#media-library">Media</a>
           <a href="#asset-vault">Assets</a>
-          <a href="#approval-queue">Approvals</a>
-          <a href="#content-calendar">Calendar</a>
+          <a href="#engagement-desk">Engage</a>
+          <a href="#agent-ops">Ops</a>
         </nav>
-        <a className={styles.topAction} href="#asset-vault">View Assets</a>
+        <a className={styles.topAction} href="#approval-queue">Review Gates</a>
       </header>
 
       <section id="home" className={styles.hero}>
@@ -127,7 +171,7 @@ export default function EdenSandboxPage() {
         <div>
           <p className={styles.eyebrow}>Draft-first revenue path</p>
           <h2>Offer, visuals, calendar, and approvals in one governed loop.</h2>
-          <p>The sandbox now renders all 13 canonical uploaded references from Shopify-hosted media URLs while keeping publication gates locked.</p>
+          <p>The preview now models the public funnel, admin queues, engagement drafts, experiments, agent ops, and canonical visual vault without unlocking publication.</p>
         </div>
         <figure className={styles.imagePanel}>
           <img src={assets.brandKit} alt="Eden Skye brand kit download page visual reference" />
@@ -144,15 +188,32 @@ export default function EdenSandboxPage() {
         ))}
       </section>
 
+      <section id="launch-board" className={styles.splitSection}>
+        <figure className={styles.imagePanel}>
+          <img src={assets.publicStack} alt="Eden Skye public brand system visual reference" />
+          <figcaption>Public preview stack for offer, proof, and audience capture.</figcaption>
+        </figure>
+        <div>
+          <p className={styles.eyebrow}>Launch Board</p>
+          <h2>Preview the revenue path before any checkout or publishing unlock.</h2>
+          <p>Each step stays as a draft surface until evidence, rights review, and owner approval move it forward.</p>
+          <div className={styles.connectorList}>{launchLanes.map(([name, focus, status]) => <div key={name}><b>{name}</b><span>{focus}</span><span>{status}</span></div>)}</div>
+        </div>
+      </section>
+
       <section id="command-center" className={styles.workspace}>
         <aside className={styles.rail}>
           <span>Control Plane</span>
           <a href="#command-center">Today</a>
+          <a href="#launch-board">Launch Board</a>
           <a href="#model-registry">Model Registry</a>
           <a href="#media-library">Media Library</a>
           <a href="#asset-vault">Asset Vault</a>
           <a href="#approval-queue">Approval Queue</a>
           <a href="#content-calendar">Content Calendar</a>
+          <a href="#engagement-desk">Engagement Desk</a>
+          <a href="#experiment-lab">Experiment Lab</a>
+          <a href="#agent-ops">Agent Ops</a>
           <a href="#analytics">Analytics</a>
           <a href="#connectors">Connectors</a>
         </aside>
@@ -226,6 +287,31 @@ export default function EdenSandboxPage() {
               <img src={assets.calendar} alt="Eden content calendar dashboard visual reference" />
               <ol className={styles.calendar}>{calendar.map(([time, item]) => <li key={time}><span>{time}</span>{item}</li>)}</ol>
             </div>
+          </section>
+
+          <section id="content-studio" className={styles.workSection}>
+            <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Content operations</p><h2>Content Studio</h2></div><span className={styles.lockPill}>Draft assets only</span></div>
+            <div className={styles.table}>{contentQueue.map((row) => <div key={row[0]}>{row.map((cell) => <span key={cell}>{cell}</span>)}</div>)}</div>
+          </section>
+
+          <section id="engagement-desk" className={styles.workSection}>
+            <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Inbox governance</p><h2>Engagement Desk</h2></div><span className={styles.dangerPill}>Outbound locked</span></div>
+            <div className={styles.table}>{engagementDrafts.map((row) => <div key={row[0]}>{row.map((cell) => <span key={cell}>{cell}</span>)}</div>)}</div>
+          </section>
+
+          <section id="experiment-lab" className={styles.workSection}>
+            <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Optimization</p><h2>Experiment Lab</h2></div><span className={styles.lockPill}>Preview hypotheses</span></div>
+            <div className={styles.approvals}>{experiments.map(([name, hypothesis, state]) => <article key={name}><span>Test</span><h3>{name}</h3><p>{hypothesis}</p><button disabled>{state}</button></article>)}</div>
+          </section>
+
+          <section id="agent-ops" className={styles.workSection}>
+            <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Orchestration</p><h2>Agent Ops</h2></div><span className={styles.lockPill}>Receipt-backed preview</span></div>
+            <div className={styles.connectorList}>{agentOps.map(([agent, state, gate]) => <div key={agent}><b>{agent}</b><span>{state}</span><span>{gate}</span></div>)}</div>
+          </section>
+
+          <section id="revenue-funnel" className={styles.workSection}>
+            <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Monetization path</p><h2>Revenue Funnel</h2></div><span className={styles.dangerPill}>Checkout locked</span></div>
+            <ol className={styles.calendar}>{revenueSteps.map(([step, offer, rule]) => <li key={step}><span>{step}</span>{offer} - {rule}</li>)}</ol>
           </section>
 
           <section id="analytics" className={styles.workSection}>
