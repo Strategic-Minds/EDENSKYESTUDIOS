@@ -14,6 +14,21 @@ const sources = [
   ["eden-model-006", "eden-model-006-canonical-source-v001.png", "Approved internal", "Male model profile, Shopify draft, Social draft"]
 ];
 
+const stockSources = [
+  ["eden-skye-001", "eden-skye-001_identity-lock_front-portrait_4x5_v1.png", "Identity lock"],
+  ["eden-skye-002", "eden-skye-002_identity-lock_three-quarter_4x5_v1.png", "Identity lock"],
+  ["eden-skye-003", "eden-skye-003_identity-lock_side-profile_4x5_v1.png", "Identity lock"],
+  ["eden-skye-004", "eden-skye-004_portfolio_black-card-portrait_4x5_v1.png", "Models page / Black Card"],
+  ["eden-skye-005", "eden-skye-005_portfolio_white-blazer_4x5_v1.png", "Models page"],
+  ["eden-skye-006", "eden-skye-006_website-hero_black-neon-stage_16x9_v1.png", "Home hero"],
+  ["eden-skye-007", "eden-skye-007_website-hero_neon-runway_16x9_v1.png", "Models hero"],
+  ["eden-skye-008", "eden-skye-008_wardrobe-safe_full-body-black_9x16_v1.png", "Closet viewer"],
+  ["eden-skye-009", "eden-skye-009_background_walk-in-closet_16x9_v1.png", "Closet environment"],
+  ["eden-skye-010", "eden-skye-010_social-vertical_hot-pink-blazer_9x16_v1.png", "Social draft"],
+  ["eden-skye-011", "eden-skye-011_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen headshot"],
+  ["eden-skye-012", "eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png", "HeyGen half body"]
+];
+
 const queues = [
   ["Source Images", "Canonical model, hero, closet, Shopify, and HeyGen image sources", "generated_pending_review -> approved_internal -> approved_site/shopify_draft/heygen_packet"],
   ["Video Packets", "HeyGen scripts, avatar packets, shot lists, review renders", "draft_packet -> pending_review -> approved_heygen_packet"],
@@ -41,6 +56,20 @@ function Tag({ children, red = false }: { children: string; red?: boolean }) {
   return <span style={{ border: `1px solid ${red ? "#ff4f7b" : accent}`, color: red ? "#ff4f7b" : accent, borderRadius: 999, padding: "5px 9px", fontSize: 11, textTransform: "uppercase", whiteSpace: "nowrap" }}>{children}</span>;
 }
 
+function AssetGrid({ items, state }: { items: string[][]; state: string }) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 12 }}>
+      {items.map(([id, file, use]) => (
+        <article key={`${id}-${file}`} style={{ background: "#050507", border: "1px solid rgba(255,255,255,.12)", padding: 14 }}>
+          <strong style={{ display: "block", color: "#fff", fontSize: 14 }}>{id}</strong>
+          <span style={{ display: "block", color: accent, fontSize: 12, margin: "8px 0", wordBreak: "break-word" }}>{file}</span>
+          <small style={{ display: "block", color: "rgba(255,255,255,.64)", lineHeight: 1.45 }}>{state} | {use}</small>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export default function Page() {
   return (
     <main data-admin-theme="black-command-center" style={{ minHeight: "100vh", background: bg, color: "#fff", padding: 24, fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
@@ -53,13 +82,13 @@ export default function Page() {
             </div>
             <h1 style={{ margin: "24px 0 10px", fontSize: 48, lineHeight: 1, letterSpacing: 0 }}>Image, Video, And Content Approval Control Plane</h1>
             <p style={{ margin: 0, maxWidth: 860, color: "rgba(255,255,255,.74)", lineHeight: 1.55 }}>
-              GPT-readable approval page for Eden Skye media operations. It connects the readable Drive intake folder, canonical model source manifest, video/content queues, protected action gates, and evidence routing in one draft-safe command surface.
+              GPT-readable approval page for Eden Skye media operations. It connects the readable Drive intake folder, canonical model sources, generated stock-source batch, video/content queues, protected action gates, and evidence routing in one draft-safe command surface.
             </p>
           </section>
           <aside style={{ border: `1px solid ${line}`, background: panel, padding: 20 }}>
             <Tag>approval state</Tag>
-            <div style={{ marginTop: 18, fontSize: 44, lineHeight: 1, fontWeight: 900 }}>6</div>
-            <p style={{ margin: "8px 0 18px", color: "rgba(255,255,255,.72)" }}>Canonical model sources approved internally.</p>
+            <div style={{ marginTop: 18, fontSize: 44, lineHeight: 1, fontWeight: 900 }}>18</div>
+            <p style={{ margin: "8px 0 18px", color: "rgba(255,255,255,.72)" }}>6 approved model sources + 12 stock sources pending admin review.</p>
             <a href="/api/admin/eden/approval-studio" style={{ display: "block", border: `1px solid ${accent}`, color: "#fff", padding: 12, textAlign: "center", textDecoration: "none", background: "rgba(255,43,214,.18)" }}>GPT Registry API</a>
           </aside>
         </header>
@@ -68,13 +97,14 @@ export default function Page() {
           <div style={{ border: `1px solid ${line}`, background: panel, padding: 20 }}>
             <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Drive Intake</div>
             <h2 style={{ margin: "6px 0 12px", fontSize: 26 }}>Readable Source Folder</h2>
-            <p style={{ color: "rgba(255,255,255,.72)", lineHeight: 1.5 }}>Use this folder for uploaded temporary source images, approved boards, generated candidates, and review evidence while Drive write automation is being repaired.</p>
+            <p style={{ color: "rgba(255,255,255,.72)", lineHeight: 1.5 }}>Use this folder for uploaded temporary source images, approved boards, generated candidates, and review evidence. Generated stock-source files are registered here as pending Drive upload/validation until file IDs are returned.</p>
             <a href={driveFolder} style={{ color: accent, wordBreak: "break-all" }}>{driveFolder}</a>
           </div>
           <div style={{ border: `1px solid ${line}`, background: panel, padding: 20 }}>
             <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Current Manifests</div>
             <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Canonical model source manifest: <strong>EDEN_CANONICAL_MODEL_SOURCE_MANIFEST_REVISED_V004.csv</strong></p>
-            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Generation contract: <strong>EDEN_MODEL_SOURCE_GENERATION_CONTRACT_REVISED_V004.json</strong></p>
+            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Stock source manifest: <strong>EDEN_STOCK_CANONICAL_SOURCE_MANIFEST_2026-06-12.csv</strong></p>
+            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Stock source package: <strong>EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip</strong></p>
           </div>
         </section>
 
@@ -86,15 +116,19 @@ export default function Page() {
             </div>
             <Tag>approved internal</Tag>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 12 }}>
-            {sources.map(([id, file, state, use]) => (
-              <article key={id} style={{ background: "#050507", border: "1px solid rgba(255,255,255,.12)", padding: 14 }}>
-                <strong style={{ display: "block", color: "#fff", fontSize: 14 }}>{id}</strong>
-                <span style={{ display: "block", color: accent, fontSize: 12, margin: "8px 0", wordBreak: "break-word" }}>{file}</span>
-                <small style={{ display: "block", color: "rgba(255,255,255,.64)", lineHeight: 1.45 }}>{state} | {use}</small>
-              </article>
-            ))}
+          <AssetGrid items={sources} state="Approved internal" />
+        </section>
+
+        <section style={{ border: `1px solid rgba(255,43,214,.38)`, background: panel, padding: 20, marginBottom: 18 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+            <div>
+              <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Generated Stock Sources</div>
+              <h2 style={{ margin: "6px 0 0", fontSize: 26 }}>12 Eden Skye Assets Pending Admin Review</h2>
+            </div>
+            <Tag>pending drive upload</Tag>
           </div>
+          <p style={{ color: "rgba(255,255,255,.68)", marginTop: 0 }}>These files are generated standalone source images for the autonomous system. They are not collage crops. Drive folder linkage is registered; individual Drive file IDs remain pending until upload validation returns metadata.</p>
+          <AssetGrid items={stockSources} state="Generated pending admin review" />
         </section>
 
         <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 14, marginBottom: 18 }}>
