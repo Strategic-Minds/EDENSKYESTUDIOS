@@ -6,6 +6,13 @@ export async function GET() {
       system: "EDEN SKYE ADMIN",
       evidence_state: "pending_runtime_capture",
       required_screenshots: [
+        "/",
+        "/models",
+        "/models/alexis-voss",
+        "/models/alexis-voss/portfolio",
+        "/pricing",
+        "/shopify",
+        "/checkout",
         "/admin",
         "/admin/eden",
         "/admin/agent-console",
@@ -23,7 +30,10 @@ export async function GET() {
         "/admin/evidence",
         "/admin/images",
         "/admin/models",
-        "/admin/quarantine"
+        "/admin/quarantine",
+        "/closet",
+        "/closet/alexis-voss",
+        "/closet/alexis-voss/viewer"
       ],
       required_logs: ["npm test", "npm run build", "bridge enablement", "readiness API", "builder docs API", "approval gate API", "blocked protected command"],
       source_package: "01-black-chat-ui-2-7-.zip",

@@ -1,7 +1,7 @@
 import { heroAsset, missingAssets, models, primaryModel } from './visual-source-truth';
 
 export function Header() {
-  return <header className="es-header"><a className="es-logo" href="/"><span>ES</span><strong>EDEN <b>SKYE</b> STUDIOS</strong><small>DIGITAL MODELING & CONTENT CREATOR AGENCY</small></a><nav><a href="/">Home</a><a href="/models">Models</a><a href="/services">Services</a><a href="/auto-social">Auto Social</a><a href="/brand-partnerships">Brand Partnerships</a><a href="/apply">Apply</a><a href="/pwa-app">PWA App</a><a href="/contact">Contact</a></nav><a className="es-apply" href="/apply">Apply Now</a></header>;
+  return <header className="es-header"><a className="es-logo" href="/"><span>ES</span><strong>EDEN <b>SKYE</b> STUDIOS</strong><small>DIGITAL MODELING & CONTENT CREATOR AGENCY</small></a><nav><a href="/">Home</a><a href="/models">Models</a><a href="/pricing">Black Card</a><a href="/shopify">Shopify</a><a href="/closet">Closet</a><a href="/auto-social">Auto Social</a><a href="/pwa-app">PWA App</a><a href="/contact">Contact</a></nav><a className="es-apply" href="/shopify">Black Card</a></header>;
 }
 
 export function VisualAssetSlot({ label, requiredFile, className = '' }: { label: string; requiredFile?: string; className?: string }) {
