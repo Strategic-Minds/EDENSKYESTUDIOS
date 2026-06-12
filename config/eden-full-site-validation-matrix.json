@@ -1,0 +1,21 @@
+{
+  "system": "EDEN_FULL_SITE_VALIDATION_MATRIX",
+  "commands": ["npm run generator:full-site", "npm test", "npm run build", "npm run visual:preview-bridge"],
+  "required_checks": [
+    {"id": "exact_image_manifest_present", "failure": "locked exact image source manifest missing"},
+    {"id": "no_collage_rendering", "failure": "collage/page-board image rendered as production asset"},
+    {"id": "all_required_routes_present", "failure": "required route missing"},
+    {"id": "admin_black_style", "failure": "EDEN SKYE ADMIN style drifted from black/white/hot-pink command center"},
+    {"id": "closet_full_body_asset", "failure": "closet viewer missing locked full-body model asset"},
+    {"id": "closet_environment_assets", "failure": "closet environment selector missing locked environments"},
+    {"id": "black_card_pricing", "failure": "Black Card plan missing or not highlighted"},
+    {"id": "payment_draft_only", "failure": "live payment activation enabled by default"},
+    {"id": "shopify_webhook_test_mode", "failure": "Shopify webhook missing or unsigned payload accepted"},
+    {"id": "entitlement_sync_test_mode", "failure": "Black Card entitlement cannot be granted/revoked in test mode"},
+    {"id": "protected_actions_blocked", "failure": "protected action allowed without approval"},
+    {"id": "generator_receipt_written", "failure": "generator receipt missing"},
+    {"id": "chromium_screenshots_present", "failure": "visual evidence missing"}
+  ],
+  "protected_actions": ["production_deploy", "shopify_live_payment_activation", "supabase_production_schema_mutation", "public_social_publish", "gmail_live_send", "calendar_external_event_create", "domain_dns_billing_change", "secret_rotation", "destructive_git", "merge_or_release"],
+  "approval_required": true
+}
