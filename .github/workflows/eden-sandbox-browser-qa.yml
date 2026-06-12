@@ -39,7 +39,14 @@ jobs:
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/eden-sandbox-next.log 2>&1 &
           echo $! > /tmp/eden-sandbox-next.pid
-          npx wait-on http://127.0.0.1:3000/eden-sandbox
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/eden-sandbox > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/eden-sandbox-next.log
+          exit 1
 
       - name: Run browser QA
         env:
