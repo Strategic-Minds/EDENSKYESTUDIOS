@@ -1,0 +1,2 @@
+import { Header, ModelCard, models } from '../components';
+export default function ModelsPage(){return <main className="eden-site"><Header/><section className="page-head"><h1>Our Models</h1><p>10 elite creators. Real standalone source images only. No collage crops.</p></section><section className="models-grid">{models.map(model=><ModelCard key={model.slug} model={model}/>)}</section><section className="ready-panel"><h2>Ready to work with the best?</h2><p>Apply now and join the Eden Skye Studios family.</p><a className="hot-btn" href="/apply">Apply Now</a></section></main>}

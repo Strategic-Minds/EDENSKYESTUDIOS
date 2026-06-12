@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { EdensCloset } from "./closet-client";
 
-export default function AdminEdenPage() {
-  redirect('/closet');
+export default function Page() {
+  return <EdensCloset />;
 }
