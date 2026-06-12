@@ -71,6 +71,22 @@ const visualProof = [
   ['Mobile admin flow', assets.mobileAdmin]
 ];
 
+const canonicalAssets = [
+  ['ess-vis-001', 'Public home hero', 'public_site_reference', assets.hero, 'private_design_reference_until_approved', true, false],
+  ['ess-vis-002', 'Lookbook grid', 'public_site_reference', assets.lookbook, 'private_design_reference_until_approved', false, false],
+  ['ess-vis-003', 'Avatar matrix', 'avatar_reference_matrix', assets.avatarMatrix, 'private_generation_reference_until_approved', false, false],
+  ['ess-vis-004', 'Admin brand dashboard', 'admin_control_plane_reference', assets.command, 'private_design_reference_until_approved', false, false],
+  ['ess-vis-005', 'Brand download page', 'lead_magnet_reference', assets.brandKit, 'private_design_reference_until_approved', false, false],
+  ['ess-vis-006', 'Model card gallery', 'model_registry_reference', assets.modelGallery, 'private_registry_reference_until_approved', false, false],
+  ['ess-vis-007', 'Brand full stack', 'public_site_reference', assets.publicStack, 'private_design_reference_until_approved', false, false],
+  ['ess-vis-008', 'Vertical admin flow', 'mobile_or_longform_admin_reference', assets.mobileAdmin, 'private_design_reference_until_approved', false, true],
+  ['ess-vis-009', 'Avatar brand board', 'avatar_reference_matrix', assets.avatarBoard, 'private_generation_reference_until_approved', false, false],
+  ['ess-vis-010', 'Full-body reference', 'avatar_reference_matrix', assets.fullBody, 'private_generation_reference_until_approved', false, false],
+  ['ess-vis-011', 'Admin ops overview', 'admin_control_plane_reference', assets.ops, 'private_design_reference_until_approved', false, false],
+  ['ess-vis-012', 'Media library', 'admin_control_plane_reference', assets.media, 'private_design_reference_until_approved', false, false],
+  ['ess-vis-013', 'Content calendar', 'admin_control_plane_reference', assets.calendar, 'private_design_reference_until_approved', false, false]
+] as const;
+
 export const metadata = {
   title: 'Eden Skye Sandbox | AUTO BUILDER',
   description: 'Branch-safe Eden Skye visual and admin sandbox with approval-gated controls.'
@@ -86,10 +102,11 @@ export default function EdenSandboxPage() {
           <a href="#command-center">Command</a>
           <a href="#model-registry">Models</a>
           <a href="#media-library">Media</a>
+          <a href="#asset-vault">Assets</a>
           <a href="#approval-queue">Approvals</a>
           <a href="#content-calendar">Calendar</a>
         </nav>
-        <a className={styles.topAction} href="#approval-queue">Review Gates</a>
+        <a className={styles.topAction} href="#asset-vault">View Assets</a>
       </header>
 
       <section id="home" className={styles.hero}>
@@ -133,6 +150,7 @@ export default function EdenSandboxPage() {
           <a href="#command-center">Today</a>
           <a href="#model-registry">Model Registry</a>
           <a href="#media-library">Media Library</a>
+          <a href="#asset-vault">Asset Vault</a>
           <a href="#approval-queue">Approval Queue</a>
           <a href="#content-calendar">Content Calendar</a>
           <a href="#analytics">Analytics</a>
@@ -173,6 +191,23 @@ export default function EdenSandboxPage() {
             <div className={styles.mediaGrid}>
               <img src={assets.media} alt="Eden media library dashboard visual reference" />
               <div className={styles.assetStates}>{assetStates.map((state) => <span key={state}>{state}</span>)}</div>
+            </div>
+          </section>
+
+          <section id="asset-vault" className={styles.workSection}>
+            <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Canonical visual references</p><h2>Asset Vault</h2></div><span className={styles.lockPill}>13 assets visible</span></div>
+            <div className={styles.assetVaultGrid} aria-label="All canonical Eden visual references">
+              {canonicalAssets.map(([id, label, role, src, usage, feature, tall]) => (
+                <figure className={`${styles.assetCard} ${feature ? styles.featureAsset : ''} ${tall ? styles.tallAsset : ''}`} key={id}>
+                  <img src={src} alt={`${label} visual reference`} />
+                  <figcaption>
+                    <b>{id}</b>
+                    <span>{label}</span>
+                    <small>{role}</small>
+                    <em>{usage}</em>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </section>
 
