@@ -6,25 +6,34 @@ const target = process.env.EDEN_SANDBOX_TARGET_URL || 'http://127.0.0.1:3000/ede
 const outDir = process.env.EDEN_SANDBOX_QA_DIR || 'artifacts/eden-sandbox-browser-qa';
 
 const checks = [
-  ['home', '#home', 'Eden Skye Studios'],
-  ['launch-board', '#launch-board', 'Launch Board'],
-  ['command-center', '#command-center', 'Today Command Center'],
-  ['model-registry', '#model-registry', 'Model Registry'],
-  ['media-library', '#media-library', 'Media Library'],
-  ['asset-vault', '#asset-vault', 'Asset Vault'],
-  ['approval-queue', '#approval-queue', 'Approval Queue'],
-  ['content-calendar', '#content-calendar', 'Content Calendar'],
-  ['content-studio', '#content-studio', 'Content Studio'],
-  ['engagement-desk', '#engagement-desk', 'Engagement Desk'],
-  ['experiment-lab', '#experiment-lab', 'Experiment Lab'],
-  ['agent-ops', '#agent-ops', 'Agent Ops'],
-  ['revenue-funnel', '#revenue-funnel', 'Revenue Funnel']
+  ['home', '#home', '#home', 'Eden Skye Studios'],
+  ['launch-board', '#launch-board', '#launch-board', 'Launch Board'],
+  ['command-center', '#command-center', '#command-center', 'Today Command Center'],
+  ['model-registry', '#model-registry', '#model-registry', 'Model Registry'],
+  ['media-library', '#media-library', '#media-library', 'Media Library'],
+  ['asset-vault', '#asset-vault', '#asset-vault', 'Asset Vault'],
+  ['approval-queue', '#approval-queue', '#approval-queue', 'Approval Queue'],
+  ['content-calendar', '#content-calendar', '#content-calendar', 'Content Calendar'],
+  ['content-studio', '#content-studio', '#content-studio', 'Content Studio'],
+  ['engagement-desk', '#engagement-desk', '#engagement-desk', 'Engagement Desk'],
+  ['experiment-lab', '#experiment-lab', '#experiment-lab', 'Experiment Lab'],
+  ['agent-ops', '#agent-ops', '#agent-ops', 'Agent Ops'],
+  ['revenue-funnel', '#revenue-funnel', '#revenue-funnel', 'Revenue Funnel'],
+  ['action-ledger', '/actions#action-ledger', '#action-ledger', 'Admin Action Ledger'],
+  ['connector-smoke', '/actions#connector-smoke', '#connector-smoke', 'Connector Smoke Receipts']
 ];
 
 const viewports = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'mobile', width: 390, height: 844 }
 ];
+
+function buildUrl(route) {
+  if (route.startsWith('#')) return `${target}${route}`;
+  const base = new URL(target);
+  const pathPrefix = base.pathname.replace(/\/$/, '');
+  return `${base.origin}${pathPrefix}${route}`;
+}
 
 await fs.mkdir(outDir, { recursive: true });
 
@@ -41,10 +50,10 @@ for (const viewport of viewports) {
   });
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
-  for (const [name, hash, expectedText] of checks) {
-    const url = `${target}${hash}`;
+  for (const [name, route, selector, expectedText] of checks) {
+    const url = buildUrl(route);
     const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 90000 });
-    await page.locator(hash).scrollIntoViewIfNeeded();
+    await page.locator(selector).scrollIntoViewIfNeeded();
     await page.waitForTimeout(200);
     const visible = await page.getByText(expectedText).first().isVisible();
     const screenshotPath = path.join(outDir, `${viewport.name}-${name}.png`);
