@@ -9,10 +9,10 @@ const receiptActions = [
 ];
 
 const smokeReceipts = [
-  ['Shopify / Xyla', 'Shopify read smoke passed for Eden Skye Studios store context. Xyla app/install path remains unverified.', 'Read-only; no product, theme, checkout, collection, or app mutation.'],
+  ['Shopify / Xyla', 'Shopify store and catalog read smoke passed for Eden Skye Studios. Xyla app/install path remains unverified.', 'Read-only; no product, theme, checkout, collection, or app mutation.'],
   ['Metricool', 'No direct Metricool connector was exposed in this runtime.', 'Blocked dry-run lane until token, brand ID, and callable smoke route are available.'],
-  ['Supabase', 'Project list read smoke passed for Strategic Minds Advisory.', 'Read-only; no SQL, migration, branch, storage, or production data mutation.'],
-  ['Google Drive', 'Drive profile read smoke passed for the connected Workspace identity.', 'Read-only; no file, folder, upload, move, archive, or permission mutation.'],
+  ['Supabase', 'Project, health, and public table metadata read smoke passed for Strategic Minds Advisory.', 'Read-only; no SQL, migration, branch, storage, or production data mutation.'],
+  ['Google Drive', 'Drive profile and root listing read smoke passed for connected Eden working docs.', 'Read-only; no file, folder, upload, move, archive, or permission mutation.'],
   ['AUTO BUILDER', 'Strict MCP health/bootstrap smoke passed with default dry-run governance.', 'Read-only; no Drive write, provisioning, rollback, deploy, or platform mutation.']
 ];
 
@@ -22,6 +22,8 @@ const gates = [
   ['Production mutation', 'Locked'],
   ['Checkout and publishing', 'Locked']
 ];
+
+const anchorOffset = { scrollMarginTop: 190 };
 
 export const metadata = {
   title: 'Eden Skye Receipt Actions | AUTO BUILDER',
@@ -41,7 +43,7 @@ export default function EdenSandboxActionsPage() {
         <a className={styles.topAction} href="/eden-sandbox">Back to Preview</a>
       </header>
 
-      <section id="action-ledger" className={styles.workMain}>
+      <section id="action-ledger" className={styles.workMain} style={anchorOffset}>
         <section className={styles.workHeader}>
           <div>
             <p className={styles.eyebrow}>Receipt-only preview gate</p>
@@ -67,7 +69,7 @@ export default function EdenSandboxActionsPage() {
         </section>
       </section>
 
-      <section id="connector-smoke" className={styles.workMain}>
+      <section id="connector-smoke" className={styles.workMain} style={anchorOffset}>
         <section className={styles.workSection}>
           <div className={styles.sectionRow}>
             <div>
