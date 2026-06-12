@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import * as vt from "../visual-source-truth";
 
 const accent = "#ff2bd6";
 const black = "#030305";
@@ -49,11 +50,21 @@ const modules = [
   ["Supabase Ops", "Registry, SQL checks, queues, receipts, migration gate"],
   ["Drive OS", "Source truth, exact image manifest, missing assets, quarantine"],
   ["Media Factory", "Image prompts, video prompts, HeyGen packets, approval state"],
+  ["Approval Studio", "Images, videos, site content, Shopify/social packets, source-truth review"],
   ["Social Automation", "Plans, drafts, Metricool bridge, analytics, posting gate"],
   ["Gmail / Calendar", "Inbox action queue, draft replies, scheduling briefs"],
   ["Approval Gates", "Protected actions, approve/reject decisions, audit trail"],
   ["Evidence Center", "Screenshots, API responses, SQL, build logs, readiness report"]
 ];
+
+const contentQueues = [
+  ["Call Content", "Approve model call sheets, hero layouts, and campaign direction before generation."],
+  ["Images", "Review locked source images, generated options, and route-specific visual evidence."],
+  ["Videos", "Review AI video packets, HeyGen-ready briefs, and draft motion approvals."],
+  ["Approvals", "Grant or reject media, gates, receipts, and release requests from one control plane."]
+];
+
+const mediaAssets = [vt.heroAsset, vt.galleryAssets[0], vt.galleryAssets[1], vt.galleryAssets[2]];
 
 const sourcePatterns = [
   ["workspace-shell.tsx", "Three-pane command workspace: chat, tool rail, editor, mobile tabs"],
@@ -95,7 +106,7 @@ const queue = [
   ["source-package", "Black chat UI unpacked and mapped to Eden modules", "wired"],
   ["bridge-policy", "Protected commands blocked unless approved", "active"],
   ["visual-evidence", "Run Eden Visual Preview Bridge and review screenshots", "waiting"],
-  ["source-truth", "Keep exact standalone image manifest canonical", "locked"],
+  ["source-truth", "Keep exact source-image manifest canonical", "locked"],
   ["production", "No live mutation until explicit approval", "blocked"]
 ];
 
@@ -226,6 +237,11 @@ export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: s
                 </div>
               ))}
             </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+              <a className="hot-btn" href="/admin/approval-studio">Open Approval Studio</a>
+              <a className="outline-btn" href="/admin/images">Images</a>
+              <a className="outline-btn" href="/admin/media">Media</a>
+            </div>
           </div>
           <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
             <SectionTitle kicker="Execution Queue" title="Receipts And Recovery" action="audit ready" />
@@ -239,6 +255,44 @@ export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: s
                   <p style={{ margin: "7px 0 0", color: "rgba(255,255,255,.68)", fontSize: 12, lineHeight: 1.45 }}>{detail}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(320px, .9fr)", gap: 18, marginTop: 18 }}>
+          <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
+            <SectionTitle kicker="Content Control Plane" title="Call Content, Images, And Videos" action="human approval" />
+            <div style={{ display: "grid", gap: 10 }}>
+              {contentQueues.map(([label, detail]) => (
+                <div key={label} style={{ background: "#050507", border: "1px solid rgba(255,255,255,.12)", padding: 14 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                    <strong style={{ color: "#fff", fontSize: 13 }}>{label}</strong>
+                    <Pill tone="white">review</Pill>
+                  </div>
+                  <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,.68)", fontSize: 12, lineHeight: 1.45 }}>{detail}</p>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+              <a className="hot-btn" href="/admin/images">Review Images</a>
+              <a className="outline-btn" href="/admin/media">Review Videos</a>
+              <a className="outline-btn" href="/admin/evidence">View Evidence</a>
+            </div>
+          </div>
+          <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
+            <SectionTitle kicker="Content Library" title="Approved Visuals" action="locked assets" />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+              {mediaAssets.map((asset) => (
+                <figure key={asset.id} style={{ margin: 0, background: "#050507", border: "1px solid rgba(255,255,255,.12)", padding: 8 }}>
+                  <img src={asset.src} alt={asset.label} style={{ width: "100%", height: 168, objectFit: "cover", border: "1px solid rgba(255,255,255,.12)" }} />
+                  <figcaption style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,.7)", lineHeight: 1.4 }}>{asset.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+              <Pill tone="pink">approve image</Pill>
+              <Pill tone="pink">approve video</Pill>
+              <Pill tone="red">reject release</Pill>
             </div>
           </div>
         </section>

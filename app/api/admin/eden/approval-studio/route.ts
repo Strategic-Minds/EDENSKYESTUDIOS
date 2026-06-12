@@ -35,6 +35,17 @@ const approvedModelFiles = [
   "eden-model-006_heygen-headshot_dark-studio_1x1_v1.png"
 ];
 
+const approvedModelStockSources = approvedModelFiles.map((file) => {
+  const [modelId, type] = file.split("_");
+  return {
+    asset_id: `${modelId}-${type.startsWith("portfolio") ? "portfolio" : type.startsWith("full-body") ? "full-body" : "heygen"}`,
+    filename: file,
+    model_id: modelId,
+    status: "approved_internal",
+    drive_file_id: "PENDING_DRIVE_UPLOAD"
+  };
+});
+
 const withPendingDrive = (file: string) => ({
   file,
   status: "generated_pending_admin_review",
@@ -45,76 +56,79 @@ const withPendingDrive = (file: string) => ({
   generator_safe_use: "draft_review_only_until_human_approval"
 });
 
-const registry = {
-  system: "EDEN MEDIA APPROVAL STUDIO",
-  status: "draft_safe_approval_surface",
-  updated_at: "2026-06-12T20:00:00Z",
-  source_drive_folder: {
-    label: "TEMP IMAGES",
-    folder_id: "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
-    url: driveUrl,
-    access_status: "readable_by_connector",
-    write_status: "queued_or_pending_validation_for_generated_stock_sources"
-  },
-  canonical_model_sources: [
-    { id: "eden-skye-001", file: "eden-skye-canonical-source-v004.png", status: "approved_internal", lane: "source_images", use: ["site draft", "shopify draft", "closet draft", "heygen packet draft"] },
-    { id: "eden-model-002", file: "eden-model-002-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["model profile", "shopify draft", "social draft"] },
-    { id: "eden-model-003", file: "eden-model-003-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["male model profile", "shopify draft", "social draft"] },
-    { id: "eden-model-004", file: "eden-model-004-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["male model profile", "shopify draft", "social draft"] },
-    { id: "eden-model-005", file: "eden-model-005-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["model profile", "shopify draft", "social draft"] },
-    { id: "eden-model-006", file: "eden-model-006-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["male model profile", "shopify draft", "social draft"] }
-  ],
-  canonical_stock_sources: {
-    batch_id: "ES-IMG-2026-06-12-001",
-    count: edenStockFiles.length,
-    source_package: "EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip",
-    current_state: "generated_pending_admin_review",
-    drive_file_status: "pending_drive_upload_or_validation",
-    files: edenStockFiles.map(withPendingDrive)
-  },
-  approved_model_stock_sources: {
-    batch_id: "ES-APPROVED-MODELS-2026-06-12-001",
-    model_count: 5,
-    assets_per_model: 3,
-    count: approvedModelFiles.length,
-    asset_types: ["portfolio_shopify", "full_body_viewer_social", "heygen_headshot"],
-    source_package: "EDEN_APPROVED_MODELS_STOCK_SOURCE_IMAGES_2026_06_12.zip",
-    current_state: "generated_pending_admin_review",
-    drive_file_status: "pending_drive_upload_or_validation",
-    files: approvedModelFiles.map(withPendingDrive)
-  },
-  content_batches: [
-    {
-      batch_id: "ES-CONTENT-001",
-      file: "config/eden-content-draft-batch-001.json",
-      status: "draft_created",
-      source_registry: "/api/admin/eden/approval-studio",
-      allowed_next_states: ["approved_site_draft", "approved_shopify_draft", "approved_social_draft", "approved_heygen_packet"],
-      protected_action_warning: "No public publishing, live Shopify activation, final HeyGen activation, production deploy, or social posting is approved by this batch."
-    }
-  ],
-  queues: [
-    { id: "source_images", label: "Canonical Source Images", next_state: "approved_site_or_quarantine", human_gate_required: true },
-    { id: "video_packets", label: "Video / HeyGen Packets", next_state: "approved_heygen_packet_or_quarantine", human_gate_required: true },
-    { id: "site_content", label: "Website / PWA Content", next_state: "approved_preview_or_quarantine", human_gate_required: true },
-    { id: "social_shopify", label: "Social / Shopify Draft Content", next_state: "approved_draft_only_or_quarantine", human_gate_required: true }
-  ],
-  protected_actions: ["public website production", "live Shopify product mutation", "payment activation", "public social publishing", "final HeyGen avatar activation", "production deploy", "merge or release"],
-  gpt_bridge_contract: {
-    read_endpoint: "/api/admin/eden/approval-studio",
-    live_mutations_enabled: false,
-    human_gate_required: true,
-    default_intake_state: "generated_pending_review",
-    approval_receipt_required: true,
-    generator_must_read_before_generation: true,
-    forbidden_source_use: ["collage crop", "reference board crop", "unapproved Drive image as final asset"]
-  }
-};
-
 export async function GET() {
-  return NextResponse.json(registry, {
-    headers: {
-      "Cache-Control": "no-store"
-    }
+  return NextResponse.json({
+    system: "EDEN_MEDIA_APPROVAL_STUDIO",
+    status: "draft_safe_approval_surface",
+    updated_at: "2026-06-12T20:00:00Z",
+    source_drive_folder: {
+      label: "TEMP IMAGES",
+      folder_id: "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+      url: driveUrl,
+      access_status: "readable_by_connector",
+      write_status: "queued_or_pending_validation_for_generated_stock_sources"
+    },
+    canonical_model_sources: [
+      { id: "eden-skye-001", file: "eden-skye-canonical-source-v004.png", status: "approved_internal", lane: "source_images", use: ["site draft", "shopify draft", "closet draft", "heygen packet draft"] },
+      { id: "eden-model-002", file: "eden-model-002-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["model profile", "shopify draft", "social draft"] },
+      { id: "eden-model-003", file: "eden-model-003-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["male model profile", "shopify draft", "social draft"] },
+      { id: "eden-model-004", file: "eden-model-004-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["male model profile", "shopify draft", "social draft"] },
+      { id: "eden-model-005", file: "eden-model-005-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["model profile", "shopify draft", "social draft"] },
+      { id: "eden-model-006", file: "eden-model-006-canonical-source-v001.png", status: "approved_internal", lane: "source_images", use: ["male model profile", "shopify draft", "social draft"] }
+    ],
+    canonical_stock_sources: {
+      batch_id: "ES-IMG-2026-06-12-001",
+      count: edenStockFiles.length,
+      source_package: "EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip",
+      current_state: "generated_pending_admin_review",
+      drive_file_status: "pending_drive_upload_or_validation",
+      files: edenStockFiles.map(withPendingDrive)
+    },
+    approved_model_stock_sources: {
+      batch_id: "ES-APPROVED-MODELS-2026-06-12-001",
+      manifest: "EDEN_APPROVED_MODELS_STOCK_SOURCE_MANIFEST_2026-06-12.csv",
+      contract: "EDEN_APPROVED_MODELS_STOCK_SOURCE_CONTRACT_2026-06-12.json",
+      source_package: "EDEN_APPROVED_MODELS_STOCK_SOURCE_IMAGES_2026_06_12.zip",
+      contact_sheet: "eden-approved-models-stock-source-contact-sheet-2026-06-12.jpg",
+      model_count: 5,
+      assets_per_model: 3,
+      count: 15,
+      current_state: "approved_internal",
+      drive_folder_id: "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+      drive_folder_url: driveUrl,
+      drive_file_status: "pending_drive_upload_or_validation",
+      asset_types: ["portfolio_shopify", "full_body_viewer_social", "heygen_headshot"],
+      files: approvedModelStockSources
+    },
+    content_batches: [
+      {
+        batch_id: "ES-CONTENT-001",
+        file: "config/eden-content-draft-batch-001.json",
+        status: "draft_created",
+        source_registry: "/api/admin/eden/approval-studio",
+        allowed_next_states: ["approved_site_draft", "approved_shopify_draft", "approved_social_draft", "approved_heygen_packet"],
+        protected_action_warning: "No public publishing, live Shopify activation, final HeyGen activation, production deploy, or social posting is approved by this batch."
+      }
+    ],
+    queues: [
+      { id: "source_images", label: "Canonical Source Images", state: "approved_internal", next: "human review" },
+      { id: "video_packets", label: "Video / HeyGen Packets", state: "draft_packet", next: "approval gate" },
+      { id: "site_content", label: "Website / PWA Content", state: "draft", next: "preview evidence" },
+      { id: "social_shopify", label: "Social / Shopify Draft Content", state: "draft_only", next: "approval gate" }
+    ],
+    approval_lanes: [
+      { id: "source_images", label: "Canonical Source Images", allowed_outputs: ["website draft", "Shopify draft", "Closet draft", "HeyGen packet draft"], protected_outputs: ["public website production", "live Shopify product image", "public social post", "final HeyGen avatar"] },
+      { id: "video_packets", label: "Video / HeyGen Packets", allowed_outputs: ["script draft", "avatar packet", "shot list", "review render"], protected_outputs: ["public video publish", "paid ad launch", "final avatar activation"] },
+      { id: "site_content", label: "Website / PWA Content", allowed_outputs: ["page draft", "component draft", "preview evidence"], protected_outputs: ["production deploy", "PR ready for review", "merge/release"] },
+      { id: "social_shopify", label: "Social / Shopify Draft Content", allowed_outputs: ["caption draft", "collection draft", "product copy draft"], protected_outputs: ["public posting", "live product mutation", "payment activation"] }
+    ],
+    gpt_bridge_contract: {
+      read_endpoint: "/api/admin/eden/approval-studio",
+      human_gate_required: true,
+      live_mutations_enabled: false,
+      default_next_state: "generated_pending_review",
+      approved_internal_requires: "operator visual approval in Eden Media Approval Studio"
+    },
+    protected_actions: ["production deploy", "shopify live mutation", "public social publishing", "supabase production schema mutation", "drive write automation"]
   });
 }

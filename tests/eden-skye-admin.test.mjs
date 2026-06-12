@@ -104,6 +104,9 @@ assert(shell.includes("#fff") || shell.includes("#ffffff"), "Admin shell must us
 assert(shell.includes("#ff2bd6"), "Admin shell must use hot pink Eden Skye accent token.");
 assert(shell.includes("Unpacked Source Package"), "Admin shell must surface the unpacked black chat UI package wiring.");
 assert(shell.includes("/admin/agent-console") && shell.includes("/admin/bridge") && shell.includes("/admin/builders"), "Admin shell must link the wired source-package modules.");
+assert(shell.includes("/admin/approval-studio"), "Admin shell must link the media approval studio.");
+assert(shell.includes("Call Content") && shell.includes("Images") && shell.includes("Videos"), "Admin shell must expose the media approval control plane.");
+assert(shell.includes("approve image") && shell.includes("approve video"), "Admin shell must expose approval controls for images and videos.");
 assert(!/beige|tan|cream|sand/i.test(shell), "Admin shell must not drift into beige/generic styling language.");
 assert(!/marketing homepage/i.test(shell), "Admin shell must not render as a marketing homepage.");
 

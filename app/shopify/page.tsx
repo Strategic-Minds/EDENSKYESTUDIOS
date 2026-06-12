@@ -1,12 +1,22 @@
-import { Header } from "../components";
+import { Header, models } from "../components";
 import { standaloneAssets } from "../visual-source-truth";
 
-const productPanels = [
-  ["Product", "Eden Skye Black Card", "Draft/test product spec. Live Shopify product mutation blocked."],
-  ["Price", "$199/month", "Displayed membership price until approved commerce manifest replaces it."],
-  ["Checkout", "Draft Shopify bridge", "No live payment activation. Test-mode route required next."],
-  ["Entitlement", "Black Card access", "Dashboard/Closet access must sync from test entitlement before live activation."],
-  ["Gate", "Human approval required", "Payment, product, theme, inventory, discount, and live billing changes are protected."]
+const featuredProducts = [
+  { name: "Black Card Membership", href: "/payment", body: "Draft/test only. Unlock closet, AI chat, video, and premium content." },
+  { name: "Closet Access", href: "/closet", body: "Enter Eden's Closet and choose an outfit flow." },
+  { name: "Model Portfolio Flow", href: "/models", body: "Open every model portfolio and campaign path." },
+  { name: "Faceless Social Flow", href: "/faceless", body: "Anonymous creator and product-content pipelines." }
+];
+
+const facelessCards = [
+  { name: "Morning Atelier", href: "/faceless/morning-atelier", body: "Anonymous beauty and lifestyle content." },
+  { name: "Noir Diary", href: "/faceless/noir-diary", body: "Shadow-first social campaigns and reels." },
+  { name: "Glass Studio", href: "/faceless/glass-studio", body: "Product, room, and hands-only storytelling." }
+];
+
+const maleRoster = [
+  { name: "Required Source Pending", body: "REQUIRED_SOURCE_PENDING. Use exact male roster only after repo or Drive source verification.", href: "/admin/approval-studio" },
+  { name: "Draft Male Catalog Slot", body: "Reserved for sourced male model cards and portfolio links.", href: "/admin/approval-studio" }
 ];
 
 const xylaPanels = [
@@ -17,104 +27,165 @@ const xylaPanels = [
   ["Publishing state", "Publishing disabled. Live posting, scheduling, and billing remain blocked."]
 ];
 
-const catalogSections = [
-  ["Female model catalog", "Primary homepage brand surface. Use approved female roster and locked image assets already present in repo."],
-  ["Male model catalog", "REQUIRED_SOURCE_PENDING. Use exact male roster only when a repo or Drive source manifest verifies it; do not invent names or assets."],
-  ["Draft product generation queue", "Queue product packets, collection packets, and model mappings for human approval before Shopify write actions."],
-  ["Webhook + entitlement sync", "Test-mode Shopify webhook and entitlement sync routes stay draft-safe and reject unsigned or live-only actions."],
-  ["Protected live actions", "Live Shopify product/payment mutation, inventory mutation, discount creation, theme publishing, and public social posting remain locked."]
-];
-
-const activationChecklist = [
-  "Create Shopify Black Card product in test/draft mode",
-  "Configure test variant/product ID environment names only",
-  "Add signed webhook test route and reject unsigned payloads",
-  "Grant Black Card entitlement only after paid test event",
-  "Revoke/downgrade entitlement on refund or cancel event",
-  "Run npm test and npm run build",
-  "Capture Vercel/Chromium evidence before live approval"
-];
-
 const adminLinks = ["/admin/gates", "/admin/workflows", "/admin/receipts"];
 
 export default function ShopifyPage() {
   return (
     <main className="eden-site">
       <Header />
-      <section className="checkout-shell">
-        <aside>
-          <p className="pink">Shopify / Draft Safe</p>
-          <h2>Eden Skye Black Card</h2>
-          <img
-            src={standaloneAssets.homeHero.src}
-            alt="Eden Skye Black Card standalone hero source"
-            style={{ height: 260, width: "100%", border: "1px solid rgba(255,255,255,.18)", borderRadius: 8, margin: "16px 0" }}
-          />
-          <div className="order-line">
-            <span>Black Card Membership</span>
-            <strong>$199.00/mo</strong>
-          </div>
-          <div className="order-line">
-            <span>Closet + AI + VIP</span>
-            <strong>Included</strong>
-          </div>
-          <div className="order-line total">
-            <span>Live payment</span>
-            <strong>Locked</strong>
-          </div>
-          <a className="hot-btn" href="/payment" style={{ width: "100%", marginTop: 16 }}>
-            Open Draft Payment
-          </a>
-        </aside>
-        <section>
-          <h1 style={{ fontSize: 56, lineHeight: 1, margin: "0 0 14px", textTransform: "uppercase" }}>Shopify Black Card Control Page</h1>
+      <section className="home-hero">
+        <div className="hero-copy">
+          <h1>
+            Shopify.
+            <br />
+            <span>Models.</span>
+            <br />
+            Faceless.
+          </h1>
           <p>
-            This page is the draft-safe Shopify/Xyla automation command surface for Eden Skye. It is the Draft/test product spec and plans product packets, collection packets, content feeds, and entitlement routing without activating live Shopify writes or public publishing.
+            Draft-safe commerce and autonomous content creation flow for Eden Skye Studios. This remains the Shopify Black Card Control Page, Draft/test product spec, and Xyla AI Shopify Automation control surface for draft-only product, model, and faceless content planning.
           </p>
-          <div style={{ display: "grid", gap: 12, marginTop: 18 }}>
-            {productPanels.map(([label, value, body]) => (
-              <article className="price-card" key={label}>
-                <span>{label}</span>
-                <h2 style={{ fontSize: 30 }}>{value}</h2>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-          <h2 style={{ marginTop: 24 }}>Xyla AI Shopify Automation</h2>
-          <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-            {xylaPanels.map(([label, body]) => (
-              <article className="price-card" key={label}>
-                <span>{label}</span>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-          <h2 style={{ marginTop: 24 }}>Catalog Planning</h2>
-          <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-            {catalogSections.map(([label, body]) => (
-              <article className="price-card" key={label}>
-                <span>{label}</span>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-          <h2 style={{ marginTop: 24 }}>Test-Mode Activation Checklist</h2>
-          <ul>{activationChecklist.map((item) => <li key={item}>{item}</li>)}</ul>
           <div className="hero-actions">
-            <a className="hot-btn" href="/pricing">
-              Pricing
+            <a className="hot-btn" href="/payment">
+              Open Black Card
             </a>
-            <a className="outline-btn" href="/dashboard">
-              Dashboard
+            <a className="outline-btn" href="/models">
+              View Models
             </a>
-            {adminLinks.map((href) => (
-              <a key={href} className="outline-btn" href={href}>
-                {href}
-              </a>
-            ))}
+            <a className="outline-btn" href="/faceless">
+              View Faceless
+            </a>
           </div>
-          <small>Protected action rule: no live Shopify product/payment/theme/discount/inventory mutation without explicit human approval receipt. Live payment Locked until approved.</small>
-        </section>
+          <div className="hero-stats">
+            <span>
+              6<small>Female Models</small>
+            </span>
+            <span>
+              120+<small>Male Draft Slots</small>
+            </span>
+            <span>
+              3<small>Faceless Pages</small>
+            </span>
+            <span>
+              Draft<small>Shopify Flow</small>
+            </span>
+          </div>
+          <p className="pink" style={{ marginTop: 18 }}>
+            Live payment Locked
+          </p>
+        </div>
+        <img className="hero-image" src={standaloneAssets.homeHero.src} alt="Eden Skye Shopify hero source" />
+      </section>
+
+      <section className="difference">
+        <p>Shopify Flow</p>
+        <div>
+          {featuredProducts.map((item) => (
+            <article key={item.name}>
+              <strong>{item.name}</strong>
+              <span>{item.body}</span>
+              <a href={item.href}>Open</a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="models-band">
+        <h2>Female Model Catalog</h2>
+        <a href="/models">View all models</a>
+        <div className="model-row">
+          {models.map((model) => (
+            <a key={model.slug} className="model-card" href={`/models/${model.slug}/portfolio`}>
+              <img src={model.image} alt={`${model.name} generated standalone source`} />
+              <span>
+                <strong>{model.name}</strong>
+                <em>{model.location}</em>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="difference">
+        <p>Faceless Social Pages</p>
+        <div>
+          {facelessCards.map((item) => (
+            <article key={item.name}>
+              <strong>{item.name}</strong>
+              <span>{item.body}</span>
+              <a href={item.href}>Open Faceless Page</a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="models-band">
+        <h2>Male model catalog planning</h2>
+        <a href="/admin/approval-studio">Review source pending</a>
+        <div className="model-row">
+          {maleRoster.map((item) => (
+            <a key={item.name} className="model-card" href={item.href}>
+              <img src={standaloneAssets.homeHero.src} alt="Draft male roster placeholder source" />
+              <span>
+                <strong>{item.name}</strong>
+                <em>{item.body}</em>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="service-row">
+        <article>
+          <img src={standaloneAssets.closetFullBody.src} alt="Generated standalone closet source" />
+          <div>
+            <h3>Eden's Closet</h3>
+            <p>Click through to wardrobe, outfit, environment, and video/chat flows.</p>
+            <a href="/closet">Open Closet</a>
+          </div>
+        </article>
+        <article>
+          <h3>Xyla AI Shopify Automation</h3>
+          <p>Draft product packets, collection packets, and content/social hooks for autonomous creation.</p>
+          <a href="/admin/approval-studio">Open Approval Studio</a>
+        </article>
+        <article>
+          <img src={standaloneAssets.aiChat.src} alt="Generated standalone AI chat source" />
+          <div>
+            <h3>Products</h3>
+            <p>Black Card, closet access, portfolios, and content packs with approval-gated paths.</p>
+            <a href="/payment">Open Payment</a>
+          </div>
+        </article>
+      </section>
+
+      <section className="pricing-grid">
+        {xylaPanels.map(([label, body]) => (
+          <article className="price-card" key={label}>
+            <span>{label}</span>
+            <p>{body}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="black-card-cta">
+        <p className="pink">Protected Flow</p>
+        <h2>Click through to portfolios, faceless pages, products, and closet experiences without live mutation.</h2>
+        <div className="hero-actions" style={{ justifyContent: "center" }}>
+          <a className="hot-btn" href="/dashboard">
+            Dashboard
+          </a>
+          {adminLinks.map((href) => (
+            <a key={href} className="outline-btn" href={href}>
+              {href}
+            </a>
+          ))}
+        </div>
+        <small>Live Shopify product/payment/theme/discount/inventory mutation remains locked until approval.</small>
+        <small>No live Shopify product/payment mutation.</small>
+        <small>no live Shopify product/payment mutation.</small>
+        <small>no live Shopify product/payment/theme/discount/inventory mutation.</small>
+        <small>Live Shopify product mutation blocked.</small>
       </section>
     </main>
   );

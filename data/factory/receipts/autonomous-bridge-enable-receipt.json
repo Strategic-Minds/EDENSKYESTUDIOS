@@ -1,6 +1,6 @@
 {
   "status": "BRIDGE_READY_DRAFT_ONLY",
-  "checked_at": "2026-06-12T00:59:11.242Z",
+  "checked_at": "2026-06-12T17:26:51.337Z",
   "live_mutations_enabled": false,
   "human_gate_required": true,
   "manifest": "config/autonomous-bridge-manifest.json",
