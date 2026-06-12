@@ -1,4 +1,4 @@
-type SmokeStatus = 'read_only_passed' | 'ready_for_read_only_probe' | 'blocked_missing_configuration';
+type SmokeStatus = 'read_only_passed' | 'ready_for_read_only_probe' | 'configured_non_api_dependency' | 'blocked_missing_configuration';
 
 type EnvRequirement = {
   key: string;
@@ -97,14 +97,14 @@ export function getConnectorSmokeReceipts(): ConnectorSmokeReceipt[] {
     },
     {
       connector: 'Xyla',
-      status: xylaMissing.length === 0 ? 'ready_for_read_only_probe' : 'blocked_missing_configuration',
-      summary: xylaMissing.length === 0 ? 'Xyla install readiness has a runtime connection marker and can advance to a read-only install probe.' : 'Xyla install status is blocked until a Xyla connection marker is configured.',
-      evidence: 'Checks only for Shopify base env plus at least one Xyla credential, app, install, account, shop env alias, or XYLA_* runtime key; does not call Xyla or Shopify mutation endpoints.',
+      status: xylaMissing.length === 0 ? 'configured_non_api_dependency' : 'blocked_missing_configuration',
+      summary: xylaMissing.length === 0 ? 'Xyla is configured as a non-API Shopify dependency. GPT cannot directly reach Xyla here, so status is manual/UI-mediated.' : 'Xyla manual dependency status is blocked until a Xyla marker is configured.',
+      evidence: 'Checks only for Shopify base env plus a Xyla marker so the admin can display the dependency. This route does not call Xyla APIs, because Xyla is not reachable by GPT/API in this setup.',
       requiredEnv: labels(xylaRequirements),
       optionalEnv: xylaOptional,
       missingRequiredEnv: xylaMissing,
       resolvedRequiredEnv: resolved(xylaRequirements),
-      mutationPolicy: 'read_only_no_xyla_or_shopify_mutation'
+      mutationPolicy: 'manual_or_ui_mediated_no_xyla_api_no_shopify_mutation'
     },
     {
       connector: 'Metricool',
