@@ -1,5 +1,5 @@
-import { EdensCloset } from "./closet-client";
+import { EdenSkyeAdminShell } from "../eden-admin-shell";
 
 export default function Page() {
-  return <EdensCloset />;
+  return <EdenSkyeAdminShell section="Eden Skye OS" />;
 }
