@@ -1,0 +1,18 @@
+{
+  "system": "EDEN SKYE ADMIN",
+  "status": "INSTALLED_DRAFT_CONTROL_PLANE",
+  "updated_at": "2026-06-12T06:25:00Z",
+  "design_contract": {
+    "background": "black",
+    "text": "white",
+    "accent": "hot pink / neon Eden Skye",
+    "layout": "dense backend command center",
+    "forbidden": ["beige UI", "generic SaaS cards", "marketing homepage", "ungated production mutation"]
+  },
+  "mission_loop": ["PLAN", "BUILD", "VALIDATE", "APPROVE", "DEPLOY_PREVIEW", "OPERATE", "GENERATE_MEDIA", "CREATE_SOCIAL_DRAFTS", "ANALYZE", "OPTIMIZE", "SCALE"],
+  "modules": ["Command Center", "Agent Console", "Git / Vercel Ops", "Supabase Ops", "Drive OS", "Media Factory", "Social Automation", "Gmail / Calendar Ops", "Approval Gates", "Evidence Center"],
+  "default_autonomy": "maximum_safe_autonomy",
+  "live_mutations_enabled": false,
+  "human_gate_required": true,
+  "source_references": ["01-black-chat-ui-2-7-.zip", "config/autonomous-bridge-manifest.json", "docs/EDEN_EXACT_IMAGE_SOURCE_MANIFEST_2026-06-12.json", "docs/EDEN_DRIVE_DISCOVERY_MANIFEST_2026-06-12.json"]
+}
