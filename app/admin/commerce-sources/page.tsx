@@ -27,6 +27,7 @@ function Pill({ children, red = false }: { children: string; red?: boolean }) {
 
 export default function Page() {
   return (
+    <AdminAuthGate>
     <main data-admin-theme="black-command-center" style={{ minHeight: "100vh", background: bg, color: "#fff", padding: 24, fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
       <div style={{ maxWidth: 1500, margin: "0 auto" }}>
         <header style={{ display: "grid", gridTemplateColumns: "minmax(0,1.25fr) minmax(320px,.75fr)", gap: 18, marginBottom: 18 }}>
@@ -80,5 +81,7 @@ export default function Page() {
         </section>
       </div>
     </main>
+    </AdminAuthGate>
   );
 }
+import { AdminAuthGate } from "../admin-auth-gate";

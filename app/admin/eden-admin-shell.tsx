@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import * as vt from "../visual-source-truth";
+import { AdminAuthGate } from "./admin-auth-gate";
 
 const accent = "#ff2bd6";
 const black = "#030305";
@@ -131,8 +132,9 @@ function SectionTitle({ kicker, title, action }: { kicker: string; title: string
   );
 }
 
-export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: string }) {
+export async function EdenSkyeAdminShell({ section = "Command Center" }: { section?: string }) {
   return (
+    <AdminAuthGate>
     <main data-admin-theme="black-command-center" style={{ minHeight: "100vh", background: black, color: "#fff", fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif", padding: 24 }}>
       <div style={{ maxWidth: 1540, margin: "0 auto" }}>
         <header style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, .8fr)", gap: 18, alignItems: "stretch", marginBottom: 18 }}>
@@ -298,5 +300,6 @@ export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: s
         </section>
       </div>
     </main>
+    </AdminAuthGate>
   );
 }
