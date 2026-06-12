@@ -1,0 +1,64 @@
+name: Eden Sandbox Browser QA
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    name: Eden sandbox browser QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Start preview server
+        run: |
+          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/eden-sandbox-next.log 2>&1 &
+          echo $! > /tmp/eden-sandbox-next.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/eden-sandbox > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/eden-sandbox-next.log
+          exit 1
+
+      - name: Run browser QA
+        env:
+          EDEN_SANDBOX_TARGET_URL: http://127.0.0.1:3000/eden-sandbox
+          EDEN_SANDBOX_QA_DIR: artifacts/eden-sandbox-browser-qa
+        run: npm run qa:eden-sandbox
+
+      - name: Upload browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-sandbox-browser-qa
+          path: |
+            artifacts/eden-sandbox-browser-qa
+            /tmp/eden-sandbox-next.log
