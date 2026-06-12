@@ -20,8 +20,9 @@ const checks = [
   ['agent-ops', '#agent-ops', '#agent-ops', 'Agent Ops'],
   ['revenue-funnel', '#revenue-funnel', '#revenue-funnel', 'Revenue Funnel'],
   ['action-ledger', '/actions#action-ledger', '#action-ledger', 'Admin Action Ledger'],
-  ['connector-smoke', '/actions#connector-smoke', '#connector-smoke', 'Connector Smoke Receipts'],
-  ['connector-smoke-api', '/api/eden-sandbox/connector-smoke', 'body', 'read_only_configuration_smoke']
+  ['connector-smoke', '/actions#connector-smoke', '#connector-smoke', 'Metricool read validation'],
+  ['connector-smoke-api', '/api/eden-sandbox/connector-smoke', 'body', 'read_only_configuration_smoke'],
+  ['metricool-read-validation-api', '/api/eden-sandbox/metricool-read-validation', 'body', 'metricool_read_validation']
 ];
 
 const viewports = [
