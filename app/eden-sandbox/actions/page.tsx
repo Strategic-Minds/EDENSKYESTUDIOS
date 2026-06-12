@@ -1,4 +1,7 @@
+import { getConnectorSmokeReceipts } from '@/lib/eden-sandbox/connector-smoke';
 import styles from '../page.module.css';
+
+export const dynamic = 'force-dynamic';
 
 const receiptActions = [
   ['Approve', 'Internal draft batch', 'Records approval intent for preview review only', 'receipt_only_no_external_write'],
@@ -8,9 +11,7 @@ const receiptActions = [
   ['Retry', 'Recoverable preview failure', 'Queues a mock retry receipt without running a live job', 'receipt_only_no_external_write']
 ];
 
-const smokeReceipts = [
-  ['Shopify / Xyla', 'Shopify store and catalog read smoke passed for Eden Skye Studios. Xyla app/install path remains unverified.', 'Read-only; no product, theme, checkout, collection, or app mutation.'],
-  ['Metricool', 'No direct Metricool connector was exposed in this runtime.', 'Blocked dry-run lane until token, brand ID, and callable smoke route are available.'],
+const supportingReadReceipts = [
   ['Supabase', 'Project, health, and public table metadata read smoke passed for Strategic Minds Advisory.', 'Read-only; no SQL, migration, branch, storage, or production data mutation.'],
   ['Google Drive', 'Drive profile and root listing read smoke passed for connected Eden working docs.', 'Read-only; no file, folder, upload, move, archive, or permission mutation.'],
   ['AUTO BUILDER', 'Strict MCP health/bootstrap smoke passed with default dry-run governance.', 'Read-only; no Drive write, provisioning, rollback, deploy, or platform mutation.']
@@ -31,6 +32,16 @@ export const metadata = {
 };
 
 export default function EdenSandboxActionsPage() {
+  const routedSmokeReceipts = getConnectorSmokeReceipts();
+  const smokeRows = [
+    ...routedSmokeReceipts.map((receipt) => [
+      receipt.connector,
+      `${receipt.status}: ${receipt.summary}`,
+      `${receipt.evidence} Missing required env: ${receipt.missingRequiredEnv.length ? receipt.missingRequiredEnv.join(', ') : 'none'}.`
+    ]),
+    ...supportingReadReceipts
+  ];
+
   return (
     <main className={styles.shell}>
       <header className={styles.topbar}>
@@ -75,11 +86,12 @@ export default function EdenSandboxActionsPage() {
             <div>
               <p className={styles.eyebrow}>Dry-run connector evidence</p>
               <h2>Connector Smoke Receipts</h2>
+              <p>Route-backed smoke endpoint: <code>/api/eden-sandbox/connector-smoke</code></p>
             </div>
             <span className={styles.lockPill}>Read-only checks only</span>
           </div>
           <div className={styles.table}>
-            {smokeReceipts.map((row) => <div key={row[0]}>{row.map((cell) => <span key={cell}>{cell}</span>)}</div>)}
+            {smokeRows.map((row) => <div key={row[0]}>{row.map((cell) => <span key={cell}>{cell}</span>)}</div>)}
           </div>
         </section>
       </section>
