@@ -6,12 +6,12 @@ const line = "rgba(255,255,255,.16)";
 const driveFolder = "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE";
 
 const sources = [
-  ["eden-skye-001", "eden-skye-canonical-source-v004.png", "Approved internal", "Site, Shopify draft, Closet, HeyGen packet"],
-  ["eden-model-002", "eden-model-002-canonical-source-v001.png", "Approved internal", "Model profile, Shopify draft, Social draft"],
-  ["eden-model-003", "eden-model-003-canonical-source-v001.png", "Approved internal", "Male model profile, Shopify draft, Social draft"],
-  ["eden-model-004", "eden-model-004-canonical-source-v001.png", "Approved internal", "Male model profile, Shopify draft, Social draft"],
-  ["eden-model-005", "eden-model-005-canonical-source-v001.png", "Approved internal", "Model profile, Shopify draft, Social draft"],
-  ["eden-model-006", "eden-model-006-canonical-source-v001.png", "Approved internal", "Male model profile, Shopify draft, Social draft"]
+  ["eden-skye-001", "eden-skye-canonical-source-v004.png", "Site, Shopify draft, Closet, HeyGen packet"],
+  ["eden-model-002", "eden-model-002-canonical-source-v001.png", "Model profile, Shopify draft, Social draft"],
+  ["eden-model-003", "eden-model-003-canonical-source-v001.png", "Male model profile, Shopify draft, Social draft"],
+  ["eden-model-004", "eden-model-004-canonical-source-v001.png", "Male model profile, Shopify draft, Social draft"],
+  ["eden-model-005", "eden-model-005-canonical-source-v001.png", "Model profile, Shopify draft, Social draft"],
+  ["eden-model-006", "eden-model-006-canonical-source-v001.png", "Male model profile, Shopify draft, Social draft"]
 ];
 
 const stockSources = [
@@ -27,6 +27,24 @@ const stockSources = [
   ["eden-skye-010", "eden-skye-010_social-vertical_hot-pink-blazer_9x16_v1.png", "Social draft"],
   ["eden-skye-011", "eden-skye-011_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen headshot"],
   ["eden-skye-012", "eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png", "HeyGen half body"]
+];
+
+const approvedModelStock = [
+  ["eden-model-002", "eden-model-002_portfolio-shopify_black-luxury_4x5_v1.png", "Portfolio / Shopify draft"],
+  ["eden-model-002", "eden-model-002_full-body-viewer_social_9x16_v1.png", "Full-body viewer / social draft"],
+  ["eden-model-002", "eden-model-002_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen / video draft"],
+  ["eden-model-003", "eden-model-003_portfolio-shopify_black-luxury_4x5_v1.png", "Portfolio / Shopify draft"],
+  ["eden-model-003", "eden-model-003_full-body-viewer_social_9x16_v1.png", "Full-body viewer / social draft"],
+  ["eden-model-003", "eden-model-003_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen / video draft"],
+  ["eden-model-004", "eden-model-004_portfolio-shopify_black-luxury_4x5_v1.png", "Portfolio / Shopify draft"],
+  ["eden-model-004", "eden-model-004_full-body-viewer_social_9x16_v1.png", "Full-body viewer / social draft"],
+  ["eden-model-004", "eden-model-004_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen / video draft"],
+  ["eden-model-005", "eden-model-005_portfolio-shopify_black-luxury_4x5_v1.png", "Portfolio / Shopify draft"],
+  ["eden-model-005", "eden-model-005_full-body-viewer_social_9x16_v1.png", "Full-body viewer / social draft"],
+  ["eden-model-005", "eden-model-005_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen / video draft"],
+  ["eden-model-006", "eden-model-006_portfolio-shopify_black-luxury_4x5_v1.png", "Portfolio / Shopify draft"],
+  ["eden-model-006", "eden-model-006_full-body-viewer_social_9x16_v1.png", "Full-body viewer / social draft"],
+  ["eden-model-006", "eden-model-006_heygen-headshot_dark-studio_1x1_v1.png", "HeyGen / video draft"]
 ];
 
 const queues = [
@@ -82,13 +100,13 @@ export default function Page() {
             </div>
             <h1 style={{ margin: "24px 0 10px", fontSize: 48, lineHeight: 1, letterSpacing: 0 }}>Image, Video, And Content Approval Control Plane</h1>
             <p style={{ margin: 0, maxWidth: 860, color: "rgba(255,255,255,.74)", lineHeight: 1.55 }}>
-              GPT-readable approval page for Eden Skye media operations. It connects the readable Drive intake folder, canonical model sources, generated stock-source batch, video/content queues, protected action gates, and evidence routing in one draft-safe command surface.
+              GPT-readable approval page for Eden Skye media operations. It connects the readable Drive intake folder, canonical model sources, generated stock-source batches, video/content queues, protected action gates, and evidence routing in one draft-safe command surface.
             </p>
           </section>
           <aside style={{ border: `1px solid ${line}`, background: panel, padding: 20 }}>
             <Tag>approval state</Tag>
-            <div style={{ marginTop: 18, fontSize: 44, lineHeight: 1, fontWeight: 900 }}>18</div>
-            <p style={{ margin: "8px 0 18px", color: "rgba(255,255,255,.72)" }}>6 approved model sources + 12 stock sources pending admin review.</p>
+            <div style={{ marginTop: 18, fontSize: 44, lineHeight: 1, fontWeight: 900 }}>33</div>
+            <p style={{ margin: "8px 0 18px", color: "rgba(255,255,255,.72)" }}>6 approved model sources + 27 generated stock sources pending admin review.</p>
             <a href="/api/admin/eden/approval-studio" style={{ display: "block", border: `1px solid ${accent}`, color: "#fff", padding: 12, textAlign: "center", textDecoration: "none", background: "rgba(255,43,214,.18)" }}>GPT Registry API</a>
           </aside>
         </header>
@@ -102,18 +120,15 @@ export default function Page() {
           </div>
           <div style={{ border: `1px solid ${line}`, background: panel, padding: 20 }}>
             <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Current Manifests</div>
-            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Canonical model source manifest: <strong>EDEN_CANONICAL_MODEL_SOURCE_MANIFEST_REVISED_V004.csv</strong></p>
-            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Stock source manifest: <strong>EDEN_STOCK_CANONICAL_SOURCE_MANIFEST_2026-06-12.csv</strong></p>
-            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Stock source package: <strong>EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip</strong></p>
+            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Canonical model manifest: <strong>EDEN_CANONICAL_MODEL_SOURCE_MANIFEST_REVISED_V004.csv</strong></p>
+            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Eden stock package: <strong>EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip</strong></p>
+            <p style={{ color: "rgba(255,255,255,.78)", lineHeight: 1.55 }}>Approved model stock package: <strong>EDEN_APPROVED_MODELS_STOCK_SOURCE_IMAGES_2026_06_12.zip</strong></p>
           </div>
         </section>
 
         <section style={{ border: `1px solid ${line}`, background: panel, padding: 20, marginBottom: 18 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
-            <div>
-              <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Approved Source Images</div>
-              <h2 style={{ margin: "6px 0 0", fontSize: 26 }}>Canonical Model Sources</h2>
-            </div>
+            <div><div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Approved Source Images</div><h2 style={{ margin: "6px 0 0", fontSize: 26 }}>Canonical Model Sources</h2></div>
             <Tag>approved internal</Tag>
           </div>
           <AssetGrid items={sources} state="Approved internal" />
@@ -121,14 +136,19 @@ export default function Page() {
 
         <section style={{ border: `1px solid rgba(255,43,214,.38)`, background: panel, padding: 20, marginBottom: 18 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
-            <div>
-              <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Generated Stock Sources</div>
-              <h2 style={{ margin: "6px 0 0", fontSize: 26 }}>12 Eden Skye Assets Pending Admin Review</h2>
-            </div>
+            <div><div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Generated Stock Sources</div><h2 style={{ margin: "6px 0 0", fontSize: 26 }}>12 Eden Skye Assets Pending Admin Review</h2></div>
             <Tag>pending drive upload</Tag>
           </div>
-          <p style={{ color: "rgba(255,255,255,.68)", marginTop: 0 }}>These files are generated standalone source images for the autonomous system. They are not collage crops. Drive folder linkage is registered; individual Drive file IDs remain pending until upload validation returns metadata.</p>
           <AssetGrid items={stockSources} state="Generated pending admin review" />
+        </section>
+
+        <section style={{ border: `1px solid rgba(255,43,214,.38)`, background: panel, padding: 20, marginBottom: 18 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+            <div><div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>Approved Model Stock Tranche</div><h2 style={{ margin: "6px 0 0", fontSize: 26 }}>15 Assets For Models 002-006 Pending Admin Review</h2></div>
+            <Tag>pending drive upload</Tag>
+          </div>
+          <p style={{ color: "rgba(255,255,255,.68)", marginTop: 0 }}>Each approved model now has a portfolio/Shopify source, full-body viewer/social source, and HeyGen/video headshot source. These are standalone generated assets, not collage crops.</p>
+          <AssetGrid items={approvedModelStock} state="Generated pending admin review" />
         </section>
 
         <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 14, marginBottom: 18 }}>
@@ -145,16 +165,12 @@ export default function Page() {
           <div style={{ border: `1px solid ${line}`, background: panel, padding: 20 }}>
             <div style={{ color: accent, fontSize: 12, fontWeight: 800, textTransform: "uppercase" }}>GPT Bridge Rules</div>
             <h2 style={{ margin: "6px 0 14px", fontSize: 26 }}>How Agents Must Use This Page</h2>
-            <div style={{ display: "grid", gap: 10 }}>
-              {gptRules.map((rule) => <div key={rule} style={{ borderBottom: "1px solid rgba(255,255,255,.1)", paddingBottom: 10, color: "rgba(255,255,255,.76)" }}>{rule}</div>)}
-            </div>
+            <div style={{ display: "grid", gap: 10 }}>{gptRules.map((rule) => <div key={rule} style={{ borderBottom: "1px solid rgba(255,255,255,.1)", paddingBottom: 10, color: "rgba(255,255,255,.76)" }}>{rule}</div>)}</div>
           </div>
           <div style={{ border: `1px solid rgba(255,79,123,.5)`, background: "#10070b", padding: 20 }}>
             <Tag red>human approval required</Tag>
             <h2 style={{ margin: "16px 0 14px", fontSize: 26 }}>Protected Outputs</h2>
-            <div style={{ display: "grid", gap: 10 }}>
-              {protectedActions.map((item) => <div key={item} style={{ color: "#ff9bb4", borderBottom: "1px solid rgba(255,79,123,.22)", paddingBottom: 10 }}>{item}</div>)}
-            </div>
+            <div style={{ display: "grid", gap: 10 }}>{protectedActions.map((item) => <div key={item} style={{ color: "#ff9bb4", borderBottom: "1px solid rgba(255,79,123,.22)", paddingBottom: 10 }}>{item}</div>)}</div>
           </div>
         </section>
       </div>
