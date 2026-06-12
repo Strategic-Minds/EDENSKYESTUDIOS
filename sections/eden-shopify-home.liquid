@@ -1,27 +1,5 @@
-<section class="eden-hero">
-  <div class="eden-hero-inner">
-    <div>
-      <p class="eden-eyebrow">{{ section.settings.eyebrow }}</p>
-      <h1>{{ section.settings.heading }}</h1>
-      <p>{{ section.settings.subheading }}</p>
-      <div class="eden-hero-actions">
-        <a class="eden-button" href="{{ section.settings.primary_link }}">{{ section.settings.primary_label }}</a>
-        <a class="eden-button secondary" href="{{ section.settings.secondary_link }}">{{ section.settings.secondary_label }}</a>
-      </div>
-    </div>
-    <div class="eden-visual-panel">
-      {% if section.settings.hero_image != blank %}
-        {{ section.settings.hero_image | image_url: width: 1200 | image_tag: loading: 'eager', alt: section.settings.heading }}
-      {% else %}
-        <div class="eden-visual-placeholder"><div><p class="eden-eyebrow">Approved image slot</p><strong>Upload Eden Skye hero</strong></div></div>
-      {% endif %}
-    </div>
-  </div>
-</section>
-{% assign female_blocks = section.blocks | where: 'type', 'female_model' %}
-{% assign male_blocks = section.blocks | where: 'type', 'male_model' %}
-{% assign faceless_blocks = section.blocks | where: 'type', 'faceless_offer' %}
-{% assign product_blocks = section.blocks | where: 'type', 'product_offer' %}
+<section class="eden-hero"><div class="eden-hero-inner"><div><p class="eden-eyebrow">{{ section.settings.eyebrow }}</p><h1>{{ section.settings.heading }}</h1><p>{{ section.settings.subheading }}</p><div class="eden-hero-actions"><a class="eden-button" href="{{ section.settings.primary_link }}">{{ section.settings.primary_label }}</a><a class="eden-button secondary" href="{{ section.settings.secondary_link }}">{{ section.settings.secondary_label }}</a></div></div><div class="eden-visual-panel">{% if section.settings.hero_image != blank %}{{ section.settings.hero_image | image_url: width: 1200 | image_tag: loading: 'eager', alt: section.settings.heading }}{% else %}<div class="eden-visual-placeholder"><div><p class="eden-eyebrow">Approved image slot</p><strong>Upload Eden Skye hero</strong></div></div>{% endif %}</div></div></section>
+{% assign female_blocks = section.blocks | where: 'type', 'female_model' %}{% assign male_blocks = section.blocks | where: 'type', 'male_model' %}{% assign faceless_blocks = section.blocks | where: 'type', 'faceless_offer' %}{% assign product_blocks = section.blocks | where: 'type', 'product_offer' %}
 <section class="eden-section"><div class="eden-section-head"><div><p class="eden-eyebrow">Women</p><h2>Female model roster</h2></div><p>Ten approved Eden Skye women for Shopify collections, Xyla video drafts, Black Card content, and member discovery.</p></div><div class="eden-grid">{% for block in female_blocks %}<div {{ block.shopify_attributes }}>{% render 'eden-card', title: block.settings.title, text: block.settings.text, tag: 'Female model', image: block.settings.image, url: block.settings.link %}</div>{% endfor %}</div></section>
 <section class="eden-section eden-feature-band"><div class="eden-section-head"><div><p class="eden-eyebrow">Men</p><h2>Male model roster</h2></div><p>Five approved male model slots for premium lifestyle, faceless automation, video scripting, and Shopify offer testing.</p></div><div class="eden-grid">{% for block in male_blocks %}<div {{ block.shopify_attributes }}>{% render 'eden-card', title: block.settings.title, text: block.settings.text, tag: 'Male model', image: block.settings.image, url: block.settings.link %}</div>{% endfor %}</div></section>
 <section class="eden-section"><div class="eden-section-head"><div><p class="eden-eyebrow">Faceless</p><h2>Content engines</h2></div><p>Faceless content lanes for Xyla AI, Shopify product storytelling, short-form video, and social draft automation.</p></div><div class="eden-product-list">{% for block in faceless_blocks %}<div {{ block.shopify_attributes }}>{% render 'eden-card', title: block.settings.title, text: block.settings.text, tag: 'Faceless lane', image: block.settings.image, url: block.settings.link %}</div>{% endfor %}</div></section>

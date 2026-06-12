@@ -1,24 +1,11 @@
-# EdenSkyeStudios
+# Eden Skye Shopify Theme
 
-Next.js control surface for the Eden Skye Studios brand, launch workflow, Supabase-backed operating tables, and Vercel automation routes.
+Native Shopify Online Store theme branch. Connect this branch directly in Shopify/GitHub.
 
-This repository is designed to stay governed:
+Theme files are at the repository root for Shopify compatibility.
 
-- public publishing requires approval
-- Shopify mutations require approval
-- paid ad activation requires approval
-- production promotion requires approval
+Required root folders are present: layout, templates, sections, snippets, assets, config, locales.
 
-## Bootstrap Scope
+This branch is for theme editing. It is not the Next.js/Vercel storefront branch.
 
-The first application foundation includes:
-
-- Next.js App Router template
-- premium Eden Skye landing page
-- health and readiness APIs
-- Supabase server client helpers
-- launch workflow contract
-- draft-only social bridge endpoint
-- Vercel cron readiness route
-- environment variable contract
-- Supabase migration for core operating tables
+Live product creation, payments, and publishing remain merchant-approved actions.
