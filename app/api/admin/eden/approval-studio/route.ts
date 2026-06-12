@@ -1,28 +1,58 @@
 import { NextResponse } from "next/server";
 
-const stockSourceFiles = [
-  { id: "eden-skye-001", file: "eden-skye-001_identity-lock_front-portrait_4x5_v1.png", type: "identity_lock", use: ["identity lock"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-002", file: "eden-skye-002_identity-lock_three-quarter_4x5_v1.png", type: "identity_lock", use: ["identity lock"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-003", file: "eden-skye-003_identity-lock_side-profile_4x5_v1.png", type: "identity_lock", use: ["identity lock"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-004", file: "eden-skye-004_portfolio_black-card-portrait_4x5_v1.png", type: "portfolio_portrait", use: ["models page", "Black Card draft"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-005", file: "eden-skye-005_portfolio_white-blazer_4x5_v1.png", type: "portfolio_portrait", use: ["models page"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-006", file: "eden-skye-006_website-hero_black-neon-stage_16x9_v1.png", type: "website_hero", use: ["home hero"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-007", file: "eden-skye-007_website-hero_neon-runway_16x9_v1.png", type: "website_hero", use: ["models page hero"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-008", file: "eden-skye-008_wardrobe-safe_full-body-black_9x16_v1.png", type: "wardrobe_safe", use: ["closet viewer"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-009", file: "eden-skye-009_background_walk-in-closet_16x9_v1.png", type: "background_context", use: ["closet environment"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-010", file: "eden-skye-010_social-vertical_hot-pink-blazer_9x16_v1.png", type: "social_vertical", use: ["social draft", "reels draft"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-011", file: "eden-skye-011_heygen-headshot_dark-studio_1x1_v1.png", type: "heygen_headshot", use: ["HeyGen draft"], status: "generated_pending_admin_review" },
-  { id: "eden-skye-012", file: "eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png", type: "heygen_half_body", use: ["HeyGen draft"], status: "generated_pending_admin_review" }
+const driveUrl = "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE";
+
+const edenStockFiles = [
+  "eden-skye-001_identity-lock_front-portrait_4x5_v1.png",
+  "eden-skye-002_identity-lock_three-quarter_4x5_v1.png",
+  "eden-skye-003_identity-lock_side-profile_4x5_v1.png",
+  "eden-skye-004_portfolio_black-card-portrait_4x5_v1.png",
+  "eden-skye-005_portfolio_white-blazer_4x5_v1.png",
+  "eden-skye-006_website-hero_black-neon-stage_16x9_v1.png",
+  "eden-skye-007_website-hero_neon-runway_16x9_v1.png",
+  "eden-skye-008_wardrobe-safe_full-body-black_9x16_v1.png",
+  "eden-skye-009_background_walk-in-closet_16x9_v1.png",
+  "eden-skye-010_social-vertical_hot-pink-blazer_9x16_v1.png",
+  "eden-skye-011_heygen-headshot_dark-studio_1x1_v1.png",
+  "eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png"
 ];
+
+const approvedModelFiles = [
+  "eden-model-002_portfolio-shopify_black-luxury_4x5_v1.png",
+  "eden-model-002_full-body-viewer_social_9x16_v1.png",
+  "eden-model-002_heygen-headshot_dark-studio_1x1_v1.png",
+  "eden-model-003_portfolio-shopify_black-luxury_4x5_v1.png",
+  "eden-model-003_full-body-viewer_social_9x16_v1.png",
+  "eden-model-003_heygen-headshot_dark-studio_1x1_v1.png",
+  "eden-model-004_portfolio-shopify_black-luxury_4x5_v1.png",
+  "eden-model-004_full-body-viewer_social_9x16_v1.png",
+  "eden-model-004_heygen-headshot_dark-studio_1x1_v1.png",
+  "eden-model-005_portfolio-shopify_black-luxury_4x5_v1.png",
+  "eden-model-005_full-body-viewer_social_9x16_v1.png",
+  "eden-model-005_heygen-headshot_dark-studio_1x1_v1.png",
+  "eden-model-006_portfolio-shopify_black-luxury_4x5_v1.png",
+  "eden-model-006_full-body-viewer_social_9x16_v1.png",
+  "eden-model-006_heygen-headshot_dark-studio_1x1_v1.png"
+];
+
+const withPendingDrive = (file: string) => ({
+  file,
+  status: "generated_pending_admin_review",
+  lane: "source_images",
+  drive_file_id: "PENDING_DRIVE_UPLOAD",
+  drive_url: driveUrl,
+  collage_use_rule: "no_collage_crop_reference_only",
+  generator_safe_use: "draft_review_only_until_human_approval"
+});
 
 const registry = {
   system: "EDEN MEDIA APPROVAL STUDIO",
   status: "draft_safe_approval_surface",
-  updated_at: "2026-06-12T19:25:00Z",
+  updated_at: "2026-06-12T19:45:00Z",
   source_drive_folder: {
     label: "TEMP IMAGES",
     folder_id: "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
-    url: "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+    url: driveUrl,
     access_status: "readable_by_connector",
     write_status: "queued_or_pending_validation_for_generated_stock_sources"
   },
@@ -36,23 +66,28 @@ const registry = {
   ],
   canonical_stock_sources: {
     batch_id: "ES-IMG-2026-06-12-001",
-    count: stockSourceFiles.length,
-    current_state: "generated_pending_admin_review",
-    drive_folder_id: "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
-    drive_folder_url: "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
-    drive_file_status: "pending_drive_upload_or_validation",
+    count: edenStockFiles.length,
     source_package: "EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip",
     manifest: "EDEN_STOCK_CANONICAL_SOURCE_MANIFEST_2026-06-12.csv",
     contract: "EDEN_STOCK_CANONICAL_SOURCE_CONTRACT_2026-06-12.json",
     contact_sheet: "eden-stock-canonical-source-contact-sheet-2026-06-12.jpg",
-    files: stockSourceFiles.map((asset) => ({
-      ...asset,
-      lane: "source_images",
-      drive_file_id: "PENDING_DRIVE_UPLOAD",
-      drive_url: "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
-      collage_use_rule: "no_collage_crop_reference_only",
-      generator_safe_use: "draft_review_only_until_human_approval"
-    }))
+    current_state: "generated_pending_admin_review",
+    drive_file_status: "pending_drive_upload_or_validation",
+    files: edenStockFiles.map(withPendingDrive)
+  },
+  approved_model_stock_sources: {
+    batch_id: "ES-APPROVED-MODELS-2026-06-12-001",
+    model_count: 5,
+    assets_per_model: 3,
+    count: approvedModelFiles.length,
+    asset_types: ["portfolio_shopify", "full_body_viewer_social", "heygen_headshot"],
+    source_package: "EDEN_APPROVED_MODELS_STOCK_SOURCE_IMAGES_2026_06_12.zip",
+    manifest: "EDEN_APPROVED_MODELS_STOCK_SOURCE_MANIFEST_2026-06-12.csv",
+    contract: "EDEN_APPROVED_MODELS_STOCK_SOURCE_CONTRACT_2026-06-12.json",
+    contact_sheet: "eden-approved-models-stock-source-contact-sheet-2026-06-12.jpg",
+    current_state: "generated_pending_admin_review",
+    drive_file_status: "pending_drive_upload_or_validation",
+    files: approvedModelFiles.map(withPendingDrive)
   },
   queues: [
     { id: "source_images", label: "Canonical Source Images", next_state: "approved_site_or_quarantine", human_gate_required: true },
