@@ -16,7 +16,7 @@ async function readPacket(request: Request): Promise<AutonomousBridgePacket> {
 export async function GET() {
   return NextResponse.json(
     {
-      status: "N8N_AUTONOMOUS_BRIDGE_READY",
+      capability_status: "N8N_AUTONOMOUS_BRIDGE_READY",
       activation_status: "DRAFT_ONLY",
       ...bridgeCapabilities,
       expected_header: "x-eden-bridge-secret when N8N_BRIDGE_SECRET is configured"
