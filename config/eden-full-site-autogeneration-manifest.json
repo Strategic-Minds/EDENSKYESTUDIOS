@@ -1,0 +1,30 @@
+{
+  "system": "EDEN_FULL_SITE_AUTOGENERATION",
+  "status": "GENERATOR_DOCS_READY_IMPLEMENTATION_PENDING",
+  "branch": "eden/readiness-scaffold-20260604",
+  "canonical_inputs": {
+    "visual_manifest": "docs/EDEN_EXACT_IMAGE_SOURCE_MANIFEST_2026-06-12.json",
+    "visual_registry": "app/visual-source-truth.ts",
+    "admin_source_map": "config/eden-skye-admin-chat-ui-source-map.json",
+    "page_registry": "docs/EDEN_FULL_SITE_PAGE_REGISTRY.md",
+    "route_generation_matrix": "docs/EDEN_FULL_SITE_ROUTE_GENERATION_MATRIX.md",
+    "closet_contract": "docs/EDEN_CLOSET_AUTOGENERATION_CONTRACT.md",
+    "admin_contract": "docs/EDEN_ADMIN_AUTOGENERATION_CONTRACT.md",
+    "commerce_contract": "docs/EDEN_BLACK_CARD_COMMERCE_GENERATION_CONTRACT.md",
+    "validation_plan": "docs/EDEN_FULL_SITE_AUTOGENERATION_VALIDATION_PLAN.md"
+  },
+  "route_groups": {
+    "storefront": ["/", "/models", "/models/[slug]", "/pricing", "/checkout", "/payment", "/success", "/dashboard", "/login", "/media-vault"],
+    "closet": ["/closet", "/closet/[slug]", "/closet/[slug]/viewer", "/closet/[slug]/chat", "/closet/[slug]/video"],
+    "ai_media": ["/ai-chat", "/ai-video", "/messages", "/media-vault"],
+    "pwa": ["/pwa-app", "public/manifest.webmanifest", "public/sw.js", "app/manifest.ts"],
+    "admin": ["/admin", "/admin/eden", "/admin/agent-console", "/admin/bridge", "/admin/builders", "/admin/git-vercel", "/admin/supabase", "/admin/drive", "/admin/gmail-calendar", "/admin/media", "/admin/social", "/admin/gates", "/admin/workflows", "/admin/receipts", "/admin/evidence", "/admin/images", "/admin/models", "/admin/quarantine", "/admin/exceptions"],
+    "api": ["/api/admin/eden/readiness", "/api/admin/eden/bridge-registry", "/api/admin/eden/approval-gates", "/api/admin/eden/evidence", "/api/admin/eden/command-queue", "/api/admin/eden/builder-docs", "/api/shopify/webhook", "/api/entitlements/sync", "/api/heygen/packet", "/api/eden/chat"]
+  },
+  "protected_actions_default": "BLOCKED_PENDING_HUMAN_APPROVAL",
+  "live_shopify_payment_activation": false,
+  "production_deploy_activation": false,
+  "supabase_production_mutation": false,
+  "visual_approval": "PENDING_CHROMIUM_EVIDENCE_REVIEW",
+  "generator_receipt_required": true
+}
