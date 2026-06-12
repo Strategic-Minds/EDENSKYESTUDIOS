@@ -1,0 +1,38 @@
+{
+  "contract_id": "EDEN-GLAM-EDITORIAL-BATCH-003-2026-06-12",
+  "system": "Eden Skye Glam Editorial Source Batch 003",
+  "batch_id": "ES-GLAM-EDITORIAL-2026-06-12-003",
+  "run_mode": "draft_only",
+  "status": "generated_pending_admin_review",
+  "generated_source_count": 8,
+  "created_at": "2026-06-12T23:03:30Z",
+  "style_correction": "sexier editorial female and male source images, not business suits",
+  "drive_folder_id": "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+  "admin_page": "/admin/glam-editorial",
+  "gpt_registry_api": "/api/admin/eden/glam-editorial",
+  "source_manifest": "EDEN_GLAM_EDITORIAL_BATCH_003_MANIFEST_2026-06-12.csv",
+  "source_package": "EDEN_GLAM_EDITORIAL_BATCH_003_IMAGES_2026_06_12.zip",
+  "contact_sheet": "eden-glam-editorial-batch-003-contact-sheet-2026-06-12.jpg",
+  "approval_policy": {
+    "current_state": "generated_pending_admin_review",
+    "next_if_pass": "approved_site_draft_or_approved_shopify_draft_or_approved_social_draft_or_approved_heygen_packet",
+    "next_if_fail": "quarantine_regenerate",
+    "public_use_allowed": false,
+    "shopify_live_allowed": false,
+    "xyla_public_posting_allowed": false,
+    "heygen_final_allowed": false,
+    "human_gate_required": true
+  },
+  "protected_actions": ["live Shopify product mutation", "payment activation", "public social publishing", "final HeyGen avatar activation", "production deploy", "merge or release"],
+  "files": [
+    {"asset_id":"eden-glam-editorial-001_female-black-lace-evening-dress_4x5_v1","filename":"eden-glam-editorial-001_female-black-lace-evening-dress_4x5_v1.png","platform_target":"female model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-002_female-hot-pink-mini-dress_4x5_v1","filename":"eden-glam-editorial-002_female-hot-pink-mini-dress_4x5_v1.png","platform_target":"female model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-003_female-black-club-fashion_4x5_v1","filename":"eden-glam-editorial-003_female-black-club-fashion_4x5_v1.png","platform_target":"female model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-004_male-open-shirt-nightlife_4x5_v1","filename":"eden-glam-editorial-004_male-open-shirt-nightlife_4x5_v1.png","platform_target":"male model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-005_male-black-tank-editorial_4x5_v1","filename":"eden-glam-editorial-005_male-black-tank-editorial_4x5_v1.png","platform_target":"male model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-006_female-fullbody-black-gown_9x16_v1","filename":"eden-glam-editorial-006_female-fullbody-black-gown_9x16_v1.png","platform_target":"female model / Closet / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-007_male-fullbody-open-shirt_9x16_v1","filename":"eden-glam-editorial-007_male-fullbody-open-shirt_9x16_v1.png","platform_target":"male model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"},
+    {"asset_id":"eden-glam-editorial-008_female-social-closeup-glam_4x5_v1","filename":"eden-glam-editorial-008_female-social-closeup-glam_4x5_v1.png","platform_target":"female model / Shopify / social draft","status":"generated_pending_admin_review","drive_file_id":"PENDING_DRIVE_UPLOAD","style_direction":"sexier_glam_editorial_non_explicit_no_suits","collage_use_rule":"standalone_generated_no_collage_crop","safety_rule":"adult_non_explicit_no_nudity_no_minors_no_celebrity_likeness"}
+  ]
+}
