@@ -1,0 +1,27 @@
+{
+  "system": "EDEN_FULL_SITE_PAGE_REGISTRY",
+  "pages": [
+    {"route": "/", "group": "storefront", "required": true, "asset_keys": ["homeHero"], "status": "must_generate"},
+    {"route": "/models", "group": "storefront", "required": true, "asset_keys": ["lunaMoretti", "siennaCole", "alexisVoss", "nataliaVega", "zoeyParker", "ariaReyes"], "status": "must_generate"},
+    {"route": "/models/[slug]", "group": "storefront", "required": true, "asset_keys": ["alexisVoss", "homeHero"], "status": "must_generate"},
+    {"route": "/pricing", "group": "commerce", "required": true, "commerce": "black_card_highlighted", "status": "must_generate"},
+    {"route": "/checkout", "group": "commerce", "required": true, "commerce": "draft_shopify_bridge", "status": "must_generate"},
+    {"route": "/payment", "group": "commerce", "required": true, "commerce": "test_mode_payment_status", "status": "missing_must_generate"},
+    {"route": "/success", "group": "commerce", "required": true, "commerce": "test_mode_entitlement_handoff", "status": "missing_must_generate"},
+    {"route": "/dashboard", "group": "member", "required": true, "commerce": "black_card_entitlement_state", "status": "must_generate"},
+    {"route": "/closet", "group": "closet", "required": true, "asset_keys": ["closetFullBody"], "status": "must_generate"},
+    {"route": "/closet/[slug]", "group": "closet", "required": true, "asset_keys": ["closetFullBody"], "status": "must_generate"},
+    {"route": "/closet/[slug]/viewer", "group": "closet", "required": true, "asset_keys": ["closetFullBody", "environmentModernBedroom", "environmentWalkInCloset", "environmentPenthouseLivingRoom", "environmentBeachVilla", "environmentLuxuryHotelSuite", "environmentRooftopTerrace", "environmentPhotoStudio"], "status": "must_generate"},
+    {"route": "/closet/[slug]/chat", "group": "closet", "required": true, "asset_keys": ["aiChat"], "status": "must_generate"},
+    {"route": "/closet/[slug]/video", "group": "closet", "required": true, "asset_keys": ["aiVideo"], "status": "must_generate"},
+    {"route": "/ai-chat", "group": "ai_media", "required": true, "asset_keys": ["aiChat"], "status": "missing_must_generate"},
+    {"route": "/ai-video", "group": "ai_media", "required": true, "asset_keys": ["aiVideo"], "status": "missing_must_generate"},
+    {"route": "/messages", "group": "member", "required": true, "status": "missing_must_generate"},
+    {"route": "/pwa-app", "group": "pwa", "required": true, "asset_keys": ["pwaHome", "pwaNavigation"], "status": "must_generate"},
+    {"route": "/admin", "group": "admin", "required": true, "status": "must_generate"},
+    {"route": "/admin/agent-console", "group": "admin", "required": true, "status": "must_generate"},
+    {"route": "/admin/bridge", "group": "admin", "required": true, "status": "must_generate"},
+    {"route": "/admin/builders", "group": "admin", "required": true, "status": "must_generate"}
+  ],
+  "rule": "Every required route must either be generated or explicitly marked MISSING_ASSET/MISSING_BACKEND with a validation failure."
+}
