@@ -29,15 +29,14 @@ const shopifyRequired: EnvRequirement[] = [
 ];
 
 const xylaRequired: EnvRequirement[] = [
-  { key: 'XYLA_APP_ID', aliases: ['XYLA_CLIENT_ID', 'XYLA_APP_KEY', 'XYLA_STORE_ID'] },
-  { key: 'XYLA_INSTALLATION_ID', aliases: ['XYLA_INSTALL_ID', 'XYLA_APP_INSTALLATION_ID', 'XYLA_CONNECTION_ID'] }
+  { key: 'XYLA_CONNECTION_MARKER', aliases: ['XYLA_API_KEY', 'XYLA_APP_ID', 'XYLA_CLIENT_ID', 'XYLA_APP_KEY', 'XYLA_STORE_ID', 'XYLA_INSTALLATION_ID', 'XYLA_INSTALL_ID', 'XYLA_APP_INSTALLATION_ID', 'XYLA_CONNECTION_ID', 'XYLA_ACCOUNT_ID', 'XYLA_SHOP_DOMAIN'] }
 ];
 
-const xylaOptional = ['XYLA_API_KEY', 'XYLA_SHOP_DOMAIN', 'XYLA_ACCOUNT_ID'];
+const xylaOptional = ['XYLA_API_KEY', 'XYLA_APP_ID', 'XYLA_INSTALLATION_ID', 'XYLA_SHOP_DOMAIN', 'XYLA_ACCOUNT_ID'];
 
 const metricoolRequired: EnvRequirement[] = [
   { key: 'METRICOOL_API_KEY', aliases: ['METRICOOL_TOKEN', 'METRICOOL_ACCESS_TOKEN'] },
-  { key: 'METRICOOL_BRAND_ID', aliases: ['METRICOOL_ACCOUNT_ID', 'METRICOOL_USER_ID', 'METRICOOL_BLOG_ID', 'METRICOOL_PROFILE_ID'] }
+  { key: 'METRICOOL_BRAND_ID', aliases: ['METRICOOL_ACCOUNT_ID', 'METRICOOL_USER_ID', 'METRICOOL_BLOG_ID', 'METRICOOL_PROFILE_ID', 'METRICOOL_PROJECT_ID', 'METRICOOL_WORKSPACE_ID', 'METRICOOL_BRAND', 'METRICOOL_ACCOUNT', 'METRICOOL_PROFILE'] }
 ];
 
 const metricoolOptional = ['METRICOOL_BASE_URL'];
@@ -67,8 +66,8 @@ export function getConnectorSmokeReceipts(): ConnectorSmokeReceipt[] {
     {
       connector: 'Xyla',
       status: xylaMissing.length === 0 ? 'ready_for_read_only_probe' : 'blocked_missing_configuration',
-      summary: xylaMissing.length === 0 ? 'Xyla install status can be probed read-only once an endpoint is approved.' : 'Xyla install status is blocked until app/install identifiers are configured.',
-      evidence: 'Checks only for Shopify base env plus Xyla app/install env aliases; does not call Xyla or Shopify mutation endpoints.',
+      summary: xylaMissing.length === 0 ? 'Xyla install readiness has a runtime connection marker and can advance to a read-only install probe.' : 'Xyla install status is blocked until a Xyla connection marker is configured.',
+      evidence: 'Checks only for Shopify base env plus at least one Xyla credential, app, install, account, or shop env alias; does not call Xyla or Shopify mutation endpoints.',
       requiredEnv: labels(xylaRequirements),
       optionalEnv: xylaOptional,
       missingRequiredEnv: xylaMissing,
@@ -78,8 +77,8 @@ export function getConnectorSmokeReceipts(): ConnectorSmokeReceipt[] {
     {
       connector: 'Metricool',
       status: makeStatus(metricoolRequired),
-      summary: metricoolMissing.length === 0 ? 'Metricool brand/token readiness can be probed read-only once an endpoint is approved.' : 'Metricool brand/token readiness is blocked until API key and brand ID are configured.',
-      evidence: 'Checks only for Metricool API key and brand/account env aliases; does not create, schedule, publish, or mutate Metricool posts.',
+      summary: metricoolMissing.length === 0 ? 'Metricool brand/token readiness can be probed read-only once an endpoint is approved.' : 'Metricool brand/token readiness is blocked until API key and brand/account identifier are configured.',
+      evidence: 'Checks only for Metricool API key and brand/account/profile env aliases; does not create, schedule, publish, or mutate Metricool posts.',
       requiredEnv: labels(metricoolRequired),
       optionalEnv: metricoolOptional,
       missingRequiredEnv: metricoolMissing,
