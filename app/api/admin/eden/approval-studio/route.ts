@@ -48,7 +48,7 @@ const withPendingDrive = (file: string) => ({
 const registry = {
   system: "EDEN MEDIA APPROVAL STUDIO",
   status: "draft_safe_approval_surface",
-  updated_at: "2026-06-12T19:45:00Z",
+  updated_at: "2026-06-12T20:00:00Z",
   source_drive_folder: {
     label: "TEMP IMAGES",
     folder_id: "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
@@ -68,9 +68,6 @@ const registry = {
     batch_id: "ES-IMG-2026-06-12-001",
     count: edenStockFiles.length,
     source_package: "EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip",
-    manifest: "EDEN_STOCK_CANONICAL_SOURCE_MANIFEST_2026-06-12.csv",
-    contract: "EDEN_STOCK_CANONICAL_SOURCE_CONTRACT_2026-06-12.json",
-    contact_sheet: "eden-stock-canonical-source-contact-sheet-2026-06-12.jpg",
     current_state: "generated_pending_admin_review",
     drive_file_status: "pending_drive_upload_or_validation",
     files: edenStockFiles.map(withPendingDrive)
@@ -82,28 +79,27 @@ const registry = {
     count: approvedModelFiles.length,
     asset_types: ["portfolio_shopify", "full_body_viewer_social", "heygen_headshot"],
     source_package: "EDEN_APPROVED_MODELS_STOCK_SOURCE_IMAGES_2026_06_12.zip",
-    manifest: "EDEN_APPROVED_MODELS_STOCK_SOURCE_MANIFEST_2026-06-12.csv",
-    contract: "EDEN_APPROVED_MODELS_STOCK_SOURCE_CONTRACT_2026-06-12.json",
-    contact_sheet: "eden-approved-models-stock-source-contact-sheet-2026-06-12.jpg",
     current_state: "generated_pending_admin_review",
     drive_file_status: "pending_drive_upload_or_validation",
     files: approvedModelFiles.map(withPendingDrive)
   },
+  content_batches: [
+    {
+      batch_id: "ES-CONTENT-001",
+      file: "config/eden-content-draft-batch-001.json",
+      status: "draft_created",
+      source_registry: "/api/admin/eden/approval-studio",
+      allowed_next_states: ["approved_site_draft", "approved_shopify_draft", "approved_social_draft", "approved_heygen_packet"],
+      protected_action_warning: "No public publishing, live Shopify activation, final HeyGen activation, production deploy, or social posting is approved by this batch."
+    }
+  ],
   queues: [
     { id: "source_images", label: "Canonical Source Images", next_state: "approved_site_or_quarantine", human_gate_required: true },
     { id: "video_packets", label: "Video / HeyGen Packets", next_state: "approved_heygen_packet_or_quarantine", human_gate_required: true },
     { id: "site_content", label: "Website / PWA Content", next_state: "approved_preview_or_quarantine", human_gate_required: true },
     { id: "social_shopify", label: "Social / Shopify Draft Content", next_state: "approved_draft_only_or_quarantine", human_gate_required: true }
   ],
-  protected_actions: [
-    "public website production",
-    "live Shopify product mutation",
-    "payment activation",
-    "public social publishing",
-    "final HeyGen avatar activation",
-    "production deploy",
-    "merge or release"
-  ],
+  protected_actions: ["public website production", "live Shopify product mutation", "payment activation", "public social publishing", "final HeyGen avatar activation", "production deploy", "merge or release"],
   gpt_bridge_contract: {
     read_endpoint: "/api/admin/eden/approval-studio",
     live_mutations_enabled: false,
