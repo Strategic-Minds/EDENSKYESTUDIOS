@@ -1,0 +1,18 @@
+<section class="eden-collection">
+  <p class="eden-eyebrow">{{ collection.title }}</p>
+  <h1>{{ collection.title }}</h1>
+  {% if collection.description != blank %}<div>{{ collection.description }}</div>{% endif %}
+  <div class="eden-grid">
+    {% paginate collection.products by 20 %}
+      {% for product in collection.products %}
+        {% render 'eden-card', title: product.title, text: product.price | money, tag: 'Shopify product', image: product.featured_image, url: product.url %}
+      {% else %}
+        <article class="eden-card"><div class="eden-card-media"></div><div class="eden-card-body"><h3>Collection product slot</h3><p>Add Shopify products to this collection when ready.</p><span class="eden-card-tag">Draft safe</span></div></article>
+      {% endfor %}
+      {{ paginate | default_pagination }}
+    {% endpaginate %}
+  </div>
+</section>
+{% schema %}
+{"name":"Main collection","settings":[]}
+{% endschema %}
