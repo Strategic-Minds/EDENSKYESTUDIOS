@@ -1,6 +1,20 @@
 import styles from './page.module.css';
 
-const campaignImage = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-studios-homepage-campaign.png?v=1780873477';
+const assets = {
+  hero: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-001-public-home-hero-wide.png?v=1781224815',
+  lookbook: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-002-public-lookbook-grid.png?v=1781224831',
+  avatarMatrix: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-003-avatar-reference-matrix.png?v=1781224848',
+  command: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-004-admin-brand-dashboard.png?v=1781224856',
+  brandKit: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-005-brand-download-page.png?v=1781224866',
+  modelGallery: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-006-model-card-gallery.png?v=1781224881',
+  publicStack: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-007-public-brand-full-stack.png?v=1781224889',
+  mobileAdmin: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-008-vertical-admin-flow.png?v=1781224898',
+  avatarBoard: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-009-avatar-brand-board.png?v=1781224915',
+  fullBody: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-010-avatar-full-body-reference.png?v=1781224924',
+  ops: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-011-admin-ops-overview.png?v=1781224933',
+  media: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-012-media-library-dashboard.png?v=1781224947',
+  calendar: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-013-content-calendar-dashboard.png?v=1781224960'
+};
 
 const stats = [
   ['Queued drafts', '160'],
@@ -11,7 +25,7 @@ const stats = [
 
 const tasks = [
   ['Asset manifest', 'Complete'],
-  ['Media rights review', 'Queued'],
+  ['Shopify CDN media hosting', 'Complete'],
   ['Preview UI patch', 'In review'],
   ['Connector smoke', 'Blocked']
 ];
@@ -40,12 +54,21 @@ const calendar = [
 ];
 
 const connectors = [
+  ['Shopify media', '13 canonical URLs hosted'],
   ['Metricool', 'Needs token/brand smoke'],
   ['Xyla', 'Install path unverified'],
   ['HeyGen', 'Avatar list smoke queued'],
   ['Higgsfield', 'MCP connection smoke queued'],
-  ['Supabase', 'Preview/dev only'],
-  ['Vercel', 'Preview-first']
+  ['Supabase', 'Preview/dev only']
+];
+
+const visualProof = [
+  ['Public lookbook', assets.lookbook],
+  ['Brand system', assets.publicStack],
+  ['Avatar matrix', assets.avatarMatrix],
+  ['Avatar board', assets.avatarBoard],
+  ['Full-body reference', assets.fullBody],
+  ['Mobile admin flow', assets.mobileAdmin]
 ];
 
 export const metadata = {
@@ -70,7 +93,7 @@ export default function EdenSandboxPage() {
       </header>
 
       <section id="home" className={styles.hero}>
-        <div className={styles.heroImage} style={{ backgroundImage: `url(${campaignImage})` }} />
+        <div className={styles.heroImage} style={{ backgroundImage: `url(${assets.hero})` }} />
         <div className={styles.heroShade} />
         <div className={styles.heroText}>
           <p className={styles.eyebrow}>Synthetic avatar content studio</p>
@@ -87,13 +110,21 @@ export default function EdenSandboxPage() {
         <div>
           <p className={styles.eyebrow}>Draft-first revenue path</p>
           <h2>Offer, visuals, calendar, and approvals in one governed loop.</h2>
-          <p>The sandbox models private drafts, rights-gated media, locked publishing, and receipt-backed decisions.</p>
+          <p>The sandbox now renders all 13 canonical uploaded references from Shopify-hosted media URLs while keeping publication gates locked.</p>
         </div>
-        <div className={styles.referencePanel}>
-          <span>Visual manifest</span>
-          <strong>13 unique uploaded references</strong>
-          <p>Public preview assets stay separated from private admin, avatar, and generation references until rights review clears them.</p>
-        </div>
+        <figure className={styles.imagePanel}>
+          <img src={assets.brandKit} alt="Eden Skye brand kit download page visual reference" />
+          <figcaption>Lead magnet visual: hosted, reference-gated, not live-publish approved.</figcaption>
+        </figure>
+      </section>
+
+      <section className={styles.visualMosaic} aria-label="Canonical Eden visual references">
+        {visualProof.map(([label, src]) => (
+          <figure key={label}>
+            <img src={src} alt={`${label} visual reference`} />
+            <figcaption>{label}</figcaption>
+          </figure>
+        ))}
       </section>
 
       <section id="command-center" className={styles.workspace}>
@@ -120,7 +151,8 @@ export default function EdenSandboxPage() {
             <article className={styles.panelWide}>
               <p className={styles.eyebrow}>Operating snapshot</p>
               <h3>Branch-safe visual/admin scaffold</h3>
-              <p>This preview route implements the uploaded Eden visual direction without production deploy, external publishing, checkout activation, paid generation, or database mutation.</p>
+              <p>This preview route uses hosted canonical visuals without production deploy, external publishing, checkout activation, paid generation, or database mutation.</p>
+              <img src={assets.command} alt="Eden command center visual reference" />
             </article>
             <article className={styles.panel}>
               <p className={styles.eyebrow}>Next safe jobs</p>
@@ -130,12 +162,18 @@ export default function EdenSandboxPage() {
 
           <section id="model-registry" className={styles.workSection}>
             <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Registry</p><h2>Model Registry</h2></div><span className={styles.lockPill}>Rights review required</span></div>
-            <div className={styles.table}>{models.map((row) => <div key={row[0]}>{row.map((cell) => <span key={cell}>{cell}</span>)}</div>)}</div>
+            <div className={styles.mediaGrid}>
+              <img src={assets.modelGallery} alt="Eden model card gallery visual reference" />
+              <div className={styles.table}>{models.map((row) => <div key={row[0]}>{row.map((cell) => <span key={cell}>{cell}</span>)}</div>)}</div>
+            </div>
           </section>
 
           <section id="media-library" className={styles.workSection}>
             <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Asset operations</p><h2>Media Library</h2></div><span className={styles.lockPill}>13 unique references</span></div>
-            <div className={styles.assetStates}>{assetStates.map((state) => <span key={state}>{state}</span>)}</div>
+            <div className={styles.mediaGrid}>
+              <img src={assets.media} alt="Eden media library dashboard visual reference" />
+              <div className={styles.assetStates}>{assetStates.map((state) => <span key={state}>{state}</span>)}</div>
+            </div>
           </section>
 
           <section id="approval-queue" className={styles.workSection}>
@@ -149,7 +187,10 @@ export default function EdenSandboxPage() {
 
           <section id="content-calendar" className={styles.workSection}>
             <div className={styles.sectionRow}><div><p className={styles.eyebrow}>Distribution</p><h2>Content Calendar</h2></div><span className={styles.lockPill}>Draft scheduling only</span></div>
-            <ol className={styles.calendar}>{calendar.map(([time, item]) => <li key={time}><span>{time}</span>{item}</li>)}</ol>
+            <div className={styles.mediaGrid}>
+              <img src={assets.calendar} alt="Eden content calendar dashboard visual reference" />
+              <ol className={styles.calendar}>{calendar.map(([time, item]) => <li key={time}><span>{time}</span>{item}</li>)}</ol>
+            </div>
           </section>
 
           <section id="analytics" className={styles.workSection}>
