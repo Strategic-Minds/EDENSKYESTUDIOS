@@ -1,0 +1,49 @@
+{
+  "system": "EDEN_SHOPIFY_XYLA_AUTOMATION_MANIFEST",
+  "route": "/shopify",
+  "draft_only": true,
+  "live_shopify_write_enabled": false,
+  "live_payment_activation_enabled": false,
+  "approval_required": true,
+  "protected_actions": [
+    "shopify_live_product_mutation",
+    "shopify_live_payment_activation",
+    "shopify_inventory_mutation",
+    "shopify_discount_creation",
+    "shopify_theme_publish",
+    "public_social_posting",
+    "production_deploy",
+    "supabase_production_mutation",
+    "merge_or_release"
+  ],
+  "automation_panels": [
+    "black_card_product",
+    "draft_test_checkout",
+    "xyla_ai_automation",
+    "female_model_catalog",
+    "male_model_catalog",
+    "draft_product_generation_queue",
+    "webhook_entitlement_sync",
+    "approval_gates",
+    "admin_links"
+  ],
+  "draft_generation_queue": {
+    "product_packets": true,
+    "collection_packets": true,
+    "model_to_product_mapping": true,
+    "content_social_hooks": true,
+    "public_publishing": false
+  },
+  "male_model_roster": {
+    "status": "REQUIRED_SOURCE_PENDING",
+    "source_policy": "Use exact male roster only after repo or Drive manifest verification. Do not invent names or assets."
+  },
+  "xyla": {
+    "draft_product_packets": true,
+    "draft_collection_packets": true,
+    "draft_content_feed_hooks": true,
+    "draft_social_hooks": true,
+    "public_publish_enabled": false,
+    "live_shopify_write_enabled": false
+  }
+}
