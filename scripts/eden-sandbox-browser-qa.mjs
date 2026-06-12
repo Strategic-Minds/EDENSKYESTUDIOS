@@ -10,6 +10,7 @@ const checks = [
   ['command-center', '#command-center', 'Today Command Center'],
   ['model-registry', '#model-registry', 'Model Registry'],
   ['media-library', '#media-library', 'Media Library'],
+  ['asset-vault', '#asset-vault', 'Asset Vault'],
   ['approval-queue', '#approval-queue', 'Approval Queue'],
   ['content-calendar', '#content-calendar', 'Content Calendar']
 ];
