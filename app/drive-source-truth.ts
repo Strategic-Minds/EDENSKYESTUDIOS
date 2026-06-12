@@ -1,6 +1,7 @@
 export const driveSourceTruth = {
   status: 'DRIVE_DISCOVERED_ALIGNMENT_REQUIRES_FILENAME_NORMALIZATION',
   discoveredAt: '2026-06-12T00:30:00Z',
+  bridgeTriggerReceipt: '2026-06-12T00:45:00Z-drive-alignment-preview-request',
   discoveryManifest: 'docs/EDEN_DRIVE_DISCOVERY_MANIFEST_2026-06-12.json',
   discoveryNotes: 'docs/EDEN_DRIVE_DISCOVERY_AND_APP_ALIGNMENT_2026-06-12.md',
   canonicalImageManifest: 'docs/EDEN_EXACT_IMAGE_SOURCE_MANIFEST_2026-06-12.json',
