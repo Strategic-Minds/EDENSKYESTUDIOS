@@ -1,4 +1,5 @@
 import { getConnectorSmokeReceipts } from '@/lib/eden-sandbox/connector-smoke';
+import { getMetricoolReadValidationResponse } from '@/lib/eden-sandbox/metricool-read-validation';
 import styles from '../page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -31,14 +32,20 @@ export const metadata = {
   description: 'Receipt-only preview actions and connector smoke receipts for the Eden Skye sandbox.'
 };
 
-export default function EdenSandboxActionsPage() {
+export default async function EdenSandboxActionsPage() {
   const routedSmokeReceipts = getConnectorSmokeReceipts();
+  const metricoolReadValidation = await getMetricoolReadValidationResponse();
   const smokeRows = [
     ...routedSmokeReceipts.map((receipt) => [
       receipt.connector,
       `${receipt.status}: ${receipt.summary}`,
       `${receipt.evidence} Missing required env: ${receipt.missingRequiredEnv.length ? receipt.missingRequiredEnv.join(', ') : 'none'}.`
     ]),
+    [
+      'Metricool read validation',
+      `${metricoolReadValidation.status}: ${metricoolReadValidation.summary}`,
+      `${metricoolReadValidation.evidence} Probe attempted: ${metricoolReadValidation.readProbeAttempted ? 'yes' : 'no'}.`
+    ],
     ...supportingReadReceipts
   ];
 
@@ -87,6 +94,7 @@ export default function EdenSandboxActionsPage() {
               <p className={styles.eyebrow}>Dry-run connector evidence</p>
               <h2>Connector Smoke Receipts</h2>
               <p>Route-backed smoke endpoint: <code>/api/eden-sandbox/connector-smoke</code></p>
+              <p>Metricool validation endpoint: <code>/api/eden-sandbox/metricool-read-validation</code></p>
             </div>
             <span className={styles.lockPill}>Read-only checks only</span>
           </div>
