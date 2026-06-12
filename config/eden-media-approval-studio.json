@@ -1,13 +1,13 @@
 {
   "system": "EDEN MEDIA APPROVAL STUDIO",
   "status": "draft_safe_approval_surface",
-  "updated_at": "2026-06-12T18:55:00Z",
+  "updated_at": "2026-06-12T19:25:00Z",
   "source_drive_folder": {
     "label": "TEMP IMAGES",
     "folder_id": "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
     "url": "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
     "access_status": "readable_by_connector",
-    "write_status": "drive_write_bridge_pending"
+    "write_status": "queued_or_pending_validation_for_generated_stock_sources"
   },
   "canonical_model_sources": {
     "manifest": "EDEN_CANONICAL_MODEL_SOURCE_MANIFEST_REVISED_V004.csv",
@@ -16,16 +16,46 @@
     "eden_skye_source": "eden-skye-canonical-source-v004.png",
     "other_models_status": "approved_internal"
   },
+  "canonical_stock_sources": {
+    "batch_id": "ES-IMG-2026-06-12-001",
+    "manifest": "EDEN_STOCK_CANONICAL_SOURCE_MANIFEST_2026-06-12.csv",
+    "contract": "EDEN_STOCK_CANONICAL_SOURCE_CONTRACT_2026-06-12.json",
+    "source_package": "EDEN_STOCK_CANONICAL_SOURCE_IMAGES_2026_06_12.zip",
+    "contact_sheet": "eden-stock-canonical-source-contact-sheet-2026-06-12.jpg",
+    "count": 12,
+    "current_state": "generated_pending_admin_review",
+    "drive_folder_id": "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+    "drive_folder_url": "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+    "drive_file_status": "pending_drive_upload_or_validation",
+    "admin_page": "/admin/approval-studio",
+    "gpt_registry_api": "/api/admin/eden/approval-studio",
+    "files": [
+      { "asset_id": "eden-skye-001", "filename": "eden-skye-001_identity-lock_front-portrait_4x5_v1.png", "asset_type": "identity_lock", "platform_target": "identity lock", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-002", "filename": "eden-skye-002_identity-lock_three-quarter_4x5_v1.png", "asset_type": "identity_lock", "platform_target": "identity lock", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-003", "filename": "eden-skye-003_identity-lock_side-profile_4x5_v1.png", "asset_type": "identity_lock", "platform_target": "identity lock", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-004", "filename": "eden-skye-004_portfolio_black-card-portrait_4x5_v1.png", "asset_type": "portfolio_portrait", "platform_target": "models page", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-005", "filename": "eden-skye-005_portfolio_white-blazer_4x5_v1.png", "asset_type": "portfolio_portrait", "platform_target": "models page", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-006", "filename": "eden-skye-006_website-hero_black-neon-stage_16x9_v1.png", "asset_type": "website_hero", "platform_target": "home hero", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-007", "filename": "eden-skye-007_website-hero_neon-runway_16x9_v1.png", "asset_type": "website_hero", "platform_target": "models page hero", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-008", "filename": "eden-skye-008_wardrobe-safe_full-body-black_9x16_v1.png", "asset_type": "wardrobe_safe", "platform_target": "closet viewer", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-009", "filename": "eden-skye-009_background_walk-in-closet_16x9_v1.png", "asset_type": "background_context", "platform_target": "closet environment", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-010", "filename": "eden-skye-010_social-vertical_hot-pink-blazer_9x16_v1.png", "asset_type": "social_vertical", "platform_target": "instagram reels", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-011", "filename": "eden-skye-011_heygen-headshot_dark-studio_1x1_v1.png", "asset_type": "heygen_headshot", "platform_target": "heygen draft", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" },
+      { "asset_id": "eden-skye-012", "filename": "eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png", "asset_type": "heygen_half_body", "platform_target": "heygen draft", "status": "generated_pending_admin_review", "drive_file_id": "PENDING_DRIVE_UPLOAD" }
+    ]
+  },
   "asset_states": [
     "drive_intake",
     "generated_pending_review",
+    "generated_pending_admin_review",
     "approved_internal",
     "approved_site",
     "approved_shopify_draft",
     "approved_social_draft",
     "approved_heygen_packet",
     "quarantine_regenerate",
-    "rejected"
+    "rejected",
+    "pending_drive_upload"
   ],
   "approval_lanes": [
     {
