@@ -5,6 +5,27 @@ const black = "#030305";
 const panel = "#0a0a10";
 const softPanel = "#11111a";
 
+const navRoutes = [
+  "/admin",
+  "/admin/eden",
+  "/admin/agent-console",
+  "/admin/bridge",
+  "/admin/builders",
+  "/admin/git-vercel",
+  "/admin/supabase",
+  "/admin/drive",
+  "/admin/gmail-calendar",
+  "/admin/media",
+  "/admin/social",
+  "/admin/gates",
+  "/admin/workflows",
+  "/admin/receipts",
+  "/admin/evidence",
+  "/admin/images",
+  "/admin/models",
+  "/admin/quarantine"
+];
+
 const bridges = [
   ["GitHub", "connected draft ops", "Branches, PRs, Actions, issues, code receipts"],
   ["Vercel", "preview gated", "Preview deploys, visual evidence, build logs"],
@@ -20,7 +41,9 @@ const bridges = [
 
 const modules = [
   ["Command Center", "Readiness, blockers, next best action, bridge health"],
-  ["Agent Console", "GPT bridge, Codex bridge, AUTO BUILDER, v0 flow, task queue"],
+  ["Agent Console", "Chat workspace, autonomy control, model selector, task queue"],
+  ["Bridge Command", "Preflight, policy check, command queue, receipt routing"],
+  ["Builder Docs", "Source intake, install packet, validation plan, operator playbook"],
   ["Git / Vercel Ops", "Draft PR, preview, visual bridge, test/build evidence"],
   ["Supabase Ops", "Registry, SQL checks, queues, receipts, migration gate"],
   ["Drive OS", "Source truth, exact image manifest, missing assets, quarantine"],
@@ -29,6 +52,30 @@ const modules = [
   ["Gmail / Calendar", "Inbox action queue, draft replies, scheduling briefs"],
   ["Approval Gates", "Protected actions, approve/reject decisions, audit trail"],
   ["Evidence Center", "Screenshots, API responses, SQL, build logs, readiness report"]
+];
+
+const sourcePatterns = [
+  ["workspace-shell.tsx", "Three-pane command workspace: chat, tool rail, editor, mobile tabs"],
+  ["chat-panel.tsx", "Autonomous composer, model routing, attachments, browse, task queue"],
+  ["bridge-command-center.tsx", "Registry, action surfaces, smoke order, mutation policy"],
+  ["autonomous-bridge-registry.ts", "GPT, GitHub, Vercel, Supabase, generator, social, browser QA bridges"],
+  ["approvals/gate.ts", "Pause workflow, create approval request, poll status, resume or fail"],
+  ["api/bridge/*", "Preflight, policy check, approval request, command, zero inference routes"]
+];
+
+const builderDocs = [
+  "SYSTEM_BRIEF",
+  "STACK_CONTRACT",
+  "AGENT_TOPOLOGY",
+  "BRIDGE_MANIFEST",
+  "CONNECTOR_MAP",
+  "APPROVAL_GATES",
+  "VALIDATION_PLAN",
+  "RUNTIME_EVIDENCE_PLAN",
+  "INSTALL_PACKET",
+  "OPERATOR_PLAYBOOK",
+  "BLACK_CHAT_UI_SOURCE_INTAKE",
+  "AUTONOMOUS_BUILDER_PACKET"
 ];
 
 const protectedActions = [
@@ -43,7 +90,8 @@ const protectedActions = [
 ];
 
 const queue = [
-  ["admin-bootstrap", "Builder docs + manifests installed", "complete"],
+  ["admin-bootstrap", "Builder docs, source intake, manifests, routes, APIs installed", "complete"],
+  ["source-package", "Black chat UI unpacked and mapped to Eden modules", "wired"],
   ["bridge-policy", "Protected commands blocked unless approved", "active"],
   ["visual-evidence", "Run Eden Visual Preview Bridge and review screenshots", "waiting"],
   ["source-truth", "Keep exact standalone image manifest canonical", "locked"],
@@ -74,16 +122,16 @@ function SectionTitle({ kicker, title, action }: { kicker: string; title: string
 export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: string }) {
   return (
     <main data-admin-theme="black-command-center" style={{ minHeight: "100vh", background: black, color: "#fff", fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif", padding: 24 }}>
-      <div style={{ maxWidth: 1500, margin: "0 auto" }}>
-        <header style={{ display: "grid", gridTemplateColumns: "1.2fr .8fr", gap: 18, alignItems: "stretch", marginBottom: 18 }}>
+      <div style={{ maxWidth: 1540, margin: "0 auto" }}>
+        <header style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, .8fr)", gap: 18, alignItems: "stretch", marginBottom: 18 }}>
           <section style={{ background: "linear-gradient(135deg, #050506 0%, #0d0710 58%, #1a0213 100%)", border: "1px solid rgba(255,43,214,.45)", boxShadow: "0 0 42px rgba(255,43,214,.16)", padding: 24 }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <Pill>EDEN SKYE ADMIN</Pill>
               <Pill tone="red">live mutation locked</Pill>
             </div>
             <h1 style={{ margin: "26px 0 8px", fontSize: 46, lineHeight: 1, color: "#fff", letterSpacing: 0 }}>Autonomous Operations Command Center</h1>
-            <p style={{ maxWidth: 820, color: "rgba(255,255,255,.76)", fontSize: 15, lineHeight: 1.6, margin: 0 }}>
-              Backend command center for Eden Skye OS and AUTO BUILDER: plan, build, validate, approve, deploy preview, operate, generate media, draft social, analyze, optimize, and scale.
+            <p style={{ maxWidth: 860, color: "rgba(255,255,255,.76)", fontSize: 15, lineHeight: 1.6, margin: 0 }}>
+              Black chat/admin UI source package is unpacked and wired into Eden Skye OS as a governed backend control plane: plan, build, validate, approve, deploy preview, operate, generate media, draft social, analyze, optimize, and scale.
             </p>
           </section>
           <aside style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
@@ -91,25 +139,25 @@ export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: s
               <span style={{ color: "rgba(255,255,255,.64)", fontSize: 12, textTransform: "uppercase", letterSpacing: 0 }}>Readiness</span>
               <Pill tone="white">draft control plane</Pill>
             </div>
-            <div style={{ fontSize: 64, lineHeight: 1, fontWeight: 800, color: "#fff" }}>72%</div>
+            <div style={{ fontSize: 64, lineHeight: 1, fontWeight: 800, color: "#fff" }}>74%</div>
             <div style={{ height: 8, background: "#1d1d28", margin: "18px 0", overflow: "hidden" }}>
-              <div style={{ height: "100%", width: "72%", background: `linear-gradient(90deg, ${accent}, #ffffff)` }} />
+              <div style={{ height: "100%", width: "74%", background: `linear-gradient(90deg, ${accent}, #ffffff)` }} />
             </div>
             <p style={{ margin: 0, color: "rgba(255,255,255,.7)", fontSize: 13, lineHeight: 1.5 }}>
-              Admin control plane is installed. Visual evidence and live bridge credential checks remain approval-gated before PR movement.
+              Source package, builder docs, manifests, admin routes, APIs, and guardrail tests are wired. Build and Chromium evidence remain pending.
             </p>
           </aside>
         </header>
 
         <nav style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
-          {["/admin", "/admin/eden", "/admin/gates", "/admin/workflows", "/admin/receipts", "/admin/images", "/admin/models", "/admin/quarantine"].map((href) => (
+          {navRoutes.map((href) => (
             <a key={href} href={href} style={{ color: "#fff", textDecoration: "none", background: softPanel, border: "1px solid rgba(255,255,255,.14)", padding: "10px 12px", fontSize: 12 }}>
               {href}
             </a>
           ))}
         </nav>
 
-        <section style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 18, marginBottom: 18 }}>
+        <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(320px, .9fr)", gap: 18, marginBottom: 18 }}>
           <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
             <SectionTitle kicker={section} title="Next Best Autonomous Action" action="safe autonomy" />
             <div style={{ background: "#050507", border: "1px solid rgba(255,43,214,.34)", padding: 18 }}>
@@ -132,7 +180,7 @@ export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: s
           </div>
         </section>
 
-        <section style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(0, 1fr))", gap: 12, marginBottom: 18 }}>
+        <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 18 }}>
           {modules.map(([name, desc]) => (
             <article key={name} style={{ background: softPanel, border: "1px solid rgba(255,255,255,.14)", padding: 14, minHeight: 122 }}>
               <div style={{ color: accent, fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0 }}>{name}</div>
@@ -141,7 +189,31 @@ export function EdenSkyeAdminShell({ section = "Command Center" }: { section?: s
           ))}
         </section>
 
-        <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+        <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(320px, 1fr)", gap: 18, marginBottom: 18 }}>
+          <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
+            <SectionTitle kicker="Unpacked Source Package" title="Black Chat UI Patterns Wired" action="source mapped" />
+            <div style={{ display: "grid", gap: 9 }}>
+              {sourcePatterns.map(([file, detail]) => (
+                <div key={file} style={{ display: "grid", gridTemplateColumns: "210px 1fr", gap: 12, borderBottom: "1px solid rgba(255,255,255,.1)", paddingBottom: 8 }}>
+                  <span style={{ color: accent, fontSize: 12, fontWeight: 700 }}>{file}</span>
+                  <span style={{ color: "rgba(255,255,255,.68)", fontSize: 12, lineHeight: 1.45 }}>{detail}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
+            <SectionTitle kicker="Builder Docs" title="Install And Validation Pack" action="12 docs" />
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {builderDocs.map((doc) => (
+                <span key={doc} style={{ color: "#fff", background: "#050507", border: "1px solid rgba(255,43,214,.28)", padding: "7px 9px", fontSize: 11 }}>
+                  {doc}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(320px, 1fr)", gap: 18 }}>
           <div style={{ background: panel, border: "1px solid rgba(255,255,255,.16)", padding: 20 }}>
             <SectionTitle kicker="Bridge Registry" title="Connected Systems" action="manifest backed" />
             <div style={{ display: "grid", gap: 8 }}>
