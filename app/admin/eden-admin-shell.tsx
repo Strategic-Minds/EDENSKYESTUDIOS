@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 const accent = "#ff2bd6";
 const black = "#030305";
 const panel = "#0a0a10";
@@ -48,7 +50,7 @@ const queue = [
   ["production", "No live mutation until explicit approval", "blocked"]
 ];
 
-function Pill({ children, tone = "pink" }: { children: React.ReactNode; tone?: "pink" | "white" | "red" }) {
+function Pill({ children, tone = "pink" }: { children: ReactNode; tone?: "pink" | "white" | "red" }) {
   const color = tone === "red" ? "#ff4f7b" : tone === "white" ? "#ffffff" : accent;
   return (
     <span style={{ border: `1px solid ${color}`, color, borderRadius: 999, padding: "5px 9px", fontSize: 11, textTransform: "uppercase", letterSpacing: 0, whiteSpace: "nowrap" }}>
