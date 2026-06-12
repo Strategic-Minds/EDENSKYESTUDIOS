@@ -1,0 +1,47 @@
+{
+  "contract_id": "EDEN-SOURCE-EXPANSION-BATCH-002-2026-06-12",
+  "system": "Eden Skye Source Expansion Batch 002",
+  "batch_id": "ES-SOURCE-EXPANSION-2026-06-12-002",
+  "run_mode": "draft_only",
+  "generated_source_count": 10,
+  "status": "generated_pending_admin_review",
+  "created_at": "2026-06-12T22:47:30Z",
+  "drive_folder_id": "1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+  "admin_page": "/admin/source-expansion",
+  "gpt_registry_api": "/api/admin/eden/source-expansion",
+  "source_manifest": "EDEN_SOURCE_EXPANSION_BATCH_002_MANIFEST_2026-06-12.csv",
+  "source_package": "EDEN_SOURCE_EXPANSION_BATCH_002_IMAGES_2026_06_12.zip",
+  "contact_sheet": "eden-source-expansion-batch-002-contact-sheet-2026-06-12.jpg",
+  "approval_policy": {
+    "current_state": "generated_pending_admin_review",
+    "next_if_pass": "approved_site_draft_or_approved_shopify_draft_or_approved_social_draft_or_approved_heygen_packet",
+    "next_if_fail": "quarantine_regenerate",
+    "public_use_allowed": false,
+    "shopify_live_allowed": false,
+    "xyla_public_posting_allowed": false,
+    "heygen_final_allowed": false,
+    "human_gate_required": true,
+    "drive_write_status": "pending_or_blocked_until_drive_file_ids_are_verified"
+  },
+  "protected_actions": [
+    "live Shopify product mutation",
+    "payment activation",
+    "public social publishing",
+    "final HeyGen avatar activation",
+    "production deploy",
+    "merge or release"
+  ],
+  "files": [
+    {"asset_id":"eden-source-expansion-001_female-model-service-product_4x5_v1","filename":"eden-source-expansion-001_female-model-service-product_4x5_v1.png","asset_type":"female-model-service-product","purpose":"female-model-service-product","platform_target":"site/Shopify/Xyla draft","status":"generated_pending_admin_review","approval_gate":"image","width":1024,"height":1536,"aspect_ratio":"4:5","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"ec76ff9302ca02ac4b50984b8d4dd0dd89f5cc1bddb9ec34612233a12969091d"},
+    {"asset_id":"eden-source-expansion-002_male-model-service-product_4x5_v1","filename":"eden-source-expansion-002_male-model-service-product_4x5_v1.png","asset_type":"male-model-service-product","purpose":"male-model-service-product","platform_target":"site/Shopify/Xyla draft","status":"generated_pending_admin_review","approval_gate":"image","width":1122,"height":1402,"aspect_ratio":"4:5","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"8d6102cbcf95bacb55eec223bdce25050a91daf2598cea67c080782b88438aeb"},
+    {"asset_id":"eden-source-expansion-003_faceless-content-studio-product_4x5_v1","filename":"eden-source-expansion-003_faceless-content-studio-product_4x5_v1.png","asset_type":"faceless-content-studio-product","purpose":"faceless-content-studio-product","platform_target":"Xyla/social/faceless draft","status":"generated_pending_admin_review","approval_gate":"image","width":1122,"height":1402,"aspect_ratio":"4:5","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"c34af96c89b4ab22395c0710fe7103a7e0ced534e52c58ff2238de85389d56a8"},
+    {"asset_id":"eden-source-expansion-004_faceless-vertical-neon-suite_9x16_v1","filename":"eden-source-expansion-004_faceless-vertical-neon-suite_9x16_v1.png","asset_type":"faceless-vertical-neon-suite","purpose":"faceless-vertical-neon-suite","platform_target":"Xyla/social/faceless draft","status":"generated_pending_admin_review","approval_gate":"image","width":941,"height":1672,"aspect_ratio":"9:16","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"c02c24a314084a9aecda55cae514e9a05af67a583a19f48d9da2da4588c25cbf"},
+    {"asset_id":"eden-source-expansion-005_heygen-presenter-halfbody-female_9x16_v1","filename":"eden-source-expansion-005_heygen-presenter-halfbody-female_9x16_v1.png","asset_type":"heygen-presenter-halfbody-female","purpose":"heygen-presenter-halfbody-female","platform_target":"HeyGen/video packet draft","status":"generated_pending_admin_review","approval_gate":"image","width":941,"height":1672,"aspect_ratio":"9:16","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"a89b21602bfd97822eb85fefadb7fc297576ff76cd09c62ad15f34c09a923e4c"},
+    {"asset_id":"eden-source-expansion-006_heygen-presenter-halfbody-male_9x16_v1","filename":"eden-source-expansion-006_heygen-presenter-halfbody-male_9x16_v1.png","asset_type":"heygen-presenter-halfbody-male","purpose":"heygen-presenter-halfbody-male","platform_target":"HeyGen/video packet draft","status":"generated_pending_admin_review","approval_gate":"image","width":941,"height":1672,"aspect_ratio":"9:16","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"dc600fa05d92463ef4d9ca2905c7ade6e0a78b683b287d5e01f98d4c23491663"},
+    {"asset_id":"eden-source-expansion-007_closet-luxury-wardrobe-product_4x5_v1","filename":"eden-source-expansion-007_closet-luxury-wardrobe-product_4x5_v1.png","asset_type":"closet-luxury-wardrobe-product","purpose":"closet-luxury-wardrobe-product","platform_target":"Closet/site/Shopify draft","status":"generated_pending_admin_review","approval_gate":"image","width":1122,"height":1402,"aspect_ratio":"4:5","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"dd22d5409bc64a2c739e0c5ed01f0fe763b820feb84d0039fca404c5564147d6"},
+    {"asset_id":"eden-source-expansion-008_closet-environment-neon-walkin_16x9_v1","filename":"eden-source-expansion-008_closet-environment-neon-walkin_16x9_v1.png","asset_type":"closet-environment-neon-walkin","purpose":"closet-environment-neon-walkin","platform_target":"Closet/site/Shopify draft","status":"generated_pending_admin_review","approval_gate":"image","width":1672,"height":941,"aspect_ratio":"16:9","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"9d2cedcf2693579d844ae3dde8aeac276034dd91df1b324ebf68ed194280a84e"},
+    {"asset_id":"eden-source-expansion-009_investor-demo-home-hero_16x9_v1","filename":"eden-source-expansion-009_investor-demo-home-hero_16x9_v1.png","asset_type":"investor-demo-home-hero","purpose":"investor-demo-home-hero","platform_target":"site/Shopify/Xyla draft","status":"generated_pending_admin_review","approval_gate":"image","width":1672,"height":941,"aspect_ratio":"16:9","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"21d868340a5570e2195d076780e32bca7f285ef40c95e0cca040dab7c43e97dc"},
+    {"asset_id":"eden-source-expansion-010_launch-social-vertical-blackcard_9x16_v1","filename":"eden-source-expansion-010_launch-social-vertical-blackcard_9x16_v1.png","asset_type":"launch-social-vertical-blackcard","purpose":"launch-social-vertical-blackcard","platform_target":"Xyla/social/faceless draft","status":"generated_pending_admin_review","approval_gate":"image","width":941,"height":1672,"aspect_ratio":"9:16","drive_file_id":"PENDING_DRIVE_UPLOAD","generator_safe_use":"draft_review_only_until_human_approval","collage_use_rule":"standalone_generated_no_collage_crop","sha256":"f2ee97ad665204a0d75b5ec1beee5200d44f12c3ae133fee80873033b44be860"}
+  ]
+}
