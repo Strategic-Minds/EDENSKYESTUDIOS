@@ -48,12 +48,27 @@
     "/admin/agent-console",
     "/admin/bridge",
     "/admin/builders",
+    "/admin/git-vercel",
+    "/admin/supabase",
+    "/admin/drive",
+    "/admin/gmail-calendar",
+    "/admin/media",
+    "/admin/social",
     "/admin/gates",
     "/admin/workflows",
     "/admin/receipts",
+    "/admin/evidence",
     "/admin/images",
     "/admin/models",
     "/admin/quarantine"
+  ],
+  "wired_api_routes": [
+    "/api/admin/eden/readiness",
+    "/api/admin/eden/bridge-registry",
+    "/api/admin/eden/approval-gates",
+    "/api/admin/eden/evidence",
+    "/api/admin/eden/command-queue",
+    "/api/admin/eden/builder-docs"
   ],
   "protected_actions_default": "BLOCKED_PENDING_HUMAN_APPROVAL",
   "visual_approval": "PENDING_CHROMIUM_EVIDENCE_REVIEW"
