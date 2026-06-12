@@ -1,5 +1,5 @@
 import { EdenSkyeAdminShell } from "../eden-admin-shell";
 
 export default function Page() {
-  return <EdenSkyeAdminShell section="Eden Skye OS" />;
+  return <EdenSkyeAdminShell section="Social Automation" />;
 }

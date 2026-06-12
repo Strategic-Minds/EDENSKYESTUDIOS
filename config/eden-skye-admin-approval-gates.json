@@ -1,0 +1,19 @@
+{
+  "status": "APPROVAL_GATES_LOCKED",
+  "live_mutations_enabled": false,
+  "human_gate_required": true,
+  "protected_actions": [
+    "production_deploy",
+    "shopify_live_product_or_payment_change",
+    "supabase_production_schema_mutation",
+    "public_social_publish",
+    "gmail_send_to_real_customer",
+    "calendar_external_attendee_event_create",
+    "domain_dns_billing_change",
+    "secret_rotation",
+    "destructive_git_operation",
+    "merge_or_release"
+  ],
+  "approval_states": ["draft_only", "pending_human_approval", "approved_for_preview", "approved_for_production", "rejected", "expired"],
+  "rule": "Safe autonomy may inspect, draft, queue, validate, and collect evidence. Protected actions require explicit human approval and capability-specific execution tooling."
+}
