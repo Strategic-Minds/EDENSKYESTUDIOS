@@ -7,12 +7,18 @@ const outDir = process.env.EDEN_SANDBOX_QA_DIR || 'artifacts/eden-sandbox-browse
 
 const checks = [
   ['home', '#home', 'Eden Skye Studios'],
+  ['launch-board', '#launch-board', 'Launch Board'],
   ['command-center', '#command-center', 'Today Command Center'],
   ['model-registry', '#model-registry', 'Model Registry'],
   ['media-library', '#media-library', 'Media Library'],
   ['asset-vault', '#asset-vault', 'Asset Vault'],
   ['approval-queue', '#approval-queue', 'Approval Queue'],
-  ['content-calendar', '#content-calendar', 'Content Calendar']
+  ['content-calendar', '#content-calendar', 'Content Calendar'],
+  ['content-studio', '#content-studio', 'Content Studio'],
+  ['engagement-desk', '#engagement-desk', 'Engagement Desk'],
+  ['experiment-lab', '#experiment-lab', 'Experiment Lab'],
+  ['agent-ops', '#agent-ops', 'Agent Ops'],
+  ['revenue-funnel', '#revenue-funnel', 'Revenue Funnel']
 ];
 
 const viewports = [
