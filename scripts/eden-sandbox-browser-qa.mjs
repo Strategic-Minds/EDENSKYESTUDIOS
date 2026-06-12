@@ -20,7 +20,8 @@ const checks = [
   ['agent-ops', '#agent-ops', '#agent-ops', 'Agent Ops'],
   ['revenue-funnel', '#revenue-funnel', '#revenue-funnel', 'Revenue Funnel'],
   ['action-ledger', '/actions#action-ledger', '#action-ledger', 'Admin Action Ledger'],
-  ['connector-smoke', '/actions#connector-smoke', '#connector-smoke', 'Connector Smoke Receipts']
+  ['connector-smoke', '/actions#connector-smoke', '#connector-smoke', 'Connector Smoke Receipts'],
+  ['connector-smoke-api', '/api/eden-sandbox/connector-smoke', 'body', 'read_only_configuration_smoke']
 ];
 
 const viewports = [
@@ -29,8 +30,9 @@ const viewports = [
 ];
 
 function buildUrl(route) {
-  if (route.startsWith('#')) return `${target}${route}`;
   const base = new URL(target);
+  if (route.startsWith('#')) return `${target}${route}`;
+  if (route.startsWith('/api/')) return `${base.origin}${route}`;
   const pathPrefix = base.pathname.replace(/\/$/, '');
   return `${base.origin}${pathPrefix}${route}`;
 }
