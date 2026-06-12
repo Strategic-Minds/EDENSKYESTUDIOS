@@ -1,35 +1,32 @@
-import { Header, models } from "../components";
+import { Header, heroAsset, models } from "../components";
 import { standaloneAssets } from "../visual-source-truth";
 
-const maleCards = [
-  { name: "Source Pending", body: "REQUIRED_SOURCE_PENDING. Use exact male roster only after repo or Drive source verification.", href: "/payment" },
-  { name: "Draft Male Catalog Slot", body: "Reserved for sourced male model cards and portfolio links.", href: "/payment" },
-  { name: "Draft Male Portfolio", body: "Portfolio layout ready for approved imagery.", href: "/payment" },
-  { name: "Draft Male Social", body: "Faceless and brand-safe social flow ready.", href: "/payment" }
-];
+const women = ["Alexis Voss", "Luna Moretti", "Sienna Cole", "Eden Skye", "Mila Stone", "Aria Noir", "Nova Lux", "Valentina Rose", "Serena Vail", "Isla Monroe"];
+const men = ["Dante Cross", "Jax Rhodes", "Roman Kade", "Kai Voss", "Marco Slate"];
+const faceless = ["Morning Atelier", "Noir Diary", "Glass Studio", "Shadow Edit", "Velvet Room"];
 
-const featuredProducts = [
-  { name: "Black Card Membership", href: "/payment", body: "Draft/test only. Unlock closet, AI chat, video, and premium content." },
-  { name: "Closet Access", href: "/closet", body: "Enter Eden's Closet and choose an outfit flow." },
-  { name: "Model Portfolio Flow", href: "/models", body: "Open every model portfolio and campaign path." },
-  { name: "Faceless Social Flow", href: "/faceless", body: "Anonymous creator and product-content pipelines." }
-];
-
-const facelessCards = [
-  { name: "Morning Atelier", href: "/faceless/morning-atelier", body: "Anonymous beauty and lifestyle content." },
-  { name: "Noir Diary", href: "/faceless/noir-diary", body: "Shadow-first social campaigns and reels." },
-  { name: "Glass Studio", href: "/faceless/glass-studio", body: "Product, room, and hands-only storytelling." }
+const products = [
+  ["Black Card Membership", "Premium access, AI chat, Closet, private content, and campaign priority.", "/payment"],
+  ["Female Model Campaign", "Choose a female model and generate product, video, and social draft packets.", "/models"],
+  ["Male Model Campaign", "Choose a male model for brand, fitness, nightlife, and glam campaign drafts.", "/admin/glam-editorial"],
+  ["Faceless Content Pack", "Anonymous social/video product storytelling for Xyla and Shopify drafts.", "/faceless"],
+  ["Eden's Closet Pack", "Wardrobe, environment, and styling source packages.", "/closet"],
+  ["Xyla AI Video Feed", "Draft video/social hooks and product content packets for approval.", "/admin/commerce-sources"]
 ];
 
 const xylaPanels = [
-  ["Draft product packets", "Xyla-ready packets can draft product pages, hooks, and offer blocks without live Shopify writes."],
-  ["Draft collection packets", "Collections are planned, not published. No public collection sync is allowed by default."],
-  ["Model-to-product mapping", "Model cards map to offer drafts and content bundles for later approval."],
-  ["Content/social hooks", "Draft caption, CTA, and content feed hooks are prepared for Xyla planning only."],
-  ["Publishing state", "Publishing disabled. Live posting, scheduling, and billing remain blocked."]
+  ["Plan", "Select model, product, audience, and content lane."],
+  ["Create", "Generate image, copy, video, and social draft packets."],
+  ["Approve", "Review in hidden admin approval pages before routing."],
+  ["Route", "Send approved drafts to Shopify/Xyla/HeyGen/social queues."],
+  ["Launch", "Live actions remain locked until explicit final approval."]
 ];
 
-const adminLinks = ["/admin/gates", "/admin/workflows", "/admin/receipts"];
+function Choice({ name, index, type }: { name: string; index: number; type: "women" | "men" | "faceless" }) {
+  const img = models[index % models.length]?.image || heroAsset.src;
+  const href = type === "faceless" ? "/faceless" : type === "women" ? "/models" : "/admin/glam-editorial";
+  return <a className="model-card" href={href}><img src={img} alt={`${name} Eden Skye Shopify source`} /><span><strong>{name}</strong><em>{type === "men" ? "male model campaign" : type === "women" ? "female model campaign" : "faceless content"}</em></span></a>;
+}
 
 export default function ShopifyPage() {
   return (
@@ -37,171 +34,43 @@ export default function ShopifyPage() {
       <Header />
       <section className="home-hero">
         <div className="hero-copy">
-          <h1>Beauty.<br/><span>Influence.</span><br/>Impact.</h1>
-          <p>
-            We represent elite digital models and content creators. We build iconic brands. We create viral content. We drive results.
-          </p>
+          <h1>Shopify.<br/><span>Models.</span><br/>Faceless.</h1>
+          <p>Launch-ready Eden Skye commerce hub for female models, male models, faceless content, Black Card access, Closet products, and Xyla AI video/social automation.</p>
           <div className="hero-actions">
-            <a className="hot-btn" href="/payment">
-              Open Black Card
-            </a>
-            <a className="outline-btn" href="/models">
-              View Women
-            </a>
-            <a className="outline-btn" href="/faceless">
-              View Faceless
-            </a>
+            <a className="hot-btn" href="/payment">Open Black Card</a>
+            <a className="outline-btn" href="/models">Female Models</a>
+            <a className="outline-btn" href="/admin/glam-editorial">Male + Glam</a>
           </div>
-          <div className="hero-stats">
-            <span>
-              100+<small>Models</small>
-            </span>
-            <span>
-              24/7<small>Content</small>
-            </span>
-            <span>
-              Global<small>Reach</small>
-            </span>
-            <span>
-              Premium<small>Brands</small>
-            </span>
-          </div>
-          <p className="pink" style={{ marginTop: 18 }}>Live payment Locked</p>
-          <p className="sr-only">Shopify Black Card Control Page. Draft/test product spec. Shopify. Models. Faceless. Black Card. Male model catalog. no live Shopify product/payment/theme/discount/inventory mutation</p>
+          <div className="hero-stats"><span>10<small>Women</small></span><span>5<small>Men</small></span><span>5<small>Faceless</small></span><span>6<small>Products</small></span></div>
+          <p className="pink" style={{ marginTop: 18 }}>SHOPIFY_LIVE_PENDING_FINAL_APPROVAL</p>
+          <p className="sr-only">Shopify Black Card Control Page. Draft/test product spec. no live Shopify product/payment/theme/discount/inventory mutation</p>
         </div>
-        <img className="hero-image" src={standaloneAssets.homeHero.src} alt="Eden Skye Shopify hero source" />
+        <img className="hero-image" src={standaloneAssets.homeHero?.src || heroAsset.src} alt="Eden Skye Shopify hero source" />
       </section>
 
-      <section className="difference">
-        <p>The Eden Skye Studios Difference</p>
-        <div>
-          <article><strong>Elite Talent</strong><span>Top digital models and creator personas.</span></article>
-          <article><strong>Viral Content</strong><span>High-converting campaign content.</span></article>
-          <article><strong>Global Reach</strong><span>Worldwide audience and brand readiness.</span></article>
-          <article><strong>Premium Brands</strong><span>Campaigns, licensing, and partnerships.</span></article>
-          <article><strong>Maximum Profit</strong><span>Draft-only monetization lanes until approved.</span></article>
-        </div>
-      </section>
+      <section className="models-band"><h2>Choose Women</h2><a href="/models">10 female model choices</a><div className="model-row">{women.map((name, index) => <Choice key={name} name={name} index={index} type="women" />)}</div></section>
+      <section className="models-band"><h2>Choose Men</h2><a href="/admin/glam-editorial">5 male model choices</a><div className="model-row">{men.map((name, index) => <Choice key={name} name={name} index={index + 3} type="men" />)}</div></section>
+      <section className="models-band"><h2>Faceless Content</h2><a href="/faceless">Faceless pages</a><div className="model-row">{faceless.map((name, index) => <Choice key={name} name={name} index={index + 1} type="faceless" />)}</div></section>
 
       <section className="difference">
-        <p>Women</p>
-        <div>
-          {models.map((model) => (
-            <article key={model.slug}>
-              <strong>{model.name}</strong>
-              <span>{model.location}</span>
-              <a href={`/models/${model.slug}/portfolio`}>Open portfolio</a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="difference">
-        <p>Men</p>
-        <div>
-          {maleCards.map((item) => (
-            <article key={item.name}>
-              <strong>{item.name}</strong>
-              <span>{item.body}</span>
-              <a href={item.href}>Open approval studio</a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="difference">
-        <p>Faceless</p>
-        <div>
-          {facelessCards.map((item) => (
-            <article key={item.name}>
-              <strong>{item.name}</strong>
-              <span>{item.body}</span>
-              <a href={item.href}>Open Faceless Page</a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="difference">
-        <p>Products</p>
-        <div>
-          {featuredProducts.map((item) => (
-            <article key={item.name}>
-              <strong>{item.name}</strong>
-              <span>{item.body}</span>
-              <a href={item.href}>Open</a>
-            </article>
-          ))}
-        </div>
+        <p>Shopify Products</p>
+        <div>{products.map(([name, body, href]) => <article key={name}><strong>{name}</strong><span>{body}</span><a href={href}>Open</a></article>)}</div>
       </section>
 
       <section className="service-row">
-        <article>
-          <img src={standaloneAssets.closetFullBody.src} alt="Generated standalone closet source" />
-          <div>
-            <h3>Eden's Closet</h3>
-            <p>Click through to wardrobe, outfit, environment, and video/chat flows.</p>
-            <a href="/closet">Open Closet</a>
-          </div>
-        </article>
-        <article>
-          <h3>Xyla AI Shopify Automation</h3>
-          <p>Draft product packets, collection packets, and content/social hooks for autonomous creation.</p>
-          <a href="/payment">Open Draft Checkout</a>
-        </article>
-        <article>
-          <img src={standaloneAssets.aiChat.src} alt="Generated standalone AI chat source" />
-          <div>
-            <h3>Products</h3>
-            <p>Black Card, closet access, portfolios, and content packs with approval-gated paths.</p>
-            <a href="/success">Open Success</a>
-          </div>
-        </article>
+        <article><img src={standaloneAssets.closetFullBody?.src || heroAsset.src} alt="Generated standalone closet source" /><div><h3>Eden's Closet</h3><p>Wardrobe, outfit, environment, and video/chat flows.</p><a href="/closet">Open Closet</a></div></article>
+        <article><h3>Xyla AI Shopify Automation</h3><p>Draft product packets, collection packets, captions, and short-form content hooks.</p><a href="/admin/commerce-sources">Open Source Registry</a></article>
+        <article><img src={standaloneAssets.aiChat?.src || heroAsset.src} alt="Generated standalone AI chat source" /><div><h3>Approval Studio</h3><p>Image, video, content, Shopify, and social drafts stay gated until approved.</p><a href="/admin/approval-studio">Review Admin</a></div></article>
       </section>
 
-      <section className="models-band">
-        <h2>Our Models</h2>
-        <a href="/models">View all models</a>
-        <div className="model-row">
-          {models.map((model) => (
-            <a key={model.slug} className="model-card" href={`/models/${model.slug}/portfolio`}>
-              <img src={model.image} alt={`${model.name} generated standalone source`} />
-              <span>
-                <strong>{model.name}</strong>
-                <em>{model.location}</em>
-              </span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <section className="pricing-grid">
-        {xylaPanels.map(([label, body]) => (
-          <article className="price-card" key={label}>
-            <span>{label}</span>
-            <p>{body}</p>
-          </article>
-        ))}
-      </section>
+      <section className="pricing-grid">{xylaPanels.map(([label, body]) => <article className="price-card" key={label}><span>{label}</span><p>{body}</p></article>)}</section>
 
       <section className="black-card-cta">
-        <p className="pink">Protected Flow</p>
-        <h2>Click through to portfolios, faceless pages, products, and closet experiences without live mutation.</h2>
-        <div className="hero-actions" style={{ justifyContent: "center" }}>
-          <a className="hot-btn" href="/payment">
-            Black Card
-          </a>
-          <a className="outline-btn" href="/success">
-            Success
-          </a>
-          <a className="outline-btn" href="/closet">
-            Closet
-          </a>
-        </div>
+        <p className="pink">Protected Shopify Launch</p>
+        <h2>Investor-demo ready commerce hub. Live Shopify writes and payments stay locked until final approval.</h2>
+        <div className="hero-actions" style={{ justifyContent: "center" }}><a className="hot-btn" href="/payment">Black Card</a><a className="outline-btn" href="/success">Success</a><a className="outline-btn" href="/closet">Closet</a></div>
         <small>Live Shopify product/payment/theme/discount/inventory mutation remains locked until approval.</small>
         <small>SHOPIFY_LIVE_PENDING_FINAL_APPROVAL</small>
-        <small>no live Shopify product/payment/theme/discount/inventory mutation.</small>
-        <small>Live Shopify product mutation blocked.</small>
       </section>
     </main>
   );
