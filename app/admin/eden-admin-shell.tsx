@@ -16,6 +16,7 @@ const navRoutes = [
   "/admin/drive",
   "/admin/gmail-calendar",
   "/admin/media",
+  "/admin/approval-studio",
   "/admin/social",
   "/admin/gates",
   "/admin/workflows",
