@@ -1,0 +1,17 @@
+{
+  "status": "BRIDGES_REGISTERED_DRAFT_ONLY",
+  "bridges": [
+    {"key": "github", "label": "GitHub", "capabilities": ["branch inspection", "draft PR prep", "issue/PR metadata", "code review receipts"], "protected_actions": ["merge", "destructive git operation"]},
+    {"key": "vercel", "label": "Vercel", "capabilities": ["preview status", "build log review", "visual preview bridge"], "protected_actions": ["production deploy", "domain change"]},
+    {"key": "supabase", "label": "Supabase", "capabilities": ["read-only SQL", "queue registry", "receipts", "approval requests"], "protected_actions": ["production schema mutation", "data delete"]},
+    {"key": "drive", "label": "Google Drive", "capabilities": ["source truth discovery", "asset manifests", "normalization queue"], "protected_actions": ["delete", "overwrite", "unapproved public sharing"]},
+    {"key": "gmail", "label": "Gmail", "capabilities": ["inbox triage", "draft replies"], "protected_actions": ["send external email"]},
+    {"key": "calendar", "label": "Google Calendar", "capabilities": ["availability", "meeting prep", "draft schedule"], "protected_actions": ["create external attendee event"]},
+    {"key": "shopify", "label": "Shopify", "capabilities": ["draft product packet", "catalog read", "image CDN hosting with approval"], "protected_actions": ["live product/payment mutation"]},
+    {"key": "heygen", "label": "HeyGen", "capabilities": ["video/avatar packet prep", "asset readiness"], "protected_actions": ["live avatar/video publish"]},
+    {"key": "media", "label": "Image/Video Generation", "capabilities": ["prompt packet", "generated_pending_review", "QA queue"], "protected_actions": ["approved_public promotion"]},
+    {"key": "autobuilder", "label": "AUTO BUILDER", "capabilities": ["builder docs", "implementation packets", "sandbox orchestration"], "protected_actions": ["ungated live execution"]},
+    {"key": "n8n", "label": "n8n / External Workflow", "capabilities": ["dispatch queue", "draft workflow loop"], "protected_actions": ["public publish", "production mutation"]},
+    {"key": "browser", "label": "Browser / Playwright Evidence", "capabilities": ["screenshots", "route validation", "visual evidence"], "protected_actions": ["credentialed mutation"]}
+  ]
+}
