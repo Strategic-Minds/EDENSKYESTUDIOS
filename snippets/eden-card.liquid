@@ -3,6 +3,7 @@
 @param {string} text - Card supporting text
 @param {string} tag - Card category label
 @param {image} image - Optional Shopify image picker image
+@param {string} fallback_image_url - Optional Shopify CDN image URL
 @param {string} url - Optional destination URL
 {% enddoc %}
-{% if url != blank %}<a class="eden-card" href="{{ url }}">{% else %}<article class="eden-card">{% endif %}<div class="eden-card-media">{% if image != blank %}{{ image | image_url: width: 900 | image_tag: loading: 'lazy', alt: title }}{% endif %}</div><div class="eden-card-body"><h3>{{ title | escape }}</h3><p>{{ text | escape }}</p><span class="eden-card-tag">{{ tag | escape }}</span></div>{% if url != blank %}</a>{% else %}</article>{% endif %}
+{% if url != blank %}<a class="eden-card" href="{{ url }}">{% else %}<article class="eden-card">{% endif %}<div class="eden-card-media">{% if image != blank %}{{ image | image_url: width: 900 | image_tag: loading: 'lazy', alt: title }}{% elsif fallback_image_url != blank %}<img src="{{ fallback_image_url | escape }}" alt="{{ title | escape }}" loading="lazy">{% endif %}</div><div class="eden-card-body"><h3>{{ title | escape }}</h3><p>{{ text | escape }}</p><span class="eden-card-tag">{{ tag | escape }}</span></div>{% if url != blank %}</a>{% else %}</article>{% endif %}
