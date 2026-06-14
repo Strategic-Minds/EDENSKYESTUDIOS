@@ -4,6 +4,7 @@ export const approvedClosetBackground = {
   id: "eden-closet-neon-walkin-approved-bg",
   label: "Approved Eden's Closet neon walk-in wardrobe background",
   src: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-neon-walkin-approved-bg.png?v=1781424263",
+  alt: "Approved neon Eden's Closet walk-in wardrobe background",
   source: "Uploaded user_files/01-ChatGPT-Image-Jun-11-2026-01_03_28-PM-4-.png and hosted on Shopify CDN for Vercel PWA use",
   allowedUse: ["closet.home.background", "closet.viewer.background", "closet.profile.hero"]
 } as const;
