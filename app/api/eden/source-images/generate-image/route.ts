@@ -24,16 +24,19 @@ const blockedPromptPatterns = [
   { label: 'real-person sexualization', pattern: /\b(real person|celebrity|influencer|look like)\b[\s\S]{0,80}\b(nude|naked|sexual|porn|topless)\b/i }
 ];
 
+const safetyNegationPatterns = [
+  { pattern: /\b(no|without|avoid|exclude)\s+(nudity|nude|naked|topless|explicit anatomy|sexual acts?|sex|porn|xxx)\b/gi, replacement: 'opaque studio-safe fashion' },
+  { pattern: /\bplatform-safe\s+(adult|sensual|sexy)\b/gi, replacement: 'platform-safe fashion' },
+  { pattern: /\badult-inspired\b/gi, replacement: 'fashion-forward' }
+];
+
 const softRewritePatterns = [
   { pattern: /\blingerie\b/gi, replacement: 'couture bodysuit styling' },
   { pattern: /\bsexy\b/gi, replacement: 'confident editorial' },
   { pattern: /\bseductive\b/gi, replacement: 'magnetic high-fashion' },
   { pattern: /\bsensual\b/gi, replacement: 'soft editorial' },
   { pattern: /\badult\b/gi, replacement: '21 plus synthetic editorial' },
-  { pattern: /\bimplied nudity\b/gi, replacement: 'covered silhouette styling' },
-  { pattern: /\bno nudity\b/gi, replacement: 'opaque covered styling' },
-  { pattern: /\bno explicit anatomy\b/gi, replacement: 'opaque studio-safe styling' },
-  { pattern: /\bno sexual acts\b/gi, replacement: 'solo fashion portrait' }
+  { pattern: /\bimplied nudity\b/gi, replacement: 'covered silhouette styling' }
 ];
 
 function getImageConfig() {
@@ -68,17 +71,26 @@ function normalizeSize(size: unknown) {
   return '1024x1024';
 }
 
+function normalizeSafetyNegations(prompt: string) {
+  return safetyNegationPatterns
+    .reduce((current, entry) => current.replace(entry.pattern, entry.replacement), prompt)
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function sanitizeForImageModel(prompt: string) {
   return softRewritePatterns
-    .reduce((current, entry) => current.replace(entry.pattern, entry.replacement), prompt)
+    .reduce((current, entry) => current.replace(entry.pattern, entry.replacement), normalizeSafetyNegations(prompt))
     .replace(/\b(nude|nudity|naked|topless|bottomless|genitals?|vagina|penis|nipples?|areola|porn|xxx)\b/gi, 'studio-safe fashion')
+    .replace(/\b(sex|sexual|intercourse|oral|penetration|masturbat\w*|orgasm|fetish)\b/gi, 'fashion editorial')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
 function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']): GuardrailResult {
+  const promptForBlockCheck = normalizeSafetyNegations(prompt);
   const blockedTerms = blockedPromptPatterns
-    .filter((entry) => entry.pattern.test(prompt))
+    .filter((entry) => entry.pattern.test(promptForBlockCheck))
     .map((entry) => entry.label);
 
   if (blockedTerms.length > 0) {
@@ -124,7 +136,7 @@ export async function GET() {
     endpoint,
     model,
     accepts: ['POST application/json'],
-    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization'],
+    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization', 'safety_negation_normalization'],
     modes: {
       standard: 'General platform-safe image generation.',
       editorial_glamour: 'Fashion-safe glamour. Uses couture bodysuit, swimwear-inspired wardrobe, opaque covered silhouette, and solo luxury editorial pose language before calling the image model.'
