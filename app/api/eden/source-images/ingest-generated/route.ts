@@ -145,12 +145,63 @@ function buildRecord(body: IngestBody) {
   };
 }
 
-export async function GET() {
+function selfTestBody(): IngestBody {
+  return {
+    source: 'vercel_preview_self_test',
+    reason: 'ingest_api_contract_self_test',
+    filename: 'eden-skye-001_identity-lock_front-portrait_4x5_v1.png',
+    targetFilename: 'eden-skye-001_identity-lock_front-portrait_4x5_v1.png',
+    manifestSlot: 'eden-skye-001',
+    qaScore: 94,
+    qaMinScore: 92,
+    approvalFolder: 'Approved',
+    approvalColor: 'green',
+    approvalStatus: 'Self-test record only. No live external write performed.',
+    mimeType: 'image/png',
+    size: 2048,
+    originalPrompt: 'Self-test upload record for Eden image stack.',
+    productionPrompt: 'Platform-safe Eden source image receipt test.',
+    model: 'self-test',
+    provider: 'vercel-runtime',
+    matchConfidence: 'clean_self_test'
+  };
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+
+  if (url.searchParams.get('selfTest') === '1') {
+    const postResponse = await POST(new Request(`${url.origin}/api/eden/source-images/ingest-generated`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(selfTestBody())
+    }));
+    const result = await postResponse.json();
+
+    return Response.json({
+      ok: postResponse.ok,
+      selfTest: true,
+      transport: 'GET wrapper executed exported POST handler inside the Vercel runtime',
+      postStatus: postResponse.status,
+      assertions: {
+        receiptBuilt: Boolean(result.record?.receiptId),
+        manifestMatched: result.record?.manifestSlot === 'eden-skye-001',
+        targetFilenameMatched: result.record?.targetFilename === 'eden-skye-001_identity-lock_front-portrait_4x5_v1.png',
+        approvalColorGreen: result.record?.approvalColor === 'green',
+        supabaseWriteBlocked: result.record?.liveMutation?.supabaseWritePerformed === false,
+        driveWriteBlocked: result.record?.liveMutation?.driveUploadPerformed === false,
+        githubWriteBlocked: result.record?.liveMutation?.githubCommitPerformed === false
+      },
+      ...result
+    }, { status: postResponse.status });
+  }
+
   return Response.json({
     status: 'ready',
     route: '/api/eden/source-images/ingest-generated',
     mode: 'receipt_only',
     adminDrivePackage,
+    selfTest: '/api/eden/source-images/ingest-generated?selfTest=1',
     requiredRecordFields: [
       'filename',
       'targetFilename',
