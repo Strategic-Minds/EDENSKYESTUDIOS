@@ -15,6 +15,22 @@
     "public_social_posting",
     "customer_email_send"
   ],
+  "approvedPageBoards": [
+    {
+      "slot": "pwa_page_flow_board",
+      "uploadedFile": "user_files/02-ChatGPT-Image-Jun-11-2026-12_20_42-AM.png",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-pwa-page-board.png?v=1781431118",
+      "shopifyMediaId": "gid://shopify/MediaImage/31274869719094",
+      "usage": ["layout_reference", "page_flow_reference", "visual_style_reference"]
+    },
+    {
+      "slot": "full_body_360_angle_board",
+      "uploadedFile": "user_files/01-ChatGPT-Image-Jun-3-2026-11_27_37-PM.png",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-360-angle-board.png?v=1781431110",
+      "shopifyMediaId": "gid://shopify/MediaImage/31274868998198",
+      "usage": ["360_frame_source", "pose_reference", "viewer_reference"]
+    }
+  ],
   "approvedSourceImages": [
     {
       "slot": "hero_neon_closet",
@@ -45,22 +61,40 @@
       "usage": ["full_body_viewer", "outfit_selector", "avatar_preview"]
     }
   ],
+  "angleFrames": [
+    { "label": "Front", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-front.png?v=1781431146" },
+    { "label": "Left 45", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-left-45.png?v=1781431138" },
+    { "label": "Left Side", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-left-side.png?v=1781431168" },
+    { "label": "Back", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-back.png?v=1781431152" },
+    { "label": "Right Side", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-right-side.png?v=1781431160" },
+    { "label": "Right 45", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-right-45.png?v=1781431175" },
+    { "label": "Front Arms Up", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-front-arms-up.png?v=1781431194" },
+    { "label": "Left 45 Arms Up", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-left-45-arms-up.png?v=1781431202" },
+    { "label": "Back Arms Up", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-back-arms-up.png?v=1781431211" },
+    { "label": "Right 45 Arms Up", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-right-45-arms-up.png?v=1781431220" },
+    { "label": "Look Down", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-look-down.png?v=1781431227" },
+    { "label": "Look Up", "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-look-up.png?v=1781431234" }
+  ],
   "experienceModules": [
     "pwa_home",
-    "full_body_viewer",
+    "model_selector",
+    "model_profile",
+    "virtual_closet",
+    "full_body_360_viewer",
     "wardrobe_selector",
     "identity_styling",
     "environment_selector",
     "ai_text_chat_ui",
     "ai_voice_chat_ui",
     "ai_video_chat_ui",
+    "member_dashboard",
     "shopify_payment_return",
     "black_card_entitlement_gate"
   ],
   "avatarEngineTarget": {
-    "phase": "adapter_ready",
+    "phase": "visual_frame_engine_ready",
     "recommendedStack": ["Next.js App Router", "WebGL", "Three.js or Babylon.js", "VRM/GLB avatar assets", "HeyGen/video avatar bridge", "realtime voice model bridge"],
-    "currentBuild": "image-backed ultra-lifelike PWA prototype with 3D-ready controls and gated AI surfaces",
+    "currentBuild": "image-backed ultra-lifelike PWA with 12 approved 360 frame states, 3D motion effects, member surfaces, and gated AI chat, voice, and video UI",
     "missingForTrue3D": ["approved GLB/VRM model", "rigged motion clips", "voice/video provider keys", "production entitlement middleware"]
   }
 }
