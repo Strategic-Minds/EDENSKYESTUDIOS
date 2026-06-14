@@ -1,0 +1,66 @@
+{
+  "system": "EDEN_CLOSET_AI_DESIGNED_PAGE_MOCKUPS",
+  "branch": "eden/closet-ultralifelike-pwa-v2-20260614",
+  "sourceDirection": "user_files/01-ChatGPT-Image-Jun-11-2026-12_20_42-AM.png",
+  "rule": "These are brand-new full-page UI mockup images created from the approved direction board. They are not cropped collage panels and should be used as page design targets for implementation.",
+  "dimensions": {
+    "width": 1440,
+    "height": 900
+  },
+  "pages": [
+    {
+      "slug": "01-home",
+      "routeTarget": "/closet-v2",
+      "title": "Eden Closet Home",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-01-home.png?v=1781432400"
+    },
+    {
+      "slug": "02-select-model",
+      "routeTarget": "/closet-v2/models",
+      "title": "Select Your Model",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-02-select-model.png?v=1781432410"
+    },
+    {
+      "slug": "03-model-profile",
+      "routeTarget": "/closet-v2/models/alexis-voss",
+      "title": "Model Profile",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-03-model-profile.png?v=1781432421"
+    },
+    {
+      "slug": "04-virtual-closet",
+      "routeTarget": "/closet-v2/closet",
+      "title": "Virtual Closet",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-04-virtual-closet.png?v=1781432392"
+    },
+    {
+      "slug": "05-environments",
+      "routeTarget": "/closet-v2/environments",
+      "title": "Environments",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-05-environments.png?v=1781432429"
+    },
+    {
+      "slug": "06-360-viewer",
+      "routeTarget": "/closet-v2/viewer",
+      "title": "Full Body 360 Viewer",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-06-360-viewer.png?v=1781432446"
+    },
+    {
+      "slug": "07-ai-chat",
+      "routeTarget": "/closet-v2/chat",
+      "title": "AI Chat",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-07-ai-chat.png?v=1781432454"
+    },
+    {
+      "slug": "08-ai-video-chat",
+      "routeTarget": "/closet-v2/video",
+      "title": "AI Video Chat",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-08-ai-video-chat.png?v=1781432464"
+    },
+    {
+      "slug": "09-dashboard",
+      "routeTarget": "/closet-v2/dashboard",
+      "title": "Member Dashboard",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-09-dashboard.png?v=1781432471"
+    }
+  ]
+}
