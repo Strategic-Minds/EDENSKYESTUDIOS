@@ -9,7 +9,7 @@ import {
   sourceImageManifest,
   sourceManifestSummary
 } from '../admin-data';
-import { approvedBasicPortraitBatch, approvedBasicPortraits, driveThumbnailUrl } from './approved-basic-portraits';
+import { additionalFemalePortraitBatch, approvedBasicPortraitBatch, approvedBasicPortraits, driveThumbnailUrl } from './approved-basic-portraits';
 import { approvedFacelessAccounts, approvedFacelessSourceBatch } from './approved-faceless-roster';
 import { approvedMaleModels, approvedMaleRosterBatch } from './approved-male-roster';
 import { GroupCard, ModelCard } from './model-cards';
@@ -41,7 +41,7 @@ export default function EdenModelInventoryPage() {
 
       <section className={styles.summary} aria-label="Model inventory summary">
         <div className={styles.metric}><b>{loadedRosterRecords}</b><span>Roster records loaded</span></div>
-        <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Approved basic portraits</span></div>
+        <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Female/basic portraits</span></div>
         <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male profiles verified</span></div>
         <div className={styles.metric}><b>{approvedFacelessSourceBatch.count}</b><span>Faceless accounts sourced</span></div>
         <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified production slots</span></div>
@@ -52,27 +52,31 @@ export default function EdenModelInventoryPage() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div>
-            <p>green</p>
-            <h2>Approved Basic Portrait Roster</h2>
+            <p>green / yellow</p>
+            <h2>Female Basic Portrait Roster</h2>
           </div>
-          <span className={styles.sourceWarning}><b>{approvedBasicPortraitBatch.title}</b><span>These 13 Drive-backed portrait files are approved for the basic model inventory. They do not automatically unblock the separate 12-slot Eden production manifest.</span></span>
+          <span className={styles.sourceWarning}><b>{approvedBasicPortraitBatch.title}</b><span>These {approvedBasicPortraitBatch.count} Drive-backed portrait files are loaded for the basic female/model inventory. The newest {additionalFemalePortraitBatch.count} are yellow until final operator visual review is complete.</span></span>
         </div>
         <div className={styles.manifestEmpty}>
           <b>Root folder</b>
           <span>{approvedBasicPortraitBatch.rootFolderId}</span>
           <b>Basic folder</b>
           <span>{approvedBasicPortraitBatch.basicFolderId}</span>
-          <b>QA report</b>
+          <b>Original QA report</b>
           <span>{approvedBasicPortraitBatch.qaReportFileId}</span>
+          <b>Additional female QA</b>
+          <span>{additionalFemalePortraitBatch.qaReportFileId}</span>
+          <b>Additional manifest</b>
+          <span>{additionalFemalePortraitBatch.manifestFileId}</span>
           <b>QA standard</b>
           <span>{approvedBasicPortraitBatch.qaStandard}</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(188px, 1fr))', gap: 16, marginTop: 18 }}>
           {approvedBasicPortraits.map((portrait) => (
             <article key={portrait.driveFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
-              <img src={driveThumbnailUrl(portrait.driveFileId)} alt={`${portrait.name} approved basic portrait`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block', background: '#050505' }} />
+              <img src={driveThumbnailUrl(portrait.driveFileId)} alt={`${portrait.name} basic portrait`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block', background: '#050505' }} />
               <div style={{ display: 'grid', gap: 8, padding: 12 }}>
-                <span className={`${styles.badge} ${styles.green}`}>approved</span>
+                <span className={`${styles.badge} ${portrait.status === 'approved' ? styles.green : styles.yellow}`}>{portrait.status === 'approved' ? 'approved' : 'final review'}</span>
                 <b style={{ color: '#fff', fontSize: 16 }}>{portrait.index.toString().padStart(2, '0')} - {portrait.name}</b>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{portrait.fileName}</span>
                 <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Drive ID: {portrait.driveFileId}</span>
