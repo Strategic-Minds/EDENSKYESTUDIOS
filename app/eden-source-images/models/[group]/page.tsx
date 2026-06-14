@@ -5,21 +5,24 @@ import { ModelGroup, groupLabels, models } from '../../admin-data';
 import { ModelCard } from '../model-cards';
 
 const groups: ModelGroup[] = ['female', 'male', 'faceless'];
+type GroupParams = Promise<{ group: string }>;
 
 export function generateStaticParams() {
   return groups.map((group) => ({ group }));
 }
 
-export function generateMetadata({ params }: { params: { group: string } }) {
-  const group = params.group as ModelGroup;
+export async function generateMetadata({ params }: { params: GroupParams }) {
+  const { group: rawGroup } = await params;
+  const group = rawGroup as ModelGroup;
   return {
     title: groupLabels[group] ? `${groupLabels[group]} Inventory` : 'Model Inventory',
     description: 'Eden Skye Studios model inventory category page.'
   };
 }
 
-export default function EdenModelGroupPage({ params }: { params: { group: string } }) {
-  const group = params.group as ModelGroup;
+export default async function EdenModelGroupPage({ params }: { params: GroupParams }) {
+  const { group: rawGroup } = await params;
+  const group = rawGroup as ModelGroup;
   if (!groups.includes(group)) notFound();
 
   const groupModels = models.filter((model) => model.group === group);
