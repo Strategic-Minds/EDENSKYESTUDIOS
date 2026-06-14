@@ -12,6 +12,7 @@ export const metadata = {
   description: "Open a model profile, private gallery preview, wardrobe selector, and Black Card CTA."
 };
 
-export default function ClosetV2ModelProfilePage({ params }: { params: { slug: string } }) {
-  return <ClosetV2RealApp view="profile" slug={params.slug} />;
+export default async function ClosetV2ModelProfilePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return <ClosetV2RealApp view="profile" slug={slug} />;
 }
