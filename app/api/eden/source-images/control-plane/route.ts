@@ -1,15 +1,71 @@
+const primaryEmail = 'strategicmindsadvisory@gmail.com';
+
+const approvalLegend = [
+  {
+    color: 'green',
+    mark: 'check',
+    meaning: 'Verified, ready, or safely available in the preview.'
+  },
+  {
+    color: 'yellow',
+    mark: 'review',
+    meaning: 'Needs review, binary matching, QA scoring, or operator approval.'
+  },
+  {
+    color: 'red',
+    mark: 'blocked',
+    meaning: 'Blocked, missing credentials, or not allowed for live mutation.'
+  }
+];
+
 const controlPlane = {
   mode: 'sandbox_open_leak_test',
+  primaryEmail,
   chat: {
-    status: 'wired_to_route',
+    status: 'wired_to_route_with_gateway_diagnostics',
     route: '/api/eden/source-images/chat',
+    selfTestRoute: '/api/eden/source-images/chat?selfTest=1',
     gateway: 'vercel-ai-gateway',
     providerPreference: 'openai-primary',
     defaultModel: 'openai/gpt-5.5',
+    fallbackModel: 'openai/gpt-5.4',
     requiresOneOf: ['AI_GATEWAY_API_KEY', 'VERCEL_OIDC_TOKEN'],
     supportsAttachmentMetadata: true,
     storesAttachmentBinaries: false
   },
+  approvalLegend,
+  approvalQueue: [
+    {
+      label: 'Primary account',
+      status: 'green',
+      account: primaryEmail
+    },
+    {
+      label: 'Control plane API',
+      status: 'green',
+      route: '/api/eden/source-images/control-plane'
+    },
+    {
+      label: 'AI Gateway chat',
+      status: 'yellow',
+      reason: 'Diagnostics added; self-test route identifies credential, endpoint, or provider/model failures.'
+    },
+    {
+      label: '12 source image binaries',
+      status: 'yellow',
+      reason: 'Need filename, QA score, Drive file ID, and approval status matching.'
+    },
+    {
+      label: 'SOURCE_IMAGE_APPROVAL_INBOX',
+      status: 'red',
+      reason: 'Approval phrase received, but folder creation is blocked because GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are not configured in the Drive executor.'
+    },
+    {
+      label: 'Public publishing and production writes',
+      status: 'red',
+      reason: 'Still approval-gated during leak testing.'
+    }
+  ],
   productionMutationAllowed: false,
   externalWritesAllowed: false,
   livePaymentAllowed: false,
@@ -20,25 +76,30 @@ const controlPlane = {
     stockImageAssetsFolderId: '1V8MNsOdvLNSd04JQrnyvH1ECnj3nOF8P',
     approvalControlPlaneFolderId: '1EMnjZKTBT4wlO0ZgR5F6tXDKV1dvK76x',
     requestedApprovalInboxName: 'SOURCE_IMAGE_APPROVAL_INBOX',
-    requestedApprovalInboxStatus: 'blocked_pending_approval_phrase',
-    approvalPhraseRequired: 'APPROVE DRIVE FOLDER CREATE',
+    requestedApprovalInboxStatus: 'blocked_missing_google_service_account_secrets',
+    approvalPhraseReceived: 'APPROVE DRIVE FOLDER CREATE',
+    executionBlocker: 'GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY must be configured.',
+    temporaryApprovalLaneFolderId: '1EMnjZKTBT4wlO0ZgR5F6tXDKV1dvK76x',
     tempFolderId: '1kokL57oAzvL40ee6nC3v1AA8hinarWJe',
     quarantineFolderId: '1sKBf_icBG8X_xKCm8QKOsbMhMxSZaOP2'
   },
   integrations: {
     gmail: {
+      primaryAccountTarget: primaryEmail,
       connectedInAgentSession: true,
-      account: 'info@epoxywillchangeyourlife.com',
+      observedConnectorAccount: 'info@epoxywillchangeyourlife.com',
       appDirectOAuthRequired: true
     },
     googleCalendar: {
+      primaryAccountTarget: primaryEmail,
       connectedInAgentSession: true,
-      account: 'info@epoxywillchangeyourlife.com',
+      observedConnectorAccount: 'info@epoxywillchangeyourlife.com',
       appDirectOAuthRequired: true
     },
     googleDrive: {
+      primaryAccountTarget: primaryEmail,
       connectedInAgentSession: true,
-      account: 'strategicmindsadvisory@gmail.com',
+      observedConnectorAccount: primaryEmail,
       appDirectOAuthRequired: true
     },
     chatGptPassthrough: {
