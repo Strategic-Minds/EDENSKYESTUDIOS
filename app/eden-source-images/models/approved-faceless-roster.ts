@@ -28,6 +28,22 @@ export type ApprovedFacelessAccount = {
   contentCalendar: FacelessCalendarItem[];
 };
 
+type CalendarSeed = {
+  themes: string[];
+  formats: string[];
+  hooks: string[];
+  ctas: string[];
+};
+
+const buildThirtyDayCalendar = (seed: CalendarSeed): FacelessCalendarItem[] =>
+  Array.from({ length: 30 }, (_, index) => ({
+    day: index + 1,
+    theme: seed.themes[index % seed.themes.length],
+    format: seed.formats[index % seed.formats.length],
+    hook: seed.hooks[index % seed.hooks.length],
+    cta: seed.ctas[index % seed.ctas.length]
+  }));
+
 export const approvedFacelessSourceBatch = {
   title: 'Faceless Social Source Pack',
   rootFolderId: '1HFLOuRB65gjmLCiBp0Jhft5cw2xSZ6fQ',
@@ -39,7 +55,7 @@ export const approvedFacelessSourceBatch = {
   approvalStatus: 'operator-approved',
   operatingNote: '30-day proof loop. No live publishing, billing, paid ads, or lead collection without approval.',
   validationThreshold: '1 sale, 10 leads, 50 clicks, or 1,000 views.',
-  planningStatus: 'Brand kits and starter content calendars are staged for admin planning only. Publishing remains approval-gated.',
+  planningStatus: 'Each approved faceless source now has a 30-day draft content calendar and starter brand kit. Publishing remains approval-gated.',
   sourceStatus: 'Five faceless account source docs are verified from Drive and operator-approved for workflow buildout. Visual brand kits, account handles, platform accounts, and publishing permissions remain separate activation steps.'
 };
 
@@ -61,11 +77,19 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
       contentPillars: ['AI tools', 'automation workflows', 'agent demos', 'founder productivity'],
       assetNeeds: ['tool demo b-roll', 'workflow diagrams', 'AI dashboard screenshots', 'short captions pack']
     },
-    contentCalendar: [
-      { day: 1, theme: 'Tool discovery', format: 'Short', hook: 'Three AI tools I would use before hiring another assistant.', cta: 'Comment AI for the workflow list.' },
-      { day: 2, theme: 'Workflow build', format: 'Carousel', hook: 'The 5-step AI workflow that removes manual admin work.', cta: 'Save this before your next build.' },
-      { day: 3, theme: 'Agent demo', format: 'Short', hook: 'Watch an AI agent turn a messy idea into a launch checklist.', cta: 'Ask for the starter template.' }
-    ]
+    contentCalendar: buildThirtyDayCalendar({
+      themes: ['Tool discovery', 'Workflow build', 'Agent demo', 'Prompt system', 'Founder leverage', 'AI stack review'],
+      formats: ['Short', 'Carousel', 'Short', 'Thread', 'Short', 'Checklist'],
+      hooks: [
+        'Three AI tools I would use before hiring another assistant.',
+        'The 5-step AI workflow that removes manual admin work.',
+        'Watch an AI agent turn a messy idea into a launch checklist.',
+        'Most prompts fail because they skip the operating context.',
+        'The fastest founders are not doing more. They are routing better.',
+        'This is the AI stack I would build before scaling content.'
+      ],
+      ctas: ['Comment AI for the workflow list.', 'Save this before your next build.', 'Ask for the starter template.', 'Follow for the next lab test.']
+    })
   },
   {
     rank: 2,
@@ -84,11 +108,19 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
       contentPillars: ['company breakdowns', 'offer strategy', 'pricing lessons', 'market positioning'],
       assetNeeds: ['brand tear-down templates', 'chart cards', 'case-study thumbnails', 'newsletter CTA cards']
     },
-    contentCalendar: [
-      { day: 1, theme: 'Company teardown', format: 'Short', hook: 'This brand makes boring products feel expensive.', cta: 'Follow for the full breakdown.' },
-      { day: 2, theme: 'Offer lesson', format: 'Carousel', hook: 'The offer stack hiding inside a million-dollar homepage.', cta: 'Save the structure.' },
-      { day: 3, theme: 'Pricing psychology', format: 'Short', hook: 'The pricing trick that makes the middle option irresistible.', cta: 'Comment pricing for the notes.' }
-    ]
+    contentCalendar: buildThirtyDayCalendar({
+      themes: ['Company teardown', 'Offer lesson', 'Pricing psychology', 'Funnel review', 'Brand positioning', 'Revenue model'],
+      formats: ['Short', 'Carousel', 'Short', 'Newsletter teaser', 'Short', 'Checklist'],
+      hooks: [
+        'This brand makes boring products feel expensive.',
+        'The offer stack hiding inside a million-dollar homepage.',
+        'The pricing trick that makes the middle option irresistible.',
+        'A funnel does not fail at checkout. It fails at clarity.',
+        'The best brands tell you who they are before they sell.',
+        'Here is the revenue model hiding under the content.'
+      ],
+      ctas: ['Follow for the full breakdown.', 'Save the structure.', 'Comment pricing for the notes.', 'Join the breakdown list.']
+    })
   },
   {
     rank: 3,
@@ -107,11 +139,19 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
       contentPillars: ['asset building', 'income systems', 'money habits', 'automation leverage'],
       assetNeeds: ['wealth map cards', 'checklist covers', 'income ladder graphics', 'green/yellow/red score tiles']
     },
-    contentCalendar: [
-      { day: 1, theme: 'Asset map', format: 'Carousel', hook: 'Most people chase money. Builders collect assets.', cta: 'Save the map.' },
-      { day: 2, theme: 'Income system', format: 'Short', hook: 'One digital asset can become five income paths.', cta: 'Comment asset for the checklist.' },
-      { day: 3, theme: 'Automation leverage', format: 'Short', hook: 'The quiet difference between working more and compounding faster.', cta: 'Follow for the proof loop.' }
-    ]
+    contentCalendar: buildThirtyDayCalendar({
+      themes: ['Asset map', 'Income system', 'Automation leverage', 'Money habit', 'Digital product', 'Proof loop'],
+      formats: ['Carousel', 'Short', 'Short', 'Checklist', 'Short', 'Scorecard'],
+      hooks: [
+        'Most people chase money. Builders collect assets.',
+        'One digital asset can become five income paths.',
+        'The quiet difference between working more and compounding faster.',
+        'This money habit is boring until it starts buying back time.',
+        'A digital product is not the business. The system around it is.',
+        'If it cannot prove signal in 30 days, it does not scale yet.'
+      ],
+      ctas: ['Save the map.', 'Comment asset for the checklist.', 'Follow for the proof loop.', 'Use this as your weekly scorecard.']
+    })
   },
   {
     rank: 4,
@@ -130,11 +170,19 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
       contentPillars: ['morning systems', 'decision discipline', 'focus routines', 'weekly reviews'],
       assetNeeds: ['habit tracker graphics', 'routine cards', 'desk b-roll prompts', 'template mockups']
     },
-    contentCalendar: [
-      { day: 1, theme: 'Morning system', format: 'Short', hook: 'A wealthy day is usually decided before 9 AM.', cta: 'Save the routine.' },
-      { day: 2, theme: 'Decision discipline', format: 'Carousel', hook: 'Five decisions successful operators make once, not daily.', cta: 'Use this as your rule sheet.' },
-      { day: 3, theme: 'Weekly review', format: 'Short', hook: 'The Sunday review that keeps the week from owning you.', cta: 'Comment weekly for the template.' }
-    ]
+    contentCalendar: buildThirtyDayCalendar({
+      themes: ['Morning system', 'Decision discipline', 'Focus routine', 'Weekly review', 'Energy audit', 'Rule sheet'],
+      formats: ['Short', 'Carousel', 'Short', 'Checklist', 'Short', 'Template'],
+      hooks: [
+        'A wealthy day is usually decided before 9 AM.',
+        'Five decisions successful operators make once, not daily.',
+        'Your focus problem may actually be a system problem.',
+        'The Sunday review that keeps the week from owning you.',
+        'Energy leaks are expensive because they look harmless.',
+        'A rule sheet beats motivation when the week gets loud.'
+      ],
+      ctas: ['Save the routine.', 'Use this as your rule sheet.', 'Comment weekly for the template.', 'Follow for tomorrow’s system.']
+    })
   },
   {
     rank: 5,
@@ -153,10 +201,18 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
       contentPillars: ['manipulation defense', 'boundary scripts', 'social proof literacy', 'ethical persuasion'],
       assetNeeds: ['red flag cards', 'script templates', 'myth/fact overlays', 'safe-language review checklist']
     },
-    contentCalendar: [
-      { day: 1, theme: 'Red flag education', format: 'Short', hook: 'If someone rushes your decision, slow the room down.', cta: 'Save this boundary script.' },
-      { day: 2, theme: 'Self-defense script', format: 'Carousel', hook: 'Three calm lines that stop pressure tactics.', cta: 'Use the script, do not escalate.' },
-      { day: 3, theme: 'Ethical persuasion', format: 'Short', hook: 'Influence is not the problem. Coercion is.', cta: 'Follow for ethical breakdowns.' }
-    ]
+    contentCalendar: buildThirtyDayCalendar({
+      themes: ['Red flag education', 'Self-defense script', 'Ethical persuasion', 'Boundary reset', 'Pressure tactics', 'Myth versus fact'],
+      formats: ['Short', 'Carousel', 'Short', 'Script card', 'Short', 'Checklist'],
+      hooks: [
+        'If someone rushes your decision, slow the room down.',
+        'Three calm lines that stop pressure tactics.',
+        'Influence is not the problem. Coercion is.',
+        'A boundary does not need to sound angry to work.',
+        'This pressure tactic works because it borrows urgency.',
+        'Not every confident person is safe. Watch the pattern.'
+      ],
+      ctas: ['Save this boundary script.', 'Use the script, do not escalate.', 'Follow for ethical breakdowns.', 'Share this with someone who needs a reset.']
+    })
   }
 ];
