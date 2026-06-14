@@ -21,9 +21,20 @@ type AttachmentSummary = {
   size: number;
 };
 
+type GatewayAttempt = {
+  endpoint: 'responses' | 'chat_completions';
+  model: string;
+  ok: boolean;
+  status?: number;
+  error?: string;
+};
+
 function getGatewayConfig() {
+  const primaryModel = process.env.EDEN_AI_MODEL || 'openai/gpt-5.5';
+  const fallbackModel = process.env.EDEN_AI_FALLBACK_MODEL || 'openai/gpt-5.4';
+
   return {
-    model: process.env.EDEN_AI_MODEL || 'openai/gpt-5.5',
+    models: Array.from(new Set([primaryModel, fallbackModel])),
     token: process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN
   };
 }
@@ -63,16 +74,161 @@ function summarizeAttachments(attachments: unknown): string {
   return `\n\nAttached draft files:\n${safeAttachments.map((file) => `- ${file.name} (${file.type}, ${file.size} bytes)`).join('\n')}`;
 }
 
-export async function GET() {
-  const { model, token } = getGatewayConfig();
+function formatTranscript(messages: ChatMessage[]) {
+  const transcript = messages.map((message) => `${message.role.toUpperCase()}: ${message.content}`).join('\n\n');
+  return `${SYSTEM_PROMPT}\n\n${transcript}`;
+}
+
+function extractResponsesText(result: any) {
+  if (typeof result?.output_text === 'string') return result.output_text;
+
+  const text = result?.output
+    ?.flatMap((item: any) => item?.content || [])
+    ?.map((content: any) => content?.text || content?.value || '')
+    ?.filter(Boolean)
+    ?.join('\n');
+
+  return text || '';
+}
+
+function extractGatewayError(result: any) {
+  if (typeof result?.error === 'string') return result.error;
+  if (typeof result?.error?.message === 'string') return result.error.message;
+  if (typeof result?.message === 'string') return result.message;
+  return JSON.stringify(result).slice(0, 600);
+}
+
+async function readJsonSafely(response: Response) {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { raw: text.slice(0, 600) };
+  }
+}
+
+async function tryResponsesApi(token: string, model: string, messages: ChatMessage[], attempts: GatewayAttempt[]) {
+  const response = await fetch('https://ai-gateway.vercel.sh/v1/responses', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model,
+      input: formatTranscript(messages),
+      temperature: 0.4,
+      max_output_tokens: 900
+    })
+  });
+
+  const result = await readJsonSafely(response);
+  attempts.push({ endpoint: 'responses', model, ok: response.ok, status: response.status, error: response.ok ? undefined : extractGatewayError(result) });
+
+  if (!response.ok) return null;
+  return extractResponsesText(result) || 'I did not receive a usable response from the model.';
+}
+
+async function tryChatCompletionsApi(token: string, model: string, messages: ChatMessage[], attempts: GatewayAttempt[]) {
+  const response = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+      temperature: 0.4,
+      max_tokens: 900
+    })
+  });
+
+  const result = await readJsonSafely(response);
+  attempts.push({ endpoint: 'chat_completions', model, ok: response.ok, status: response.status, error: response.ok ? undefined : extractGatewayError(result) });
+
+  if (!response.ok) return null;
+  return result?.choices?.[0]?.message?.content || 'I did not receive a usable response from the model.';
+}
+
+async function callGateway(token: string, models: string[], messages: ChatMessage[]) {
+  const attempts: GatewayAttempt[] = [];
+
+  for (const model of models) {
+    const responsesContent = await tryResponsesApi(token, model, messages, attempts);
+    if (responsesContent) return { content: responsesContent, model, endpoint: 'responses', attempts };
+
+    const chatContent = await tryChatCompletionsApi(token, model, messages, attempts);
+    if (chatContent) return { content: chatContent, model, endpoint: 'chat_completions', attempts };
+  }
+
+  return { content: '', model: models[0], endpoint: 'none', attempts };
+}
+
+function summarizeAttempts(attempts: GatewayAttempt[]) {
+  const failed = attempts.filter((attempt) => !attempt.ok);
+  if (failed.length === 0) return 'Gateway call succeeded.';
+  return failed.map((attempt) => `${attempt.endpoint} ${attempt.model} returned ${attempt.status}: ${attempt.error || 'unknown error'}`).join(' | ');
+}
+
+export async function GET(request: Request) {
+  const { models, token } = getGatewayConfig();
+  const url = new URL(request.url);
+
+  if (url.searchParams.get('selfTest') === '1') {
+    if (!token) {
+      return Response.json(
+        {
+          status: 'missing_gateway_credentials',
+          route: '/api/eden/source-images/chat',
+          gateway: 'vercel-ai-gateway',
+          provider: 'openai-primary',
+          models,
+          diagnostic: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.'
+        },
+        { status: 503 }
+      );
+    }
+
+    const result = await callGateway(token, models, [
+      { role: 'user', content: 'Reply with: Eden AI Gateway self-test ready.' }
+    ]);
+
+    if (!result.content) {
+      return Response.json(
+        {
+          status: 'gateway_request_failed',
+          route: '/api/eden/source-images/chat',
+          gateway: 'vercel-ai-gateway',
+          provider: 'openai-primary',
+          models,
+          attempts: result.attempts,
+          diagnostic: summarizeAttempts(result.attempts)
+        },
+        { status: result.attempts.at(-1)?.status || 502 }
+      );
+    }
+
+    return Response.json({
+      status: 'self_test_ready',
+      route: '/api/eden/source-images/chat',
+      gateway: 'vercel-ai-gateway',
+      provider: 'openai-primary',
+      model: result.model,
+      endpoint: result.endpoint,
+      content: result.content,
+      attempts: result.attempts
+    });
+  }
 
   return Response.json({
     status: token ? 'ready' : 'missing_gateway_credentials',
     route: '/api/eden/source-images/chat',
     gateway: 'vercel-ai-gateway',
     provider: 'openai-primary',
-    model,
-    accepts: ['POST application/json'],
+    models,
+    accepts: ['POST application/json', 'GET ?selfTest=1'],
     supportsAttachmentMetadata: true,
     storesAttachmentBinaries: false,
     requiredEnvironment: ['AI_GATEWAY_API_KEY or VERCEL_OIDC_TOKEN']
@@ -84,14 +240,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const userMessages = normalizeMessages(body.messages);
     const attachmentSummary = summarizeAttachments(body.attachments);
-    const { model, token } = getGatewayConfig();
+    const { models, token } = getGatewayConfig();
 
     if (!token) {
       return Response.json(
         {
           error: 'AI Gateway is not configured for this deployment.',
-          setup: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.',
-          model
+          diagnostic: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.',
+          models
         },
         { status: 503 }
       );
@@ -105,46 +261,28 @@ export async function POST(request: Request) {
       };
     }
 
-    const gatewayResponse = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...userMessages],
-        temperature: 0.4,
-        max_tokens: 900,
-        metadata: {
-          system: 'eden-source-images',
-          feature: 'chat-control-plane',
-          provider: 'openai-primary'
-        }
-      })
-    });
+    const result = await callGateway(token, models, userMessages);
 
-    const result = await gatewayResponse.json();
-
-    if (!gatewayResponse.ok) {
+    if (!result.content) {
       return Response.json(
         {
           error: 'AI Gateway request failed.',
-          status: gatewayResponse.status,
-          details: result
+          diagnostic: summarizeAttempts(result.attempts),
+          attempts: result.attempts,
+          models
         },
-        { status: gatewayResponse.status }
+        { status: result.attempts.at(-1)?.status || 502 }
       );
     }
 
-    const content = result?.choices?.[0]?.message?.content || 'I did not receive a usable response from the model.';
-
     return Response.json({
       role: 'assistant',
-      content,
-      model,
+      content: result.content,
+      model: result.model,
+      endpoint: result.endpoint,
       gateway: 'vercel-ai-gateway',
-      provider: 'openai-primary'
+      provider: 'openai-primary',
+      attempts: result.attempts
     });
   } catch (error) {
     return Response.json(
