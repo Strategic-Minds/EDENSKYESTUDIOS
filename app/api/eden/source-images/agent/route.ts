@@ -48,6 +48,23 @@ const edenAgent = {
   ],
   creatorCapabilities: [
     {
+      id: 'prompt_stylist_retry_ladder',
+      label: 'Prompt Stylist, presets, retry ladder, and generated asset records',
+      status: 'green',
+      currentMode: 'v0_style_editor_generation_workflow',
+      includes: [
+        'raw_operator_request_visible',
+        'eden_production_prompt_visible',
+        'style_presets',
+        'glamour_fashion_realism_identity_lighting_body_framing_controls',
+        'automatic_retry_ladder',
+        'drafts_needs_review_approved_rejected_drive_ready_folders',
+        'filename_prompt_model_status_qa_drive_target_approval_record',
+        'why_blocked_feedback',
+        'one_click_safe_rewrite'
+      ]
+    },
+    {
       id: 'ultra_realistic_images',
       label: 'Ultra-realistic image creation and editing',
       status: 'yellow',
@@ -60,7 +77,7 @@ const edenAgent = {
       label: 'Editorial Glamour image mode',
       status: 'green',
       currentMode: 'platform_safe_adult_inspired_guardrail_mode',
-      allows: ['21_plus_synthetic_avatar', 'sensual_high_fashion', 'lingerie', 'swimwear', 'implied_covered_silhouettes', 'luxury_editorial_pose'],
+      allows: ['21_plus_synthetic_avatar', 'sensual_high_fashion', 'couture_bodysuit', 'swimwear_inspired', 'implied_covered_silhouettes', 'luxury_editorial_pose'],
       blocks: ['nudity', 'explicit_anatomy', 'sexual_acts', 'nudify_or_undress_edits', 'minors_or_youth_terms', 'real_person_sexualization'],
       route: '/api/eden/source-images/generate-image'
     },
@@ -109,12 +126,12 @@ const edenAgent = {
     red: 'Blocked, unsafe, missing credentials, or not allowed for live mutation.'
   },
   nextImplementationTargets: [
-    'Persist module order and autonomy preferences per operator.',
+    'Persist generated asset records in Supabase after schema approval.',
     'Add binary upload storage and Drive file id reconciliation.',
     'Add image edit endpoint after provider selection.',
     'Add realtime video chat provider selection and approval-gated session creation.',
     'Add repo patch queue for v0-style website/logo generation packets.',
-    'Add Supabase tables for generated asset records, QA scores, approvals, and receipts.'
+    'Add receipt logging for generated assets, QA scores, approvals, and Drive-ready handoffs.'
   ]
 };
 
