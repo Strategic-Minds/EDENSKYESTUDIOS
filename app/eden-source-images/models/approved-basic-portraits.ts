@@ -44,16 +44,16 @@ export const approvedBasicPortraits: ApprovedBasicPortrait[] = [
   { index: 11, name: 'Kayla Brooks', fileName: '11-eden-basic-kayla-brooks.png', driveFileId: '1_nkrDWfppuv1m-be9nDb6NUp1c8JHeQJ', dimensions: '1122x1534', status: 'approved' },
   { index: 12, name: 'Raven Hart', fileName: '12-eden-basic-raven-hart.png', driveFileId: '1A_nEIyn6GP7-fY43H2cdSYIbO-hpFwkD', dimensions: '1122x1534', status: 'approved' },
   { index: 13, name: 'Alexa Monroe', fileName: '13-eden-basic-alexa-monroe.png', driveFileId: '1k1dLrK9BrRvFWlsykAKvkxsJDpLnY7LO', dimensions: '1122x1534', status: 'approved' },
-  { index: 14, name: 'Serena Vale', fileName: '01-eden-basic-female-serena-vale.png', driveFileId: '1RlQuVZxSesO4I-X-qUJvJzjLdEDzTiJ3', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 15, name: 'Ruby Monroe', fileName: '02-eden-basic-female-ruby-monroe.png', driveFileId: '1JlM0wfbyN_QDOCh5S4UgLfObQ2gSWKh7', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 16, name: 'Brooke Harlow', fileName: '03-eden-basic-female-brooke-harlow.png', driveFileId: '1JFz9TZ0PyVPnY-yON3A_KOInZhJpleif', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 17, name: 'Claire Sterling', fileName: '04-eden-basic-female-claire-sterling.png', driveFileId: '1TJvi_Odjb-e6PTlTbCDopfaXjUtpiV8i', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 18, name: 'Naomi Banks', fileName: '05-eden-basic-female-naomi-banks.png', driveFileId: '1IJGWOTnQFym4a0nMU9DBSDxHYOYSXTRQ', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 19, name: 'Imani Cross', fileName: '06-eden-basic-female-imani-cross.png', driveFileId: '1plSBRy30Du6Y-y-d0J7P5P6omnjmEx68', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 20, name: 'Violet Reece', fileName: '07-eden-basic-female-violet-reece.png', driveFileId: '127xMeJFz8ucy9YI4fTp_9TpUgu2t5690', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 21, name: 'Lila Santos', fileName: '08-eden-basic-female-lila-santos.png', driveFileId: '1l1Iov1jHZdav8Bxy-HtT_8v29Wlprn2Z', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 22, name: 'Sasha Lane', fileName: '09-eden-basic-female-sasha-lane.png', driveFileId: '1v47ookTkib_ERFtqXmpsE3CbPAaea9Pk', dimensions: '1122x1534', status: 'pending-final-review' },
-  { index: 23, name: 'Mara Quinn', fileName: '10-eden-basic-female-mara-quinn.png', driveFileId: '12-vtwBYjKoDogehpL15FyltD7HTPHPP7', dimensions: '1122x1534', status: 'pending-final-review' }
+  { index: 14, name: 'Serena Vale', fileName: '01-eden-basic-female-serena-vale.png', driveFileId: '1RlQuVZxSesO4I-X-qUJvJzjLdEDzTiJ3', dimensions: '1122x1534', status: 'approved' },
+  { index: 15, name: 'Ruby Monroe', fileName: '02-eden-basic-female-ruby-monroe.png', driveFileId: '1JlM0wfbyN_QDOCh5S4UgLfObQ2gSWKh7', dimensions: '1122x1534', status: 'approved' },
+  { index: 16, name: 'Brooke Harlow', fileName: '03-eden-basic-female-brooke-harlow.png', driveFileId: '1JFz9TZ0PyVPnY-yON3A_KOInZhJpleif', dimensions: '1122x1534', status: 'approved' },
+  { index: 17, name: 'Claire Sterling', fileName: '04-eden-basic-female-claire-sterling.png', driveFileId: '1TJvi_Odjb-e6PTlTbCDopfaXjUtpiV8i', dimensions: '1122x1534', status: 'approved' },
+  { index: 18, name: 'Naomi Banks', fileName: '05-eden-basic-female-naomi-banks.png', driveFileId: '1IJGWOTnQFym4a0nMU9DBSDxHYOYSXTRQ', dimensions: '1122x1534', status: 'approved' },
+  { index: 19, name: 'Imani Cross', fileName: '06-eden-basic-female-imani-cross.png', driveFileId: '1plSBRy30Du6Y-y-d0J7P5P6omnjmEx68', dimensions: '1122x1534', status: 'approved' },
+  { index: 20, name: 'Violet Reece', fileName: '07-eden-basic-female-violet-reece.png', driveFileId: '127xMeJFz8ucy9YI4fTp_9TpUgu2t5690', dimensions: '1122x1534', status: 'approved' },
+  { index: 21, name: 'Lila Santos', fileName: '08-eden-basic-female-lila-santos.png', driveFileId: '1l1Iov1jHZdav8Bxy-HtT_8v29Wlprn2Z', dimensions: '1122x1534', status: 'approved' },
+  { index: 22, name: 'Sasha Lane', fileName: '09-eden-basic-female-sasha-lane.png', driveFileId: '1v47ookTkib_ERFtqXmpsE3CbPAaea9Pk', dimensions: '1122x1534', status: 'approved' },
+  { index: 23, name: 'Mara Quinn', fileName: '10-eden-basic-female-mara-quinn.png', driveFileId: '12-vtwBYjKoDogehpL15FyltD7HTPHPP7', dimensions: '1122x1534', status: 'approved' }
 ];
 
 export function driveThumbnailUrl(fileId: string) {
