@@ -8,13 +8,14 @@
 <link rel="canonical" href="{{ canonical_url }}">
 {{ content_for_header }}
 {{ 'eden-theme.css' | asset_url | stylesheet_tag }}
+{{ 'eden-enterprise.css' | asset_url | stylesheet_tag }}
 </head>
 <body class="eden-theme">
 <a class="eden-skip" href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
 <header class="eden-header">
 <a class="eden-logo" href="{{ routes.root_url }}"><span class="eden-logo-mark">ES</span><span>Eden Skye Studios</span></a>
-<nav class="eden-nav" aria-label="Main navigation"><a href="{{ routes.root_url }}">Home</a><a href="/collections/ladies">Ladies</a><a href="/collections/gentlemen">Gentlemen</a><a href="/collections/faceless-content">Faceless</a><a href="/collections/black-card">Black Card</a></nav>
-<a class="eden-header-cta" href="/collections/black-card">Black Card</a>
+<nav class="eden-nav" aria-label="Main navigation"><a href="{{ routes.root_url }}">Home</a><a href="/collections/ladies">Ladies</a><a href="/collections/gentlemen">Gentlemen</a><a href="/pages/model-portfolio">Portfolio</a><a href="/collections/faceless-content">Faceless</a><a href="/pages/payment">Payment</a><a href="/collections/black-card">Black Card</a></nav>
+<a class="eden-header-cta" href="/pages/payment">Black Card</a>
 </header>
 <main id="MainContent" role="main">{{ content_for_layout }}</main>
 <footer class="eden-footer"><div><strong>Eden Skye Studios</strong><p>AI model studio, Black Card content engine, and Shopify-ready creative commerce.</p></div><div class="eden-footer-links"><a href="/pages/contact">Contact</a><a href="/pages/terms">Terms</a><a href="/pages/privacy">Privacy</a></div></footer>
