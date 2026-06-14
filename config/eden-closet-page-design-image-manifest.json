@@ -1,0 +1,81 @@
+{
+  "source_board": "user_files/01-ChatGPT-Image-Jun-11-2026-12_20_42-AM.png",
+  "source_dimensions": {
+    "width": 1536,
+    "height": 1024
+  },
+  "purpose": "Individual Eden Closet PWA page design references extracted from approved page board. These are UI references, not model/source assets.",
+  "canonical_rule": "Use these as page design targets. Do not render the whole collage as the app. Do not use these cropped page images as final model/source assets.",
+  "pages": [
+    {
+      "slug": "01-eden-closet-home",
+      "title": "Eden Closet home / exclusive access",
+      "routeTarget": "/closet-v2",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-01-home.png?v=1781431915",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "02-select-your-model",
+      "title": "Model selector grid",
+      "routeTarget": "/closet-v2/models",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-02-select-model.png?v=1781431891",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "03-model-profile-alexis-voss",
+      "title": "Alexis Voss model profile",
+      "routeTarget": "/closet-v2/models/alexis-voss",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-03-model-profile.png?v=1781431900",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "04-virtual-closet-outfit-selector",
+      "title": "Virtual closet outfit selector",
+      "routeTarget": "/closet-v2/closet",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-04-virtual-closet.png?v=1781431908",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "05-environment-selector",
+      "title": "Environment selector",
+      "routeTarget": "/closet-v2/environments",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-05-environments.png?v=1781431923",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "06-full-body-360-viewer",
+      "title": "Full body 360 viewer",
+      "routeTarget": "/closet-v2/viewer",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-06-360-viewer.png?v=1781431957",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "07-ai-chat",
+      "title": "AI chat conversation",
+      "routeTarget": "/closet-v2/chat",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-07-ai-chat.png?v=1781431942",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "08-ai-video-chat",
+      "title": "AI video chat room",
+      "routeTarget": "/closet-v2/video",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-08-ai-video-chat.png?v=1781431950",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "09-member-dashboard",
+      "title": "Black Card member dashboard",
+      "routeTarget": "/closet-v2/dashboard",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-09-dashboard.png?v=1781431973",
+      "status": "approved_page_design_reference"
+    },
+    {
+      "slug": "10-site-footer",
+      "title": "Shared site footer",
+      "routeTarget": "shared-footer",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-page-10-footer.png?v=1781431964",
+      "status": "approved_page_design_reference"
+    }
+  ]
+}
