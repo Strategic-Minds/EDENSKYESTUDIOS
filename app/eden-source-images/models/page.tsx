@@ -11,6 +11,7 @@ import {
 } from '../admin-data';
 import { additionalFemalePortraitBatch, approvedBasicPortraitBatch, approvedBasicPortraits, driveThumbnailUrl } from './approved-basic-portraits';
 import { approvedFacelessAccounts, approvedFacelessSourceBatch } from './approved-faceless-roster';
+import { approvedInternationalModels, approvedInternationalRosterBatch, internationalThumbnailUrl } from './approved-international-roster';
 import { approvedMaleModels, approvedMaleRosterBatch } from './approved-male-roster';
 import { GroupCard, ModelCard } from './model-cards';
 
@@ -23,7 +24,7 @@ export default function EdenModelInventoryPage() {
   const summary = modelSummary();
   const sourceSummary = sourceManifestSummary();
   const missingSources = Math.max(0, summary.sourceImagesNeeded - summary.sourceImagesReady);
-  const loadedRosterRecords = approvedBasicPortraitBatch.count + approvedMaleRosterBatch.count + approvedFacelessSourceBatch.count;
+  const loadedRosterRecords = approvedBasicPortraitBatch.count + approvedInternationalRosterBatch.count + approvedMaleRosterBatch.count + approvedFacelessSourceBatch.count;
 
   return (
     <main className={styles.shell}>
@@ -31,7 +32,7 @@ export default function EdenModelInventoryPage() {
         <div>
           <p>Model Inventory</p>
           <h1>Manifest Roster</h1>
-          <span>Approved portraits, verified male profiles, and faceless account source packs are loaded from Drive. Production manifest slots stay gated until exact filenames, QA, and approval states are clean.</span>
+          <span>Approved female, international, male, and faceless source records are loaded from Drive. Production manifest slots stay gated until exact filenames, QA, and approval states are clean.</span>
         </div>
         <div className={styles.actions}>
           <Link className={styles.button} href="/eden-source-images">Dashboard</Link>
@@ -42,6 +43,7 @@ export default function EdenModelInventoryPage() {
       <section className={styles.summary} aria-label="Model inventory summary">
         <div className={styles.metric}><b>{loadedRosterRecords}</b><span>Roster records loaded</span></div>
         <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Female/basic portraits</span></div>
+        <div className={styles.metric}><b>{approvedInternationalRosterBatch.count}</b><span>International sources</span></div>
         <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male profiles verified</span></div>
         <div className={styles.metric}><b>{approvedFacelessSourceBatch.count}</b><span>Faceless accounts sourced</span></div>
         <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified production slots</span></div>
@@ -52,10 +54,10 @@ export default function EdenModelInventoryPage() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div>
-            <p>green / yellow</p>
+            <p>green</p>
             <h2>Female Basic Portrait Roster</h2>
           </div>
-          <span className={styles.sourceWarning}><b>{approvedBasicPortraitBatch.title}</b><span>These {approvedBasicPortraitBatch.count} Drive-backed portrait files are loaded for the basic female/model inventory. The newest {additionalFemalePortraitBatch.count} are yellow until final operator visual review is complete.</span></span>
+          <span className={styles.sourceWarning}><b>{approvedBasicPortraitBatch.title}</b><span>These {approvedBasicPortraitBatch.count} Drive-backed portrait files are approved for the basic female/model inventory. The latest {additionalFemalePortraitBatch.count} were promoted to green by operator approval.</span></span>
         </div>
         <div className={styles.manifestEmpty}>
           <b>Root folder</b>
@@ -76,10 +78,46 @@ export default function EdenModelInventoryPage() {
             <article key={portrait.driveFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
               <img src={driveThumbnailUrl(portrait.driveFileId)} alt={`${portrait.name} basic portrait`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block', background: '#050505' }} />
               <div style={{ display: 'grid', gap: 8, padding: 12 }}>
-                <span className={`${styles.badge} ${portrait.status === 'approved' ? styles.green : styles.yellow}`}>{portrait.status === 'approved' ? 'approved' : 'final review'}</span>
+                <span className={`${styles.badge} ${styles.green}`}>approved</span>
                 <b style={{ color: '#fff', fontSize: 16 }}>{portrait.index.toString().padStart(2, '0')} - {portrait.name}</b>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{portrait.fileName}</span>
                 <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Drive ID: {portrait.driveFileId}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <p>green</p>
+            <h2>International Model Sources</h2>
+          </div>
+          <span className={styles.sourceWarning}><b>{approvedInternationalRosterBatch.title}</b><span>{approvedInternationalRosterBatch.count} approved Drive-backed international source portraits. {approvedInternationalRosterBatch.governanceNote}</span></span>
+        </div>
+        <div className={styles.manifestEmpty}>
+          <b>Root folder</b>
+          <span>{approvedInternationalRosterBatch.rootFolderId}</span>
+          <b>Source folder</b>
+          <span>{approvedInternationalRosterBatch.sourceFolderId}</span>
+          <b>Manifest</b>
+          <span>{approvedInternationalRosterBatch.manifestFileId}</span>
+          <b>Contact sheet</b>
+          <span>{approvedInternationalRosterBatch.contactSheetFileId}</span>
+          <b>Dimensions</b>
+          <span>{approvedInternationalRosterBatch.dimensions}</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(188px, 1fr))', gap: 16, marginTop: 18 }}>
+          {approvedInternationalModels.map((model) => (
+            <article key={model.driveFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
+              <img src={internationalThumbnailUrl(model.driveFileId)} alt={`${model.name} international source portrait`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block', background: '#050505' }} />
+              <div style={{ display: 'grid', gap: 8, padding: 12 }}>
+                <span className={`${styles.badge} ${styles.green}`}>approved</span>
+                <b style={{ color: '#fff', fontSize: 16 }}>{model.index.toString().padStart(2, '0')} - {model.name}</b>
+                <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>Age {model.age} - {model.market}</span>
+                <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.fileName}</span>
+                <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Drive ID: {model.driveFileId}</span>
               </div>
             </article>
           ))}
@@ -197,7 +235,7 @@ export default function EdenModelInventoryPage() {
             <p>Production manifest model</p>
             <h2>Source-image readiness</h2>
           </div>
-          <span className={styles.sourceWarning}><b>X means action needed.</b><span>Only manifest-backed production records are shown here. The approved basic portraits above are inventory references, not production-slot replacements.</span></span>
+          <span className={styles.sourceWarning}><b>X means action needed.</b><span>Only manifest-backed production records are shown here. The approved rosters above are inventory references, not production-slot replacements.</span></span>
         </div>
         <div className={styles.modelGrid}>
           {models.map((model) => <ModelCard model={model} key={model.id} />)}
