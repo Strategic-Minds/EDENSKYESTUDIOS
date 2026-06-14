@@ -21,7 +21,8 @@ assert.match(manifest.sourceTruth.pwaReferenceBoard.rule, /Do not crop/);
 assert.match(data, /eden-closet-neon-walkin-approved-bg\.png/);
 assert.match(data, /black_card_required/);
 assert.match(data, /layout_reference_only/);
-assert.doesNotMatch(data, /crop/i);
+assert.match(data, /Do not crop this board/);
+assert.doesNotMatch(data, /crop this board into model or UI assets; use it as a final asset/i);
 
 for (const [name, source] of Object.entries({ closetHome, profile, viewer, chat, video })) {
   assert.match(source, /approvedClosetBackground|closetAccess|primaryClosetModel/, `${name} must use the Closet source truth`);
