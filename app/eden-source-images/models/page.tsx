@@ -10,6 +10,7 @@ import {
   sourceManifestSummary
 } from '../admin-data';
 import { approvedBasicPortraitBatch, approvedBasicPortraits, driveThumbnailUrl } from './approved-basic-portraits';
+import { approvedFacelessAccounts, approvedFacelessSourceBatch } from './approved-faceless-roster';
 import { approvedMaleModels, approvedMaleRosterBatch } from './approved-male-roster';
 import { GroupCard, ModelCard } from './model-cards';
 
@@ -22,7 +23,7 @@ export default function EdenModelInventoryPage() {
   const summary = modelSummary();
   const sourceSummary = sourceManifestSummary();
   const missingSources = Math.max(0, summary.sourceImagesNeeded - summary.sourceImagesReady);
-  const loadedRosterRecords = approvedBasicPortraitBatch.count + approvedMaleRosterBatch.count;
+  const loadedRosterRecords = approvedBasicPortraitBatch.count + approvedMaleRosterBatch.count + approvedFacelessSourceBatch.count;
 
   return (
     <main className={styles.shell}>
@@ -30,7 +31,7 @@ export default function EdenModelInventoryPage() {
         <div>
           <p>Model Inventory</p>
           <h1>Manifest Roster</h1>
-          <span>Approved basic portraits and verified male profile records are loaded from Drive. Production manifest slots stay gated until exact filenames, QA, and approval states are clean.</span>
+          <span>Approved portraits, verified male profiles, and faceless account source packs are loaded from Drive. Production manifest slots stay gated until exact filenames, QA, and approval states are clean.</span>
         </div>
         <div className={styles.actions}>
           <Link className={styles.button} href="/eden-source-images">Dashboard</Link>
@@ -42,6 +43,7 @@ export default function EdenModelInventoryPage() {
         <div className={styles.metric}><b>{loadedRosterRecords}</b><span>Roster records loaded</span></div>
         <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Approved basic portraits</span></div>
         <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male profiles verified</span></div>
+        <div className={styles.metric}><b>{approvedFacelessSourceBatch.count}</b><span>Faceless accounts sourced</span></div>
         <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified production slots</span></div>
         <div className={styles.metric}><b>{missingSources}</b><span>Production images needed</span></div>
         <div className={styles.metric}><b>{sourceSummary.needsReview}</b><span>Need approval cleanup</span></div>
@@ -110,6 +112,43 @@ export default function EdenModelInventoryPage() {
                 <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>Age {model.age} - {model.archetype}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.notes}</span>
                 <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Text ID: {model.textFileId}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <p>yellow</p>
+            <h2>Faceless Account Source Pack</h2>
+          </div>
+          <span className={styles.sourceWarning}><b>{approvedFacelessSourceBatch.title}</b><span>{approvedFacelessSourceBatch.sourceStatus}</span></span>
+        </div>
+        <div className={styles.manifestEmpty}>
+          <b>Root folder</b>
+          <span>{approvedFacelessSourceBatch.rootFolderId}</span>
+          <b>Pack folder</b>
+          <span>{approvedFacelessSourceBatch.packFolderId}</span>
+          <b>Master index</b>
+          <span>{approvedFacelessSourceBatch.masterIndexFileId}</span>
+          <b>30-day proof loop</b>
+          <span>{approvedFacelessSourceBatch.validationThreshold}</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginTop: 18 }}>
+          {approvedFacelessAccounts.map((account) => (
+            <article key={account.sourceFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
+              <div style={{ display: 'grid', placeItems: 'center', minHeight: 160, background: 'linear-gradient(135deg, rgba(255,20,147,0.16), rgba(255,255,255,0.02))', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: 16, textAlign: 'center' }}>
+                <span className={`${styles.badge} ${styles.yellow}`}>brand kit pending</span>
+              </div>
+              <div style={{ display: 'grid', gap: 8, padding: 12 }}>
+                <span className={`${styles.badge} ${styles.yellow}`}>source verified</span>
+                <b style={{ color: '#fff', fontSize: 16 }}>{account.rank.toString().padStart(2, '0')} - {account.concept}</b>
+                <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>{account.boardTheme} - {account.riskLevel}</span>
+                <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{account.platformFit}</span>
+                <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{account.monetizationPath}</span>
+                <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>{account.sourceFileName} - {account.sourceFileId}</span>
               </div>
             </article>
           ))}
