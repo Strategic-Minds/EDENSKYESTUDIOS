@@ -33,6 +33,26 @@ const controlPlane = {
     supportsAttachmentMetadata: true,
     storesAttachmentBinaries: false
   },
+  imageStackIngest: {
+    status: 'green',
+    mode: 'receipt_only_preview',
+    route: '/api/eden/source-images/ingest-generated',
+    imageStackRoute: '/eden-source-images/image-stack',
+    records: [
+      'filename',
+      'targetFilename',
+      'manifestSlot',
+      'qaScore',
+      'approvalColor',
+      'approvalFolder',
+      'driveFileId when available',
+      'supabaseReceiptId',
+      'githubNotation'
+    ],
+    browserPersistence: 'localStorage eden-image-stack-ingest-records-v1',
+    liveWritesPerformed: false,
+    liveWriteBlocker: 'Drive/Supabase/GitHub writes require verified connector approval and rollback receipts.'
+  },
   approvalLegend,
   approvalQueue: [
     {
@@ -46,6 +66,12 @@ const controlPlane = {
       route: '/api/eden/source-images/control-plane'
     },
     {
+      label: 'Image stack ingest API',
+      status: 'green',
+      route: '/api/eden/source-images/ingest-generated',
+      reason: 'Receipt-only ingest route records filename, manifest slot, QA, approval color, Drive ID, Supabase receipt, and GitHub notation.'
+    },
+    {
       label: 'AI Gateway chat',
       status: 'yellow',
       reason: 'Diagnostics added; self-test route identifies credential, endpoint, or provider/model failures.'
@@ -56,9 +82,9 @@ const controlPlane = {
       reason: 'Need filename, QA score, Drive file ID, and approval status matching.'
     },
     {
-      label: 'SOURCE_IMAGE_APPROVAL_INBOX',
-      status: 'red',
-      reason: 'Approval phrase received, but folder creation is blocked because GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are not configured in the Drive executor.'
+      label: 'Admin Drive package',
+      status: 'green',
+      reason: 'Package and unzipped files verified in 14_ADMIN_APPROVAL_CONTROL_PLANE.'
     },
     {
       label: 'Public publishing and production writes',
@@ -75,10 +101,11 @@ const controlPlane = {
     imageVideoFactoryFolderId: '1lu7fo915TDlJPT4U3VZGexcWBJ9dpi2b',
     stockImageAssetsFolderId: '1V8MNsOdvLNSd04JQrnyvH1ECnj3nOF8P',
     approvalControlPlaneFolderId: '1EMnjZKTBT4wlO0ZgR5F6tXDKV1dvK76x',
+    verifiedAdminPackageZipFileId: '104GT_RN95yIEeUybLXLd7Q2wFsk6lYjC',
+    verifiedAdminPackageUnzippedFolderId: '1vDvg27JrMUghw_-kwlP4yCvdHRU2MH98',
+    verifiedAdminManifestFileId: '1ExzMzWaW1IqrGDk5n1_i0FI789-7N3JB',
     requestedApprovalInboxName: 'SOURCE_IMAGE_APPROVAL_INBOX',
-    requestedApprovalInboxStatus: 'blocked_missing_google_service_account_secrets',
-    approvalPhraseReceived: 'APPROVE DRIVE FOLDER CREATE',
-    executionBlocker: 'GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY must be configured.',
+    requestedApprovalInboxStatus: 'using_verified_admin_control_plane_folder',
     temporaryApprovalLaneFolderId: '1EMnjZKTBT4wlO0ZgR5F6tXDKV1dvK76x',
     tempFolderId: '1kokL57oAzvL40ee6nC3v1AA8hinarWJe',
     quarantineFolderId: '1sKBf_icBG8X_xKCm8QKOsbMhMxSZaOP2'
@@ -145,6 +172,7 @@ const controlPlane = {
     'chat_with_eden_ai_gateway',
     'attach_file_metadata_to_chat',
     'generate_draft_image',
+    'record_image_ingest_receipt',
     'attach_binary_to_manifest_row',
     'record_qa_score',
     'route_pending_admin_review',
