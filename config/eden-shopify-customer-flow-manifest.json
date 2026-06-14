@@ -1,0 +1,67 @@
+{
+  "system": "Eden Skye Studios digital media and content creator storefront",
+  "branch": "eden/shopify-theme-launch-20260612",
+  "storefront_role": "Shopify public store, checkout, customer login, Black Card commerce",
+  "pwa_role": "Protected member app, Eden's Closet, hidden admin approval studio, AI chat, Drive/media review",
+  "primary_user_flow": [
+    {"step": 1, "action": "Visitor lands on homepage", "route": "/", "required_state": "public"},
+    {"step": 2, "action": "Visitor chooses Ladies, Gentlemen, or Faceless", "routes": ["/collections/ladies", "/collections/gentlemen", "/collections/faceless-content"], "required_state": "public"},
+    {"step": 3, "action": "Visitor clicks a model image or button", "result": "Open corresponding individual model portfolio page", "required_state": "public"},
+    {"step": 4, "action": "Visitor reviews model portfolio", "result": "Payment CTA appears at bottom", "required_state": "public"},
+    {"step": 5, "action": "Visitor clicks payment CTA", "route": "/pages/payment", "required_state": "public"},
+    {"step": 6, "action": "Visitor buys Black Card through Shopify checkout", "route": "Shopify checkout/product payment link", "required_state": "protected_action_requires_final_payment_activation"},
+    {"step": 7, "action": "Paid member logs in", "routes": ["/account/login", "/pages/edens-closet"], "required_state": "paid_member"},
+    {"step": 8, "action": "Paid member accesses Eden's Closet", "route": "/pages/edens-closet or PWA member route", "required_state": "black_card_entitlement"}
+  ],
+  "public_routes": {
+    "home": "/",
+    "ladies": "/collections/ladies",
+    "gentlemen": "/collections/gentlemen",
+    "faceless": "/collections/faceless-content",
+    "portfolio_hub": "/pages/model-portfolio",
+    "payment": "/pages/payment",
+    "login": "/account/login",
+    "signup": "/account/register"
+  },
+  "required_model_pages": [
+    {"name":"Alexis Voss","handle":"model-alexis-voss","route":"/pages/model-alexis-voss","templateSuffix":"model-profile"},
+    {"name":"Luna Moretti","handle":"model-luna-moretti","route":"/pages/model-luna-moretti","templateSuffix":"model-profile"},
+    {"name":"Sienna Cole","handle":"model-sienna-cole","route":"/pages/model-sienna-cole","templateSuffix":"model-profile"},
+    {"name":"Eden Skye","handle":"model-eden-skye","route":"/pages/model-eden-skye","templateSuffix":"model-profile"},
+    {"name":"Mila Stone","handle":"model-mila-stone","route":"/pages/model-mila-stone","templateSuffix":"model-profile"},
+    {"name":"Aria Noir","handle":"model-aria-noir","route":"/pages/model-aria-noir","templateSuffix":"model-profile"},
+    {"name":"Nova Lux","handle":"model-nova-lux","route":"/pages/model-nova-lux","templateSuffix":"model-profile"},
+    {"name":"Valentina Rose","handle":"model-valentina-rose","route":"/pages/model-valentina-rose","templateSuffix":"model-profile"},
+    {"name":"Serena Vail","handle":"model-serena-vail","route":"/pages/model-serena-vail","templateSuffix":"model-profile"},
+    {"name":"Isla Monroe","handle":"model-isla-monroe","route":"/pages/model-isla-monroe","templateSuffix":"model-profile"},
+    {"name":"Dante Cross","handle":"model-dante-cross","route":"/pages/model-dante-cross","templateSuffix":"model-profile"},
+    {"name":"Jax Rhodes","handle":"model-jax-rhodes","route":"/pages/model-jax-rhodes","templateSuffix":"model-profile"},
+    {"name":"Roman Kade","handle":"model-roman-kade","route":"/pages/model-roman-kade","templateSuffix":"model-profile"},
+    {"name":"Kai Voss","handle":"model-kai-voss","route":"/pages/model-kai-voss","templateSuffix":"model-profile"},
+    {"name":"Marco Slate","handle":"model-marco-slate","route":"/pages/model-marco-slate","templateSuffix":"model-profile"}
+  ],
+  "required_member_pages": [
+    {"title":"Eden's Closet","handle":"edens-closet","route":"/pages/edens-closet","templateSuffix":"edens-closet","gate":"black_card_entitlement"}
+  ],
+  "hidden_admin": {
+    "title": "Eden Skye Admin",
+    "handle": "eden-admin",
+    "route": "/pages/eden-admin",
+    "public_navigation": false,
+    "required_final_state": "Supabase-authenticated PWA admin with AI chat and Drive/media approval studio"
+  },
+  "copy_rules": [
+    "Public storefront must not read like an admin dashboard.",
+    "Do not mention internal automation, Xyla, GPT pipeline, manifests, gates, or approval workflows on public customer pages.",
+    "Admin and approval language belongs only on the hidden admin/PWA control plane.",
+    "Every public model card must link to that model's individual profile page.",
+    "Every model profile must include a bottom payment CTA to /pages/payment.",
+    "Payment must lead to Black Card checkout, then Eden's Closet access after entitlement is granted."
+  ],
+  "protected_actions": {
+    "live_payment_activation": "requires explicit Jeremy approval",
+    "live_product_creation": "requires explicit Jeremy approval",
+    "customer_entitlement_webhook": "requires implementation and test verification",
+    "production_admin_auth": "must be Supabase-authenticated before sensitive operations"
+  }
+}
