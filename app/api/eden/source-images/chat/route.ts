@@ -21,6 +21,13 @@ type AttachmentSummary = {
   size: number;
 };
 
+function getGatewayConfig() {
+  return {
+    model: process.env.EDEN_AI_MODEL || 'openai/gpt-5.5',
+    token: process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN
+  };
+}
+
 function normalizeMessages(messages: unknown): ChatMessage[] {
   if (!Array.isArray(messages)) return [];
 
@@ -56,13 +63,28 @@ function summarizeAttachments(attachments: unknown): string {
   return `\n\nAttached draft files:\n${safeAttachments.map((file) => `- ${file.name} (${file.type}, ${file.size} bytes)`).join('\n')}`;
 }
 
+export async function GET() {
+  const { model, token } = getGatewayConfig();
+
+  return Response.json({
+    status: token ? 'ready' : 'missing_gateway_credentials',
+    route: '/api/eden/source-images/chat',
+    gateway: 'vercel-ai-gateway',
+    provider: 'openai-primary',
+    model,
+    accepts: ['POST application/json'],
+    supportsAttachmentMetadata: true,
+    storesAttachmentBinaries: false,
+    requiredEnvironment: ['AI_GATEWAY_API_KEY or VERCEL_OIDC_TOKEN']
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const userMessages = normalizeMessages(body.messages);
     const attachmentSummary = summarizeAttachments(body.attachments);
-    const model = process.env.EDEN_AI_MODEL || 'openai/gpt-5.5';
-    const token = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
+    const { model, token } = getGatewayConfig();
 
     if (!token) {
       return Response.json(
