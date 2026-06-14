@@ -1,65 +1,64 @@
 import { Header } from "../components";
-import { buildDraftPaymentSnapshot } from "../../lib/commerce/black-card.mjs";
+import { buildBlackCardPaymentSnapshot } from "../../lib/commerce/black-card.mjs";
 
-const snapshot = buildDraftPaymentSnapshot();
+const snapshot = buildBlackCardPaymentSnapshot();
 
-const checklist = [
-  "Draft/test mode only",
-  "No live Shopify product mutation",
-  "No live payment activation",
-  "No public release or deploy action",
-  "Success handoff stays gated behind test entitlement sync"
+const memberFlow = [
+  "Choose your model or media experience.",
+  "Join through the secure Shopify Black Card payment page.",
+  "Return to Eden Skye and open your member dashboard.",
+  "Enter Eden's Closet for AI chat, voice, video, private galleries, and the 360 viewer."
 ];
 
 export default function PaymentPage() {
   return (
-    <main className="eden-site">
+    <main className="eden-site eden-closet-pwa">
       <Header />
       <section className="checkout-shell">
         <aside>
-          <p className="pink">Black Card / Draft Payment</p>
+          <p className="pink">Black Card Access</p>
           <h2>{snapshot.product}</h2>
           <div className="order-line">
             <span>Membership</span>
             <strong>{snapshot.amount}</strong>
           </div>
           <div className="order-line">
-            <span>Environment</span>
-            <strong>{snapshot.environment}</strong>
+            <span>Payment</span>
+            <strong>Secure Shopify checkout</strong>
           </div>
           <div className="order-line total">
-            <span>Live payment</span>
-            <strong>{snapshot.livePaymentActivation}</strong>
+            <span>Access</span>
+            <strong>Eden's Closet PWA</strong>
           </div>
-          <a className="hot-btn" href="/checkout" style={{ width: "100%", marginTop: 16 }}>
-            Open Draft Checkout
+          <a className="hot-btn" href={snapshot.checkout} style={{ width: "100%", marginTop: 16 }}>
+            Continue to Shopify Payment
           </a>
         </aside>
         <section>
-          <h1 style={{ fontSize: 56, lineHeight: 1, margin: "0 0 14px", textTransform: "uppercase" }}>Payment Ready</h1>
+          <h1 style={{ fontSize: 56, lineHeight: 1, margin: "0 0 14px", textTransform: "uppercase" }}>Unlock the Black Card</h1>
           <p>
-            This page exists as the draft-safe payment surface for Eden Skye Studios. It shows the Black Card purchase state, but keeps live payment activation blocked until an explicit approval receipt is created.
+            Black Card members get the private Eden Skye experience: premium model galleries, Eden's Closet, AI text and voice chat, video room previews, and the full-body 360 viewer.
           </p>
           <div style={{ display: "grid", gap: 12, marginTop: 18 }}>
-            {checklist.map((item) => (
+            {memberFlow.map((item, index) => (
               <article className="price-card" key={item}>
-                <span>Guardrail</span>
+                <span>Step {index + 1}</span>
                 <p>{item}</p>
               </article>
             ))}
           </div>
           <div className="hero-actions">
-            <a className="hot-btn" href="/success">
-              Test Success Page
+            <a className="hot-btn" href={snapshot.checkout}>
+              Pay with Shopify
             </a>
-            <a className="outline-btn" href="/shopify">
-              Shopify Bridge
+            <a className="outline-btn" href="/success">
+              Member Handoff
             </a>
-            <a className="outline-btn" href="/admin/gates">
-              Approval Gates
+            <a className="outline-btn" href="/closet">
+              Preview Closet
             </a>
           </div>
-          <small>Protected action rule: no live Shopify product/payment/theme/discount/inventory mutation without explicit human approval receipt.</small>
+          <small>After Shopify confirms payment, Eden Skye checks your Supabase member entitlement and opens the protected PWA experience.</small>
         </section>
       </section>
     </main>
