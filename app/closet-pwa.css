@@ -1,0 +1,575 @@
+.eden-closet-pwa {
+  background:
+    radial-gradient(circle at 84% 14%, rgba(255, 10, 188, 0.22), transparent 30rem),
+    linear-gradient(180deg, #050505, #0a0508 44%, #050505);
+}
+
+.eyebrow {
+  color: var(--pink);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.back-link,
+.closet-source-note,
+.locked-chip {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.locked-chip {
+  border-color: rgba(255, 10, 188, 0.5);
+  color: #fff;
+  background: rgba(255, 10, 188, 0.12);
+}
+
+.closet-hero-pwa,
+.closet-profile-hero,
+.dashboard-hero,
+.pwa-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1fr);
+  gap: 28px;
+  align-items: center;
+  min-height: 86svh;
+  padding: 118px 42px 42px;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.closet-hero-copy,
+.closet-profile-copy,
+.dashboard-hero > div,
+.pwa-hero > div {
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+}
+
+.closet-hero-copy h1,
+.closet-profile-copy h1,
+.dashboard-hero h1,
+.pwa-hero h1,
+.viewer-shell h1,
+.chat-shell h1,
+.video-chat-shell h1 {
+  margin: 0 0 18px;
+  font-size: clamp(44px, 7vw, 94px);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.closet-hero-copy p,
+.closet-profile-copy p,
+.dashboard-hero p,
+.pwa-hero p,
+.viewer-shell p,
+.chat-shell p,
+.video-chat-shell p {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+}
+
+.closet-phone-panel,
+.closet-profile-model,
+.pwa-phone-stack {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.closet-phone-panel img,
+.closet-profile-model img,
+.pwa-phone-stack img,
+.dashboard-hero img {
+  width: min(100%, 420px);
+  max-height: 640px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 10, 188, 0.18);
+}
+
+.closet-panel-section,
+.pwa-feature-grid,
+.dashboard-grid-pwa,
+.activity-panel.pwa-activity-panel {
+  padding: 42px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.section-title-row h2,
+.measurement-panel h2,
+.voice-panel h2,
+.video-settings-panel h2,
+.membership-card h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 52px);
+  text-transform: uppercase;
+}
+
+.closet-model-grid,
+.closet-preview-grid,
+.dashboard-action-grid,
+.pwa-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.closet-model-tile,
+.closet-preview-grid article,
+.dashboard-action-grid a,
+.pwa-feature-grid a,
+.membership-card,
+.gate-panel,
+.quick-actions-panel,
+.outfit-selector-panel,
+.measurement-panel,
+.closet-control-panel,
+.voice-panel,
+.video-left-panel,
+.video-settings-panel {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(255, 10, 188, 0.12), rgba(255, 255, 255, 0.035));
+  padding: 18px;
+}
+
+.closet-model-tile {
+  min-height: 320px;
+  position: relative;
+  overflow: hidden;
+}
+
+.closet-model-tile img,
+.closet-preview-grid img {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.closet-model-tile span,
+.closet-preview-grid strong {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.closet-profile-hero {
+  grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.7fr) 280px;
+}
+
+.quick-actions-panel,
+.voice-panel,
+.video-settings-panel,
+.closet-control-panel,
+.measurement-panel {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.quick-actions-panel a,
+.dashboard-action-grid a,
+.pwa-feature-grid a,
+.viewer-bottom-controls a,
+.viewer-bottom-controls button,
+.call-control-row button,
+.setting-grid button,
+.video-mode-list button,
+.outfit-tabs button,
+.environment-strip button,
+.viewer-card-list button {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.42);
+  color: #fff;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.outfit-selector-panel {
+  margin: 0 42px 42px;
+}
+
+.outfit-row {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 18px;
+}
+
+.outfit-tabs,
+.control-stack,
+.setting-grid,
+.video-mode-list,
+.call-control-row {
+  display: grid;
+  gap: 10px;
+}
+
+.outfit-stage,
+.viewer-stage-shell,
+.video-stage-shell,
+.chat-window {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.outfit-stage img,
+.viewer-model {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 620px;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.outfit-caption,
+.video-caption-panel,
+.chat-header-row {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.74);
+  padding: 14px;
+}
+
+.viewer-shell,
+.chat-shell,
+.video-chat-shell {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr) 300px;
+  gap: 18px;
+  padding: 112px 24px 28px;
+}
+
+.viewer-stage-shell {
+  min-height: 720px;
+}
+
+.viewer-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.62;
+}
+
+.viewer-stage-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 78%, rgba(255, 10, 188, 0.22), transparent 28rem), linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+}
+
+.viewer-model {
+  height: 720px;
+}
+
+.viewer-bottom-controls {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.measurement-panel dl {
+  display: grid;
+  gap: 10px;
+}
+
+.measurement-panel div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 8px;
+}
+
+.viewer-card-list {
+  display: grid;
+  gap: 10px;
+}
+
+.viewer-card-list button {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.viewer-card-list img {
+  width: 68px;
+  height: 68px;
+  border-radius: 6px;
+}
+
+.environment-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 24px 36px;
+}
+
+.environment-strip img {
+  width: 100%;
+  height: 92px;
+  border-radius: 5px;
+}
+
+.range-control span {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.range-control input {
+  width: 100%;
+  accent-color: var(--pink);
+}
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.chat-header-row {
+  position: static;
+  margin-bottom: 18px;
+}
+
+.chat-thread {
+  display: grid;
+  gap: 12px;
+  flex: 1;
+  align-content: end;
+}
+
+.chat-message {
+  max-width: 78%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(8, 8, 10, 0.84);
+  padding: 13px;
+}
+
+.chat-message.member {
+  justify-self: end;
+  background: rgba(255, 10, 188, 0.22);
+}
+
+.chat-message.system {
+  max-width: 100%;
+  border-color: rgba(255, 10, 188, 0.38);
+}
+
+.chat-message span {
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.chat-composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.chat-composer input {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background: #050505;
+  color: #fff;
+  padding: 14px;
+}
+
+.chat-composer button {
+  border: 1px solid var(--pink);
+  border-radius: 6px;
+  background: var(--pink);
+  color: #fff;
+  padding: 0 18px;
+  font-weight: 900;
+}
+
+.video-stage-shell {
+  display: grid;
+  align-content: end;
+  padding: 18px;
+  background-size: cover;
+  background-position: center;
+}
+
+.video-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.52);
+  overflow: hidden;
+}
+
+.video-frame img {
+  width: min(100%, 520px);
+  max-height: 540px;
+  object-fit: contain;
+}
+
+.video-live-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  border: 1px solid rgba(255, 10, 188, 0.5);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.68);
+  padding: 8px 12px;
+  text-transform: uppercase;
+}
+
+.video-caption-panel {
+  position: static;
+  margin-top: 12px;
+}
+
+.video-controls {
+  position: static;
+  margin-top: 12px;
+}
+
+.dashboard-grid-pwa {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+}
+
+.compact-models {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.pwa-phone-stack {
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .closet-hero-pwa,
+  .closet-profile-hero,
+  .dashboard-hero,
+  .pwa-hero,
+  .viewer-shell,
+  .chat-shell,
+  .video-chat-shell,
+  .dashboard-grid-pwa,
+  .outfit-row {
+    grid-template-columns: 1fr;
+  }
+
+  .closet-model-grid,
+  .closet-preview-grid,
+  .dashboard-action-grid,
+  .pwa-feature-grid,
+  .environment-strip,
+  .compact-models {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .viewer-bottom-controls {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .closet-hero-pwa,
+  .closet-profile-hero,
+  .dashboard-hero,
+  .pwa-hero,
+  .closet-panel-section,
+  .pwa-feature-grid,
+  .dashboard-grid-pwa,
+  .activity-panel.pwa-activity-panel,
+  .viewer-shell,
+  .chat-shell,
+  .video-chat-shell,
+  .outfit-selector-panel {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .closet-model-grid,
+  .closet-preview-grid,
+  .dashboard-action-grid,
+  .pwa-feature-grid,
+  .environment-strip,
+  .compact-models,
+  .pwa-phone-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .viewer-bottom-controls,
+  .video-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .outfit-stage,
+  .viewer-stage-shell,
+  .video-stage-shell,
+  .chat-window {
+    min-height: 520px;
+  }
+
+  .viewer-model,
+  .outfit-stage img {
+    height: 520px;
+  }
+}
