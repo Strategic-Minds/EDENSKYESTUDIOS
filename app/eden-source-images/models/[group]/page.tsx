@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import styles from '../models.module.css';
-import { ModelGroup, groupLabels, manifestSyncStatus, models } from '../../admin-data';
+import { ModelGroup, groupLabels, manifestSyncStatus, models, repairedManifest } from '../../admin-data';
 import { ModelCard } from '../model-cards';
 
 const groups: ModelGroup[] = ['female', 'male', 'faceless'];
@@ -29,7 +29,7 @@ export default async function EdenModelGroupPage({ params }: { params: GroupPara
   const sourceNeeded = groupModels.reduce((sum, model) => sum + model.sourceImagesNeeded, 0);
   const sourceReady = groupModels.reduce((sum, model) => sum + model.sourceImagesReady, 0);
   const missing = groupModels.filter((model) => model.sourceState === 'missing').length;
-  const manifestRequired = models.length === 0;
+  const laneEmpty = groupModels.length === 0;
 
   return (
     <main className={styles.shell}>
@@ -37,7 +37,7 @@ export default async function EdenModelGroupPage({ params }: { params: GroupPara
         <div>
           <p>{group} inventory</p>
           <h1>{groupLabels[group]}</h1>
-          <span>Model cards are locked until this lane is rebuilt from the real Drive manifest.</span>
+          <span>Only model cards found in the repaired Drive manifest appear here. Empty lanes are intentionally clean.</span>
         </div>
         <div className={styles.actions}>
           <Link className={styles.button} href="/eden-source-images/models">All Models</Link>
@@ -59,14 +59,14 @@ export default async function EdenModelGroupPage({ params }: { params: GroupPara
             <p>Roster</p>
             <h2>{groupLabels[group]} source readiness</h2>
           </div>
-          <span className={styles.sourceWarning}><b>Manifest required.</b><span>No placeholder model or source image is allowed in this lane.</span></span>
+          <span className={styles.sourceWarning}><b>Manifest only.</b><span>No placeholder model or old source image is allowed in this lane.</span></span>
         </div>
-        {manifestRequired ? (
+        {laneEmpty ? (
           <div className={styles.manifestEmpty}>
-            <b>{manifestSyncStatus.title}</b>
+            <b>No manifest rows</b>
+            <span>{groupLabels[group]} has no records in {repairedManifest.title}.</span>
+            <b>Source rule</b>
             <span>{manifestSyncStatus.description}</span>
-            <b>Next action</b>
-            <span>{manifestSyncStatus.nextAction}</span>
           </div>
         ) : (
           <div className={styles.modelGrid}>
