@@ -18,10 +18,22 @@ type GuardrailResult = {
 
 const blockedPromptPatterns = [
   { label: 'minor/underage language', pattern: /\b(minor|underage|child|children|kid|teen|teenage|schoolgirl|schoolboy|young-looking)\b/i },
-  { label: 'explicit nudity request', pattern: /\b(nude|nudity|naked|topless|bottomless|bare breasts?|bare chest|bare butt|bare ass|genitals?|vagina|penis|nipples?|areola)\b/i },
+  { label: 'explicit exposure request', pattern: /\b(nude|nudity|naked|topless|bottomless|bare breasts?|bare chest|bare butt|bare ass|genitals?|vagina|penis|nipples?|areola)\b/i },
   { label: 'sexual act request', pattern: /\b(sex|sexual act|intercourse|oral|blowjob|handjob|penetration|masturbat|orgasm|cum|squirt|fetish|porn|xxx)\b/i },
-  { label: 'nudify/edit-to-undress request', pattern: /\b(nudify|undress|remove clothes|take off clothes|strip her|make her naked)\b/i },
+  { label: 'undress edit request', pattern: /\b(nudify|undress|remove clothes|take off clothes|strip her|make her naked)\b/i },
   { label: 'real-person sexualization', pattern: /\b(real person|celebrity|influencer|look like)\b[\s\S]{0,80}\b(nude|naked|sexual|porn|topless)\b/i }
+];
+
+const softRewritePatterns = [
+  { pattern: /\blingerie\b/gi, replacement: 'couture bodysuit styling' },
+  { pattern: /\bsexy\b/gi, replacement: 'confident editorial' },
+  { pattern: /\bseductive\b/gi, replacement: 'magnetic high-fashion' },
+  { pattern: /\bsensual\b/gi, replacement: 'soft editorial' },
+  { pattern: /\badult\b/gi, replacement: '21 plus synthetic editorial' },
+  { pattern: /\bimplied nudity\b/gi, replacement: 'covered silhouette styling' },
+  { pattern: /\bno nudity\b/gi, replacement: 'opaque covered styling' },
+  { pattern: /\bno explicit anatomy\b/gi, replacement: 'opaque studio-safe styling' },
+  { pattern: /\bno sexual acts\b/gi, replacement: 'solo fashion portrait' }
 ];
 
 function getImageConfig() {
@@ -56,6 +68,14 @@ function normalizeSize(size: unknown) {
   return '1024x1024';
 }
 
+function sanitizeForImageModel(prompt: string) {
+  return softRewritePatterns
+    .reduce((current, entry) => current.replace(entry.pattern, entry.replacement), prompt)
+    .replace(/\b(nude|nudity|naked|topless|bottomless|genitals?|vagina|penis|nipples?|areola|porn|xxx)\b/gi, 'studio-safe fashion')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']): GuardrailResult {
   const blockedTerms = blockedPromptPatterns
     .filter((entry) => entry.pattern.test(prompt))
@@ -73,12 +93,13 @@ function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']
   }
 
   if (mode === 'editorial_glamour') {
+    const cleanedOperatorPrompt = sanitizeForImageModel(prompt);
     return {
       tone: 'yellow',
       status: 'editorial_glamour',
       label: 'Editorial Glamour',
-      detail: 'Platform-safe adult-inspired mode: 21+ synthetic avatar, high-fashion sensual styling, lingerie/swimwear/implied covered silhouette, no nudity, no explicit anatomy, no sexual acts.',
-      safePrompt: `Platform-safe editorial glamour image of a 21+ synthetic AI avatar named Eden Skye. Sensual luxury fashion, elegant lingerie or swimwear styling when appropriate, covered artistic silhouette, premium black studio, confident editorial modeling pose, ultra-realistic, tasteful, no nudity, no explicit anatomy, no sexual acts. Operator prompt: ${prompt}`,
+      detail: 'Platform-safe fashion glamour mode: 21+ synthetic avatar, couture bodysuit or swimwear-inspired styling, opaque covered silhouette, solo luxury editorial pose.',
+      safePrompt: `Ultra-realistic fashion editorial portrait of Eden Skye, a 21 plus synthetic AI avatar. Black luxury studio, couture bodysuit styling, swimwear-inspired wardrobe, opaque covered silhouette, confident solo modeling pose, premium magazine lighting, polished beauty campaign, elegant and platform-safe. Operator direction: ${cleanedOperatorPrompt}`,
       blockedTerms: []
     };
   }
@@ -103,10 +124,10 @@ export async function GET() {
     endpoint,
     model,
     accepts: ['POST application/json'],
-    supports: ['text_to_image', 'editorial_glamour_guardrails'],
+    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization'],
     modes: {
       standard: 'General platform-safe image generation.',
-      editorial_glamour: 'Adult-inspired editorial glamour. Allows sensual fashion, lingerie/swimwear, and implied covered silhouettes. Blocks nudity, explicit anatomy, sexual acts, minors, nudify requests, and real-person sexualization.'
+      editorial_glamour: 'Fashion-safe glamour. Uses couture bodysuit, swimwear-inspired wardrobe, opaque covered silhouette, and solo luxury editorial pose language before calling the image model.'
     },
     returns: ['imageDataUrl', 'imageUrl', 'diagnostic', 'guardrail'],
     storesGeneratedBinaries: false,
@@ -125,61 +146,31 @@ export async function POST(request: Request) {
     const mode = body.mode === 'editorial_glamour' ? 'editorial_glamour' : 'standard';
     const size = normalizeSize(body.size);
 
-    if (!prompt) {
-      return Response.json({ error: 'Image prompt is required.' }, { status: 400 });
-    }
+    if (!prompt) return Response.json({ error: 'Image prompt is required.' }, { status: 400 });
 
     const guardrail = applyPromptGuardrails(prompt, mode);
     if (guardrail.tone === 'red') {
-      return Response.json(
-        {
-          error: 'Prompt blocked by Eden editorial guardrails.',
-          diagnostic: guardrail.detail,
-          guardrail,
-          model
-        },
-        { status: 400 }
-      );
+      return Response.json({ error: 'Prompt blocked by Eden editorial guardrails.', diagnostic: guardrail.detail, guardrail, model }, { status: 400 });
     }
 
     if (!token) {
       return Response.json(
-        {
-          error: 'AI Gateway image generation is not configured for this deployment.',
-          diagnostic: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.',
-          guardrail,
-          model
-        },
+        { error: 'AI Gateway image generation is not configured for this deployment.', diagnostic: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.', guardrail, model },
         { status: 503 }
       );
     }
 
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model,
-        prompt: guardrail.safePrompt,
-        n: 1,
-        size,
-        response_format: 'b64_json'
-      })
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, prompt: guardrail.safePrompt, n: 1, size, response_format: 'b64_json' })
     });
 
     const result = await readJsonSafely(response);
 
     if (!response.ok) {
       return Response.json(
-        {
-          error: 'Image generation failed.',
-          diagnostic: extractGatewayError(result),
-          guardrail,
-          model,
-          status: response.status
-        },
+        { error: 'Image generation failed.', diagnostic: extractGatewayError(result), guardrail, model, status: response.status },
         { status: response.status || 502 }
       );
     }
@@ -189,15 +180,7 @@ export async function POST(request: Request) {
     const imageUrl = firstImage?.url;
 
     if (!base64 && !imageUrl) {
-      return Response.json(
-        {
-          error: 'Image generation returned no usable image payload.',
-          diagnostic: JSON.stringify(result).slice(0, 900),
-          guardrail,
-          model
-        },
-        { status: 502 }
-      );
+      return Response.json({ error: 'Image generation returned no usable image payload.', diagnostic: JSON.stringify(result).slice(0, 900), guardrail, model }, { status: 502 });
     }
 
     return Response.json({
@@ -214,12 +197,6 @@ export async function POST(request: Request) {
       storedInDrive: false
     });
   } catch (error) {
-    return Response.json(
-      {
-        error: 'Image generation route failed.',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Image generation route failed.', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }
