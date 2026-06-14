@@ -1,4 +1,5 @@
 import { decideBlackCardEntitlement, normalizeCommerceEvent, isShopifyWebhookSigned } from "../../../../lib/commerce/black-card.mjs";
+import { persistBlackCardEntitlement } from "../../../../lib/commerce/supabase-entitlements.mjs";
 
 export const dynamic = "force-dynamic";
 
@@ -17,18 +18,40 @@ export async function POST(request: Request) {
   const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
 
   if (!isShopifyWebhookSigned(text, signature, secret)) {
-    return Response.json({ ok: false, reason: "unsigned_or_invalid_payload", draftOnly: true }, { status: 401, headers: { "Cache-Control": "no-store" } });
+    return Response.json({ ok: false, reason: "unsigned_or_invalid_payload" }, { status: 401, headers: { "Cache-Control": "no-store" } });
   }
 
   const event = normalizeCommerceEvent(json?.event ?? json?.financial_status ?? json?.status);
   if (!event) {
-    return Response.json({ ok: false, reason: "unsupported_test_event", draftOnly: true }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    return Response.json({ ok: false, reason: "unsupported_shopify_event" }, { status: 400, headers: { "Cache-Control": "no-store" } });
   }
 
   const decision = decideBlackCardEntitlement(event);
-  return Response.json({ ok: true, draftOnly: true, signed: true, ...decision }, { headers: { "Cache-Control": "no-store" } });
+  const persistence = await persistBlackCardEntitlement({ event, payload: json || {}, decision });
+
+  return Response.json(
+    {
+      ok: true,
+      signed: true,
+      productionMode: true,
+      ...decision,
+      persistence
+    },
+    { headers: { "Cache-Control": "no-store" } }
+  );
 }
 
 export async function GET() {
-  return Response.json({ ok: true, route: "/api/shopify/webhook", draftOnly: true, accepts: ["paid", "failed", "cancelled", "refund"], livePaymentsBlocked: true }, { headers: { "Cache-Control": "no-store" } });
+  return Response.json(
+    {
+      ok: true,
+      route: "/api/shopify/webhook",
+      productionMode: true,
+      accepts: ["paid", "failed", "cancelled", "refund"],
+      grants: "paid -> black_card_member",
+      revokes: "refund -> revoked entitlement",
+      requires: ["SHOPIFY_WEBHOOK_SECRET", "SUPABASE_SERVICE_ROLE_KEY"]
+    },
+    { headers: { "Cache-Control": "no-store" } }
+  );
 }
