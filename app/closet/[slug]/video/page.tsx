@@ -68,9 +68,9 @@ export default function Video({ params }: { params: { slug: string } }) {
           </div>
           <div className="viewer-card-list environment-mini-list">
             {closetEnvironments.slice(0, 4).map((environment) => (
-              <button key={environment.name} type="button">
-                <img src={environment.image} alt={`${environment.name} video background`} />
-                <span>{environment.name}</span>
+              <button key={environment.key} type="button">
+                <img src={environment.src} alt={`${environment.label} video background`} />
+                <span>{environment.label}</span>
               </button>
             ))}
           </div>
