@@ -56,6 +56,15 @@ const edenAgent = {
       needs: ['AI Gateway image model access', 'binary storage', 'Drive file id mapping', 'QA scoring']
     },
     {
+      id: 'editorial_glamour',
+      label: 'Editorial Glamour image mode',
+      status: 'green',
+      currentMode: 'platform_safe_adult_inspired_guardrail_mode',
+      allows: ['21_plus_synthetic_avatar', 'sensual_high_fashion', 'lingerie', 'swimwear', 'implied_covered_silhouettes', 'luxury_editorial_pose'],
+      blocks: ['nudity', 'explicit_anatomy', 'sexual_acts', 'nudify_or_undress_edits', 'minors_or_youth_terms', 'real_person_sexualization'],
+      route: '/api/eden/source-images/generate-image'
+    },
+    {
       id: 'videos',
       label: 'Video creation',
       status: 'yellow',
