@@ -6,7 +6,7 @@ import styles from './image-stack.module.css';
 type ReviewFolder = 'Drafts' | 'Needs Review' | 'Approved' | 'Rejected' | 'Drive Ready';
 type Filter = 'All Images' | ReviewFolder;
 type ApprovalColor = 'green' | 'yellow' | 'red';
-type AssetSource = 'drive' | 'local';
+type AssetSource = 'drive' | 'local' | 'generated';
 
 type Asset = {
   id: string;
@@ -26,7 +26,14 @@ type Asset = {
   driveUrl?: string;
   manifestSlot?: string;
   targetFilename?: string;
-  matchConfidence?: 'provisional' | 'unmatched';
+  matchConfidence?: 'clean' | 'provisional' | 'unmatched';
+  originalPrompt?: string;
+  productionPrompt?: string;
+  model?: string;
+  ingestReceiptId?: string;
+  githubNotation?: string;
+  supabaseReceiptId?: string;
+  recordedAt?: string;
 };
 
 type ApprovalMapResponse = {
@@ -55,8 +62,32 @@ type ApprovalMapResponse = {
   }>;
 };
 
+type IngestRecord = {
+  receiptId: string;
+  filename: string;
+  targetFilename: string;
+  manifestSlot: string;
+  qaScore: number;
+  qaMinScore: number;
+  approvalColor: ApprovalColor;
+  approvalStatus: string;
+  approvalFolder: ReviewFolder;
+  driveFileId: string | null;
+  driveUrl: string | null;
+  supabaseReceiptId: string;
+  githubNotation: string;
+  recordedAt: string;
+  writeMode: 'receipt_only';
+};
+
+type IngestResponse = {
+  ok: boolean;
+  record: IngestRecord;
+};
+
 const filters: Filter[] = ['All Images', 'Drafts', 'Needs Review', 'Approved', 'Rejected', 'Drive Ready'];
 const primaryEmail = 'strategicmindsadvisory@gmail.com';
+const ingestStorageKey = 'eden-image-stack-ingest-records-v1';
 
 function formatSize(size: number) {
   if (!size) return 'Drive image';
@@ -78,14 +109,63 @@ function approvalColorForFolder(folder: ReviewFolder): ApprovalColor {
   return 'yellow';
 }
 
+function safeStorageRead(): IngestRecord[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(ingestStorageKey) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function safeStorageWrite(records: IngestRecord[]) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(ingestStorageKey, JSON.stringify(records.slice(0, 250)));
+}
+
+function buildLocalTargetFilename(file: File, index: number) {
+  const extension = file.name.match(/\.([a-z0-9]+)$/i)?.[1]?.toLowerCase() || 'png';
+  const cleanName = file.name.toLowerCase().replace(/\.[a-z0-9]+$/i, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 42) || 'source-upload';
+  return `eden-skye-upload-${String(index + 1).padStart(3, '0')}_${cleanName}.${extension}`;
+}
+
+function applyRecordToAsset(asset: Asset, record: IngestRecord): Asset {
+  return {
+    ...asset,
+    name: asset.source === 'local' ? record.targetFilename : asset.name,
+    folder: record.approvalFolder,
+    qa: record.qaScore,
+    qaMin: record.qaMinScore,
+    approvalColor: record.approvalColor,
+    approvalStatus: record.approvalStatus,
+    note: `${record.approvalStatus}. Receipt ${record.receiptId}.`,
+    manifestSlot: record.manifestSlot,
+    targetFilename: record.targetFilename,
+    driveFileId: record.driveFileId || asset.driveFileId,
+    driveUrl: record.driveUrl || asset.driveUrl,
+    ingestReceiptId: record.receiptId,
+    githubNotation: record.githubNotation,
+    supabaseReceiptId: record.supabaseReceiptId,
+    recordedAt: record.recordedAt,
+    matchConfidence: record.manifestSlot === 'unassigned-upload' ? 'unmatched' : asset.matchConfidence || 'provisional'
+  };
+}
+
 export default function EdenImageStackPage() {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [ingestRecords, setIngestRecords] = useState<IngestRecord[]>([]);
   const [activeFilter, setActiveFilter] = useState<Filter>('All Images');
   const [view, setView] = useState<'grid' | 'dense'>('grid');
   const [sort, setSort] = useState<'newest' | 'name' | 'qa'>('newest');
   const [expandedAsset, setExpandedAsset] = useState<Asset | null>(null);
   const [mapSummary, setMapSummary] = useState<ApprovalMapResponse['summary'] | null>(null);
   const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [ingestState, setIngestState] = useState<'idle' | 'recording' | 'ready' | 'error'>('idle');
+
+  useEffect(() => {
+    setIngestRecords(safeStorageRead());
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -99,8 +179,8 @@ export default function EdenImageStackPage() {
         if (!mounted) return;
         setMapSummary(data.summary);
         setAssets((current) => {
-          const localAssets = current.filter((asset) => asset.source === 'local');
-          const driveAssets = data.assets.map((asset, index): Asset => ({
+          const localAssets = current.filter((asset) => asset.source === 'local' || asset.source === 'generated');
+          const driveAssets = data.assets.map((asset): Asset => ({
             id: `drive-${asset.driveFileId}`,
             name: asset.filename,
             size: 0,
@@ -147,28 +227,75 @@ export default function EdenImageStackPage() {
   const driveCount = assets.filter((asset) => asset.source === 'drive').length;
   const cleanMatches = mapSummary?.cleanMatches ?? 0;
   const provisionalMatches = mapSummary?.provisionalMatches ?? 0;
+  const lastRecord = ingestRecords[0];
+
+  async function recordAsset(asset: Asset, reason: string, overrides: Partial<Asset> = {}) {
+    setIngestState('recording');
+    const nextAsset = { ...asset, ...overrides };
+    try {
+      const response = await fetch('/api/eden/source-images/ingest-generated', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: nextAsset.source,
+          reason,
+          filename: nextAsset.name,
+          originalPrompt: nextAsset.originalPrompt || 'Uploaded or generated in Eden Image Stack editor.',
+          productionPrompt: nextAsset.productionPrompt || 'Pending Eden production prompt capture.',
+          model: nextAsset.model || 'unknown-editor-source',
+          mimeType: nextAsset.type,
+          size: nextAsset.size,
+          approvalFolder: nextAsset.folder,
+          approvalStatus: nextAsset.approvalStatus,
+          approvalColor: nextAsset.approvalColor,
+          qaScore: nextAsset.qa,
+          qaMinScore: nextAsset.qaMin,
+          manifestSlot: nextAsset.manifestSlot,
+          targetFilename: nextAsset.targetFilename,
+          driveFileId: nextAsset.driveFileId,
+          driveUrl: nextAsset.driveUrl,
+          matchConfidence: nextAsset.matchConfidence
+        })
+      });
+      if (!response.ok) throw new Error('Ingest receipt failed');
+      const data = await response.json() as IngestResponse;
+      const nextRecords = [data.record, ...safeStorageRead().filter((record) => record.receiptId !== data.record.receiptId)];
+      safeStorageWrite(nextRecords);
+      setIngestRecords(nextRecords);
+      setAssets((current) => current.map((currentAsset) => currentAsset.id === asset.id ? applyRecordToAsset(currentAsset, data.record) : currentAsset));
+      setIngestState('ready');
+    } catch {
+      setIngestState('error');
+    }
+  }
 
   function addFiles(fileList: FileList | null) {
     if (!fileList) return;
-    const nextAssets = Array.from(fileList)
-      .filter((file) => file.type.startsWith('image/'))
-      .map((file) => ({
+    const files = Array.from(fileList).filter((file) => file.type.startsWith('image/'));
+    const nextAssets = files.map((file, index): Asset => {
+      const targetFilename = buildLocalTargetFilename(file, index);
+      return {
         id: `local-${Date.now()}-${file.name}-${Math.random().toString(16).slice(2)}`,
         name: file.name,
         size: file.size,
         type: file.type || 'image',
         url: URL.createObjectURL(file),
-        folder: 'Drafts' as ReviewFolder,
+        folder: 'Needs Review',
         qa: 0,
         qaMin: 90,
-        note: 'Local browser draft. Not uploaded to Drive.',
+        note: 'Local browser draft. Ingest receipt is being prepared; binary still needs Drive upload.',
         selected: false,
-        source: 'local' as AssetSource,
-        approvalColor: 'yellow' as ApprovalColor,
-        approvalStatus: 'Local draft'
-      }));
+        source: 'local',
+        approvalColor: 'yellow',
+        approvalStatus: 'Needs visual QA and Drive upload',
+        manifestSlot: targetFilename.match(/eden-skye-\d{3}/)?.[0] || 'unassigned-upload',
+        targetFilename,
+        matchConfidence: 'unmatched'
+      };
+    });
     setAssets((current) => [...nextAssets, ...current]);
-    setActiveFilter('Drafts');
+    setActiveFilter('Needs Review');
+    nextAssets.forEach((asset) => void recordAsset(asset, 'local_upload_metadata_ingest'));
   }
 
   function handleDrop(event: DragEvent<HTMLLabelElement>) {
@@ -182,16 +309,25 @@ export default function EdenImageStackPage() {
   }
 
   function moveSelected(folder: ReviewFolder) {
+    const selectedAssets = assets.filter((asset) => asset.selected);
     setAssets((current) => current.map((asset) => asset.selected ? { ...asset, folder, selected: false, note: folderNote(folder), approvalColor: approvalColorForFolder(folder), approvalStatus: folderNote(folder) } : asset));
     setActiveFilter(folder);
+    selectedAssets.forEach((asset) => void recordAsset(asset, `batch_move_${folder.toLowerCase().replace(/\s+/g, '_')}`, { folder, selected: false, note: folderNote(folder), approvalColor: approvalColorForFolder(folder), approvalStatus: folderNote(folder) }));
   }
 
   function moveOne(id: string, folder: ReviewFolder) {
-    setAssets((current) => current.map((asset) => asset.id === id ? { ...asset, folder, selected: false, note: folderNote(folder), approvalColor: approvalColorForFolder(folder), approvalStatus: folderNote(folder) } : asset));
+    const asset = assets.find((candidate) => candidate.id === id);
+    setAssets((current) => current.map((currentAsset) => currentAsset.id === id ? { ...currentAsset, folder, selected: false, note: folderNote(folder), approvalColor: approvalColorForFolder(folder), approvalStatus: folderNote(folder) } : currentAsset));
+    if (asset) void recordAsset(asset, `move_${folder.toLowerCase().replace(/\s+/g, '_')}`, { folder, selected: false, note: folderNote(folder), approvalColor: approvalColorForFolder(folder), approvalStatus: folderNote(folder) });
   }
 
   function setQa(id: string, qa: number) {
     setAssets((current) => current.map((asset) => asset.id === id ? { ...asset, qa } : asset));
+  }
+
+  function recordQa(id: string) {
+    const asset = assets.find((candidate) => candidate.id === id);
+    if (asset) void recordAsset(asset, 'qa_score_update');
   }
 
   function toggleSelected(id: string) {
@@ -224,7 +360,13 @@ export default function EdenImageStackPage() {
         <div className={styles.statusPanel}>
           <b>Drive pool</b>
           <span>{loadState === 'loading' ? 'Loading TEMP IMAGES...' : loadState === 'error' ? 'Approval map unavailable' : `${driveCount} Drive images loaded`}</span>
-          <span>{cleanMatches} clean matches · {provisionalMatches} provisional · PR #8 blocked</span>
+          <span>{cleanMatches} clean matches / {provisionalMatches} provisional / PR #8 blocked</span>
+        </div>
+        <div className={styles.ingestPanel}>
+          <b>Ingest receipts</b>
+          <span>{ingestRecords.length} browser-saved records</span>
+          <span>{ingestState === 'recording' ? 'Recording...' : ingestState === 'error' ? 'Last record failed' : lastRecord ? `Last: ${lastRecord.receiptId}` : 'Ready for uploads'}</span>
+          {lastRecord && <em>{lastRecord.filename} / {lastRecord.approvalColor.toUpperCase()} / {lastRecord.manifestSlot}</em>}
         </div>
         <div className={styles.legend}>
           <span><i className={styles.greenDot} /> Green verified</span>
@@ -234,7 +376,7 @@ export default function EdenImageStackPage() {
         <label className={styles.dropZone} onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
           <input type="file" accept="image/*" multiple onChange={handleInput} />
           <b>Drop images here</b>
-          <span>Add local drafts for comparison. Drive-backed images load automatically from TEMP IMAGES.</span>
+          <span>Uploads are titled, categorized, routed to review, saved as browser receipts, and sent to the ingest API for notation.</span>
         </label>
         <div className={styles.folderList}>
           {filters.map((filter) => (
@@ -251,10 +393,11 @@ export default function EdenImageStackPage() {
           <div>
             <p>Admin-safe approval plane</p>
             <h2>{activeFilter}</h2>
-            <span>{assets.length} stacked images · {selectedCount} selected · clean manifest match required before PR #8</span>
+            <span>{assets.length} stacked images / {selectedCount} selected / every change creates an ingest receipt</span>
           </div>
           <nav>
             <a href="/eden-source-images">Editor</a>
+            <a href="/api/eden/source-images/ingest-generated">Ingest API</a>
             <button type="button" onClick={() => setView(view === 'grid' ? 'dense' : 'grid')}>{view === 'grid' ? 'Dense View' : 'Grid View'}</button>
             <select value={sort} onChange={(event) => setSort(event.currentTarget.value as 'newest' | 'name' | 'qa')}>
               <option value="newest">Newest</option>
@@ -289,20 +432,23 @@ export default function EdenImageStackPage() {
                 <div className={styles.cardBody}>
                   <div className={styles.badgeRow}>
                     <span className={`${styles.statusBadge} ${styles[asset.approvalColor]}`}>{asset.approvalColor}</span>
-                    <span>{asset.source === 'drive' ? 'Drive' : 'Local'}</span>
+                    <span>{asset.source === 'drive' ? 'Drive' : asset.source === 'generated' ? 'Generated' : 'Local'}</span>
                     {asset.matchConfidence && <span>{asset.matchConfidence}</span>}
                   </div>
                   <label>
                     <input type="checkbox" checked={asset.selected} onChange={() => toggleSelected(asset.id)} />
                     <b>{asset.name}</b>
                   </label>
-                  <span>{asset.type} · {formatSize(asset.size)}</span>
+                  <span>{asset.type} / {formatSize(asset.size)}</span>
                   <span>Slot: {asset.manifestSlot || 'not assigned'}</span>
                   <span>Target: {asset.targetFilename || 'not assigned'}</span>
                   {asset.driveFileId && <span>Drive ID: {asset.driveFileId}</span>}
+                  {asset.ingestReceiptId && <span>Receipt: {asset.ingestReceiptId}</span>}
+                  {asset.supabaseReceiptId && <span>Supabase: {asset.supabaseReceiptId}</span>}
+                  {asset.githubNotation && <span>GitHub: {asset.githubNotation}</span>}
                   <label className={styles.qaSlider}>
                     <span>QA {asset.qa || 'pending'} / min {asset.qaMin}</span>
-                    <input type="range" min="0" max="100" value={asset.qa} onChange={(event) => setQa(asset.id, Number(event.currentTarget.value))} />
+                    <input type="range" min="0" max="100" value={asset.qa} onChange={(event) => setQa(asset.id, Number(event.currentTarget.value))} onMouseUp={() => recordQa(asset.id)} onTouchEnd={() => recordQa(asset.id)} />
                   </label>
                   <div className={styles.cardActions}>
                     <button type="button" onClick={() => moveOne(asset.id, 'Needs Review')}>Review</button>
@@ -334,6 +480,7 @@ export default function EdenImageStackPage() {
             <footer>
               <span>{expandedAsset.name}</span>
               <span>QA {expandedAsset.qa || 'pending'} / min {expandedAsset.qaMin}</span>
+              {expandedAsset.ingestReceiptId && <span>Receipt {expandedAsset.ingestReceiptId}</span>}
               {expandedAsset.driveUrl && <a href={expandedAsset.driveUrl} target="_blank" rel="noreferrer">Open in Drive</a>}
             </footer>
           </div>
