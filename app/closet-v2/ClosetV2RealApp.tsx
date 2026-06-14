@@ -4,7 +4,7 @@ import "./closet-v2-real.css";
 import { useMemo } from "react";
 
 type View = "home" | "models" | "profile" | "closet" | "environments" | "viewer" | "chat" | "video" | "dashboard";
-type Model = { name: string; slug: string; image: string; title: string };
+type Model = { name: string; slug: string; image: string; title: string; stats: string };
 
 const assets = {
   eden: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-model-lounge-02.png?v=1781428279",
@@ -17,53 +17,172 @@ const assets = {
 };
 
 const models: Model[] = [
-  { name: "Eden", slug: "eden-skye", image: assets.eden, title: "Featured model" },
-  { name: "Alexis", slug: "alexis-voss", image: assets.alexis, title: "Noir muse" },
-  { name: "Luna", slug: "luna-moretti", image: assets.fullBody, title: "Full-body preview" },
-  { name: "Sienna", slug: "sienna-cole", image: assets.front, title: "360 model" },
-  { name: "Kayla", slug: "kayla-noir", image: assets.left, title: "Private gallery" },
-  { name: "Reya", slug: "reya-vale", image: assets.right, title: "Closet select" }
+  { name: "Alexis", slug: "eden-skye", image: assets.eden, title: "Featured Model", stats: "128 photos" },
+  { name: "Kayla", slug: "alexis-voss", image: assets.alexis, title: "Noir Muse", stats: "92 photos" },
+  { name: "Luna", slug: "luna-moretti", image: assets.fullBody, title: "Closet Select", stats: "74 photos" },
+  { name: "Zoey", slug: "zoey-noir", image: assets.front, title: "Private Gallery", stats: "63 photos" },
+  { name: "Sienna", slug: "sienna-cole", image: assets.left, title: "VIP Gallery", stats: "88 photos" },
+  { name: "Reya", slug: "reya-vale", image: assets.right, title: "Full Body View", stats: "57 photos" }
 ];
 
-const tabs = [["H", "Home", "/closet-v2"], ["E", "Explore", "/closet-v2/models"], ["HEART", "Favorites", "/closet-v2/closet"], ["P", "Profile", "/payment"]];
+const tabs = [
+  { label: "Models", href: "/closet-v2/models", icon: "person" },
+  { label: "Favorites", href: "/closet-v2/closet", icon: "heart" },
+  { label: "Messages", href: "/closet-v2/chat", icon: "chat" },
+  { label: "Profile", href: "/payment", icon: "user" }
+];
 
 export function ClosetV2RealApp({ view = "home", slug }: { view?: View; slug?: string }) {
   const model = useMemo(() => models.find((item) => item.slug === slug) ?? models[0], [slug]);
-  const mobileView = view === "viewer" || view === "environments" || view === "closet" || view === "chat" || view === "video" || view === "dashboard" ? "closet" : view;
+  const screen = view === "viewer" || view === "environments" || view === "dashboard" ? "closet" : view;
 
   return (
-    <main className="pwa-stage">
-      <section className="pwa-phone">
-        {mobileView === "home" && <Home />}
-        {mobileView === "models" && <Models />}
-        {mobileView === "profile" && <Profile model={model} />}
-        {mobileView === "closet" && <Closet />}
-        <BottomTabs />
+    <main className="eden-app-stage">
+      <section className="eden-device" aria-label="Eden Skye mobile app preview">
+        {screen === "home" && <Home />}
+        {screen === "models" && <Models />}
+        {screen === "profile" && <Profile model={model} />}
+        {(screen === "closet" || screen === "chat" || screen === "video") && <Closet model={model} />}
+        <BottomTabs active={screen === "home" ? "Models" : undefined} />
       </section>
     </main>
   );
 }
 
-function AppChrome({ children, bag = false }: { children: React.ReactNode; bag?: boolean }) {
-  return <><header className="pwa-header"><span className="hamburger">MENU</span><a className="pwa-logo" href="/closet-v2"><b>EDEN SKYE</b><i>Studios</i></a><a className="pwa-icon" href="/payment">{bag ? "BAG" : "ALERT"}</a></header>{children}</>;
+function BrandLogo() {
+  return (
+    <a className="brand-logo" href="/closet-v2" aria-label="Eden Skye Studios home">
+      <span>EDEN SKYE</span>
+      <em>Studios</em>
+    </a>
+  );
+}
+
+function LineIcon({ type }: { type: string }) {
+  return <i aria-hidden="true" className={`line-icon ${type}`} />;
+}
+
+function TopBar({ bag = false }: { bag?: boolean }) {
+  return (
+    <header className="top-bar">
+      <a className="menu-lines" href="/closet-v2/models" aria-label="Open models menu"><span /><span /><span /></a>
+      <BrandLogo />
+      <a className="top-icon" href="/payment" aria-label={bag ? "Unlock Black Card" : "Notifications"}>
+        <LineIcon type={bag ? "bag" : "bell"} />
+      </a>
+    </header>
+  );
 }
 
 function Home() {
-  return <div className="pwa-screen home-screen"><img className="home-hero" src={assets.eden} alt="Eden Skye hero" /><div className="home-gradient" /><div className="home-copy"><p>EXPERIENCE</p><h1>EDEN SKYE</h1><span>BOLD. ELEVATED. UNAPOLOGETIC.</span><div className="dots"><i /><i /><i /><i /></div><a className="hot-button" href="/closet-v2/models">LOGIN</a><a className="outline-button" href="/payment">CREATE ACCOUNT</a><div className="feature-grid"><a href="/closet-v2/video"><b>PLAY</b><span>Exclusive<br />Videos</span></a><a href="/closet-v2/models"><b>PHOTO</b><span>Photo<br />Sets</span></a><a href="/payment"><b>VIP</b><span>VIP<br />Access</span></a><a href="/closet-v2/closet"><b>EVENT</b><span>Events</span></a></div><a className="vip-card" href="/payment"><b>VIP</b><span>GO VIP<small>UNLOCK EVERYTHING</small></span><em>&gt;</em></a></div></div>;
+  return (
+    <div className="eden-screen home">
+      <img className="home-image" src={assets.eden} alt="Eden Skye model in neon studio light" />
+      <div className="screen-vignette" />
+      <div className="home-brand"><BrandLogo /></div>
+      <section className="home-panel" aria-label="Eden Skye entry">
+        <p>EXPERIENCE</p>
+        <h1>EDEN SKYE</h1>
+        <span>BOLD. ELEVATED. UNAPOLOGETIC.</span>
+        <div className="pager"><b /><b /><b /><b /></div>
+        <a className="primary-action" href="/closet-v2/models">LOGIN</a>
+        <a className="secondary-action" href="/payment">CREATE ACCOUNT</a>
+        <div className="quick-grid">
+          <a href="/closet-v2/video"><LineIcon type="play" /><span>Exclusive<br />Videos</span></a>
+          <a href="/closet-v2/models"><LineIcon type="image" /><span>Photo<br />Sets</span></a>
+          <a href="/payment"><LineIcon type="crown" /><span>VIP<br />Access</span></a>
+          <a href="/closet-v2/closet"><LineIcon type="calendar" /><span>Events</span></a>
+        </div>
+        <a className="vip-strip" href="/payment">
+          <LineIcon type="diamond" />
+          <span>GO VIP<small>UNLOCK EVERYTHING</small></span>
+          <strong>›</strong>
+        </a>
+      </section>
+    </div>
+  );
 }
 
 function Models() {
-  return <div className="pwa-screen list-screen"><AppChrome><div className="screen-title"><h1>MODELS</h1><a href="/closet-v2/models">FILTER</a></div><div className="model-grid">{models.map((model) => <a href={`/closet-v2/models/${model.slug}`} className="model-tile" key={model.slug}><img src={model.image} alt={model.name} /><b>{model.name}</b><span>HEART</span></a>)}</div></AppChrome></div>;
+  return (
+    <div className="eden-screen models-screen">
+      <TopBar />
+      <div className="models-title">
+        <h1>MODELS</h1>
+        <button type="button">FILTER</button>
+      </div>
+      <div className="models-grid">
+        {models.map((model, index) => (
+          <a className={`model-card ${index === 0 ? "active" : ""}`} href={`/closet-v2/models/${model.slug}`} key={model.slug}>
+            <img src={model.image} alt={`${model.name} model preview`} />
+            <span>{model.name}</span>
+            <LineIcon type="heart" />
+          </a>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function Profile({ model }: { model: Model }) {
-  return <div className="pwa-screen profile-screen"><AppChrome><div className="profile-orbit"><img src={model.image} alt={model.name} /></div><div className="profile-copy"><h1>{model.name}</h1><b>{model.title}</b><p>Confident. Bold. Always unforgettable.</p><ul><li><span>PHOTO</span>128 Photos</li><li><span>PLAY</span>24 Videos</li><li><span>HEART</span>1.2K Likes</li></ul><div className="profile-actions"><a href="/closet-v2/closet">MESSAGE</a><a href="/closet-v2/closet">VIEW GALLERY</a></div></div></AppChrome></div>;
+  return (
+    <div className="eden-screen profile-screen">
+      <TopBar />
+      <section className="profile-hero">
+        <div className="neon-ring" />
+        <img src={model.image} alt={`${model.name} profile portrait`} />
+      </section>
+      <section className="profile-copy">
+        <h1>{model.name}</h1>
+        <b>{model.title}</b>
+        <p>Confident. Bold. Always unforgettable.</p>
+        <dl>
+          <div><dt><LineIcon type="image" /></dt><dd>128<br /><span>Photos</span></dd></div>
+          <div><dt><LineIcon type="play" /></dt><dd>24<br /><span>Videos</span></dd></div>
+          <div><dt><LineIcon type="heart" /></dt><dd>1.2K<br /><span>Likes</span></dd></div>
+        </dl>
+        <div className="profile-buttons">
+          <a href="/closet-v2/chat">MESSAGE</a>
+          <a href="/closet-v2/closet">VIEW GALLERY</a>
+        </div>
+      </section>
+    </div>
+  );
 }
 
-function Closet() {
-  return <div className="pwa-screen closet-screen"><AppChrome bag><h1 className="closet-title">EDEN&apos;S CLOSET</h1><div className="closet-fullbody"><img src={assets.fullBody} alt="Eden full body standing in her closet" /><span>Eden - Full Body Preview</span></div><div className="closet-list">{[["LING", "LINGERIE"], ["FIT", "OUTFITS"], ["SHOE", "SHOES"], ["VIP", "ACCESSORIES"], ["HEART", "FAVORITES"]].map(([icon, label]) => <a href="/payment" key={label}><b>{icon}</b><span>{label}</span><em>&gt;</em></a>)}</div></AppChrome></div>;
+function Closet({ model }: { model: Model }) {
+  return (
+    <div className="eden-screen closet-screen">
+      <TopBar bag />
+      <h1 className="closet-heading">EDEN'S CLOSET</h1>
+      <section className="closet-stage">
+        <img className="closet-room" src={assets.closet} alt="Black luxury walk-in closet with pink neon" />
+        <img className="closet-model" src={assets.fullBody} alt={`${model.name} full body closet preview`} />
+        <div className="closet-caption">
+          <b>{model.name}</b>
+          <span>Full-body closet preview</span>
+        </div>
+      </section>
+      <div className="closet-menu">
+        <a href="/payment"><LineIcon type="lingerie" /><span>LINGERIE</span><strong>›</strong></a>
+        <a href="/payment"><LineIcon type="dress" /><span>OUTFITS</span><strong>›</strong></a>
+        <a href="/payment"><LineIcon type="shoe" /><span>SHOES</span><strong>›</strong></a>
+        <a href="/payment"><LineIcon type="diamond" /><span>ACCESSORIES</span><strong>›</strong></a>
+        <a href="/payment"><LineIcon type="heart" /><span>FAVORITES</span><strong>›</strong></a>
+      </div>
+    </div>
+  );
 }
 
-function BottomTabs() {
-  return <nav className="pwa-tabs">{tabs.map(([icon, label, href]) => <a href={href} key={label}><b>{icon}</b><span>{label}</span></a>)}</nav>;
+function BottomTabs({ active }: { active?: string }) {
+  return (
+    <nav className="bottom-tabs" aria-label="Eden's Closet tabs">
+      {tabs.map((tab) => (
+        <a href={tab.href} className={active === tab.label ? "active" : ""} key={tab.label}>
+          <LineIcon type={tab.icon} />
+          <span>{tab.label}</span>
+        </a>
+      ))}
+    </nav>
+  );
 }
