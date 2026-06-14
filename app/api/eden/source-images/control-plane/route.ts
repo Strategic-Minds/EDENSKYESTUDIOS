@@ -1,5 +1,15 @@
 const controlPlane = {
   mode: 'sandbox_open_leak_test',
+  chat: {
+    status: 'wired_to_route',
+    route: '/api/eden/source-images/chat',
+    gateway: 'vercel-ai-gateway',
+    providerPreference: 'openai-primary',
+    defaultModel: 'openai/gpt-5.5',
+    requiresOneOf: ['AI_GATEWAY_API_KEY', 'VERCEL_OIDC_TOKEN'],
+    supportsAttachmentMetadata: true,
+    storesAttachmentBinaries: false
+  },
   productionMutationAllowed: false,
   externalWritesAllowed: false,
   livePaymentAllowed: false,
@@ -9,8 +19,32 @@ const controlPlane = {
     imageVideoFactoryFolderId: '1lu7fo915TDlJPT4U3VZGexcWBJ9dpi2b',
     stockImageAssetsFolderId: '1V8MNsOdvLNSd04JQrnyvH1ECnj3nOF8P',
     approvalControlPlaneFolderId: '1EMnjZKTBT4wlO0ZgR5F6tXDKV1dvK76x',
+    requestedApprovalInboxName: 'SOURCE_IMAGE_APPROVAL_INBOX',
+    requestedApprovalInboxStatus: 'blocked_pending_approval_phrase',
+    approvalPhraseRequired: 'APPROVE DRIVE FOLDER CREATE',
     tempFolderId: '1kokL57oAzvL40ee6nC3v1AA8hinarWJe',
     quarantineFolderId: '1sKBf_icBG8X_xKCm8QKOsbMhMxSZaOP2'
+  },
+  integrations: {
+    gmail: {
+      connectedInAgentSession: true,
+      account: 'info@epoxywillchangeyourlife.com',
+      appDirectOAuthRequired: true
+    },
+    googleCalendar: {
+      connectedInAgentSession: true,
+      account: 'info@epoxywillchangeyourlife.com',
+      appDirectOAuthRequired: true
+    },
+    googleDrive: {
+      connectedInAgentSession: true,
+      account: 'strategicmindsadvisory@gmail.com',
+      appDirectOAuthRequired: true
+    },
+    chatGptPassthrough: {
+      supportedAsEmbeddedChatGptSession: false,
+      supportedAlternative: 'Vercel AI Gateway with OpenAI primary model route'
+    }
   },
   manifests: [
     {
@@ -47,6 +81,8 @@ const controlPlane = {
     'eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png'
   ],
   allowedSandboxActions: [
+    'chat_with_eden_ai_gateway',
+    'attach_file_metadata_to_chat',
     'generate_draft_image',
     'attach_binary_to_manifest_row',
     'record_qa_score',
@@ -54,7 +90,9 @@ const controlPlane = {
     'route_quarantine_regenerate',
     'build_install_packet',
     'simulate_leak_test',
-    'create_video_draft_packet'
+    'create_video_draft_packet',
+    'request_gmail_action',
+    'request_calendar_action'
   ],
   blockedLiveActions: [
     'approve_public',
@@ -64,7 +102,9 @@ const controlPlane = {
     'activate_heygen_final_avatar',
     'apply_supabase_production_write',
     'move_drive_parent_destructively',
-    'run_payment_or_checkout_mutation'
+    'run_payment_or_checkout_mutation',
+    'read_gmail_from_public_preview_without_oauth',
+    'write_calendar_from_public_preview_without_oauth'
   ],
   leakTests: [
     {
