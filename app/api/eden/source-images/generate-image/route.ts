@@ -25,18 +25,23 @@ const blockedPromptPatterns = [
 ];
 
 const safetyNegationPatterns = [
-  { pattern: /\b(no|without|avoid|exclude)\s+(nudity|nude|naked|topless|explicit anatomy|sexual acts?|sex|porn|xxx)\b/gi, replacement: 'opaque studio-safe fashion' },
-  { pattern: /\bplatform-safe\s+(adult|sensual|sexy)\b/gi, replacement: 'platform-safe fashion' },
+  { pattern: /\b(no|without|avoid|exclude)\s+(nudity|nude|naked|topless|explicit anatomy|sexual acts?|sex|porn|xxx)\b/gi, replacement: 'polished studio fashion' },
+  { pattern: /\bplatform-safe\s+(adult|sensual|sexy)\b/gi, replacement: 'polished studio fashion' },
   { pattern: /\badult-inspired\b/gi, replacement: 'fashion-forward' }
 ];
 
-const softRewritePatterns = [
-  { pattern: /\blingerie\b/gi, replacement: 'couture bodysuit styling' },
+const conservativeRewritePatterns = [
+  { pattern: /\blingerie\b/gi, replacement: 'designer fashion styling' },
+  { pattern: /\bswimwear\b/gi, replacement: 'resort fashion styling' },
+  { pattern: /\bbodysuit\b/gi, replacement: 'sleek couture wardrobe' },
   { pattern: /\bsexy\b/gi, replacement: 'confident editorial' },
   { pattern: /\bseductive\b/gi, replacement: 'magnetic high-fashion' },
   { pattern: /\bsensual\b/gi, replacement: 'soft editorial' },
-  { pattern: /\badult\b/gi, replacement: '21 plus synthetic editorial' },
-  { pattern: /\bimplied nudity\b/gi, replacement: 'covered silhouette styling' }
+  { pattern: /\bglamour\b/gi, replacement: 'beauty editorial' },
+  { pattern: /\badult\b/gi, replacement: 'premium' },
+  { pattern: /\b21\s*\+|21 plus\b/gi, replacement: 'premium' },
+  { pattern: /\bimplied nudity\b/gi, replacement: 'covered silhouette styling' },
+  { pattern: /\bbody\s*framing\b/gi, replacement: 'portrait composition' }
 ];
 
 function getImageConfig() {
@@ -79,12 +84,22 @@ function normalizeSafetyNegations(prompt: string) {
 }
 
 function sanitizeForImageModel(prompt: string) {
-  return softRewritePatterns
+  return conservativeRewritePatterns
     .reduce((current, entry) => current.replace(entry.pattern, entry.replacement), normalizeSafetyNegations(prompt))
-    .replace(/\b(nude|nudity|naked|topless|bottomless|genitals?|vagina|penis|nipples?|areola|porn|xxx)\b/gi, 'studio-safe fashion')
+    .replace(/\b(nude|nudity|naked|topless|bottomless|genitals?|vagina|penis|nipples?|areola|porn|xxx)\b/gi, 'polished studio fashion')
     .replace(/\b(sex|sexual|intercourse|oral|penetration|masturbat\w*|orgasm|fetish)\b/gi, 'fashion editorial')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function modelSafeEditorialPrompt(prompt: string) {
+  const cleanedOperatorPrompt = sanitizeForImageModel(prompt);
+  return [
+    'Ultra-realistic premium fashion portrait of Eden Skye, a fictional digital brand avatar for Eden Skye Studios.',
+    'Black studio background, sleek designer wardrobe, refined magazine-cover composition, polished makeup, confident eye contact, elegant pose, luxury beauty campaign lighting.',
+    'Keep wardrobe opaque, tasteful, and commercially usable for a brand source-image review workflow.',
+    `Operator direction rewritten for safe production: ${cleanedOperatorPrompt}`
+  ].join(' ');
 }
 
 function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']): GuardrailResult {
@@ -99,19 +114,18 @@ function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']
       status: 'blocked',
       label: 'Blocked prompt',
       detail: `This prompt asks for content outside the platform-safe editorial lane: ${blockedTerms.join(', ')}.`,
-      safePrompt: prompt,
+      safePrompt: modelSafeEditorialPrompt(prompt),
       blockedTerms
     };
   }
 
   if (mode === 'editorial_glamour') {
-    const cleanedOperatorPrompt = sanitizeForImageModel(prompt);
     return {
       tone: 'yellow',
       status: 'editorial_glamour',
-      label: 'Editorial Glamour',
-      detail: 'Platform-safe fashion glamour mode: 21+ synthetic avatar, couture bodysuit or swimwear-inspired styling, opaque covered silhouette, solo luxury editorial pose.',
-      safePrompt: `Ultra-realistic fashion editorial portrait of Eden Skye, a 21 plus synthetic AI avatar. Black luxury studio, couture bodysuit styling, swimwear-inspired wardrobe, opaque covered silhouette, confident solo modeling pose, premium magazine lighting, polished beauty campaign, elegant and platform-safe. Operator direction: ${cleanedOperatorPrompt}`,
+      label: 'Editorial Beauty/Fashion Safe Mode',
+      detail: 'Model-safe fashion mode: the backend removes high-risk terms before calling AI Gateway and sends a conservative beauty/editorial reference prompt.',
+      safePrompt: modelSafeEditorialPrompt(prompt),
       blockedTerms: []
     };
   }
@@ -121,7 +135,7 @@ function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']
     status: 'ready',
     label: 'Ready',
     detail: 'Prompt passed the preview guardrail check.',
-    safePrompt: prompt,
+    safePrompt: sanitizeForImageModel(prompt),
     blockedTerms: []
   };
 }
@@ -136,12 +150,12 @@ export async function GET() {
     endpoint,
     model,
     accepts: ['POST application/json'],
-    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization', 'safety_negation_normalization'],
+    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization', 'safety_negation_normalization', 'model_safe_beauty_fashion_fallback'],
     modes: {
       standard: 'General platform-safe image generation.',
-      editorial_glamour: 'Fashion-safe glamour. Uses couture bodysuit, swimwear-inspired wardrobe, opaque covered silhouette, and solo luxury editorial pose language before calling the image model.'
+      editorial_glamour: 'Model-safe beauty/fashion fallback. Removes high-risk terms and sends conservative designer wardrobe, black studio, portrait-reference language to the image model.'
     },
-    returns: ['imageDataUrl', 'imageUrl', 'diagnostic', 'guardrail'],
+    returns: ['imageDataUrl', 'imageUrl', 'diagnostic', 'guardrail', 'safePrompt'],
     storesGeneratedBinaries: false,
     approvalRequiredForDriveWrite: true,
     requiredEnvironment: ['AI_GATEWAY_API_KEY or VERCEL_OIDC_TOKEN'],
@@ -182,7 +196,7 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       return Response.json(
-        { error: 'Image generation failed.', diagnostic: extractGatewayError(result), guardrail, model, status: response.status },
+        { error: 'Image generation failed.', diagnostic: extractGatewayError(result), guardrail, model, status: response.status, safePrompt: guardrail.safePrompt },
         { status: response.status || 502 }
       );
     }
@@ -192,7 +206,7 @@ export async function POST(request: Request) {
     const imageUrl = firstImage?.url;
 
     if (!base64 && !imageUrl) {
-      return Response.json({ error: 'Image generation returned no usable image payload.', diagnostic: JSON.stringify(result).slice(0, 900), guardrail, model }, { status: 502 });
+      return Response.json({ error: 'Image generation returned no usable image payload.', diagnostic: JSON.stringify(result).slice(0, 900), guardrail, model, safePrompt: guardrail.safePrompt }, { status: 502 });
     }
 
     return Response.json({
