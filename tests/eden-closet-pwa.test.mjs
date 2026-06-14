@@ -13,8 +13,11 @@ const video = read("app/closet/[slug]/video/page.tsx");
 const accessApi = read("app/api/closet/access/route.ts");
 
 assert.equal(manifest.system, "Eden's Closet PWA");
-assert.equal(manifest.commerceHandoff.livePaymentActivation, false);
+assert.equal(manifest.status, "production_entitlement_gate_active");
+assert.equal(manifest.commerceHandoff.livePaymentActivation, true);
+assert.equal(manifest.commerceHandoff.shopifyPaymentPath, "https://edenskyestudios.com/pages/payment");
 assert.equal(manifest.authAndEntitlement.entitlementProvider, "Shopify Black Card");
+assert.equal(manifest.authAndEntitlement.gateState, "production_requires_authenticated_active_black_card_member");
 assert.equal(manifest.sourceTruth.pwaReferenceBoard.usage, "layout_reference_only");
 assert.match(manifest.sourceTruth.pwaReferenceBoard.rule, /Do not crop/);
 
@@ -32,8 +35,9 @@ for (const [name, source] of Object.entries({ closetHome, profile, viewer, chat,
 assert.match(viewer, /Full Experience Viewer/);
 assert.match(chat, /AI Text \+ Voice Chat/);
 assert.match(video, /AI Video Chat/);
-assert.match(accessApi, /liveEntitlementMutation: false/);
+assert.match(accessApi, /getBlackCardAccess/);
+assert.match(accessApi, /productionEntitlementCheck: true/);
 assert.match(accessApi, /Supabase/);
 assert.match(accessApi, /Shopify Black Card/);
 
-console.log("Eden Closet PWA source truth, protected gates, and member routes are installed.");
+console.log("Eden Closet PWA source truth, production entitlement gates, and member routes are installed.");
