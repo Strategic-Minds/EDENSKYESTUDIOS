@@ -20,6 +20,7 @@ export default function EdenSourceImagesLayout({ children }: { children: ReactNo
         boxShadow: '0 18px 60px rgba(0, 0, 0, 0.45)'
       }}>
         <a href="/eden-source-images/image-stack" style={navLinkStyle}>Image Stack</a>
+        <a href="/eden-source-images/video-stack" style={navLinkStyle}>Video Stack</a>
         <a href="/eden-source-images" style={navLinkStyle}>Editor</a>
       </nav>
     </>
