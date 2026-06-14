@@ -7,6 +7,7 @@ type ReviewFolder = 'Drafts' | 'Needs Review' | 'Approved' | 'Rejected' | 'Drive
 type Filter = 'All Images' | ReviewFolder;
 type ApprovalColor = 'green' | 'yellow' | 'red';
 type AssetSource = 'drive' | 'local' | 'generated';
+type StageId = 'discover' | 'plan' | 'create' | 'review' | 'schedule' | 'analyze';
 
 type Asset = {
   id: string;
@@ -88,6 +89,14 @@ type IngestResponse = {
 const filters: Filter[] = ['All Images', 'Drafts', 'Needs Review', 'Approved', 'Rejected', 'Drive Ready'];
 const primaryEmail = 'strategicmindsadvisory@gmail.com';
 const ingestStorageKey = 'eden-image-stack-ingest-records-v1';
+const stages: Array<{ id: StageId; label: string; helper: string }> = [
+  { id: 'discover', label: 'Discover', helper: 'Find ideas, trends, hooks, and source material.' },
+  { id: 'plan', label: 'Plan', helper: 'Turn ideas into campaigns, scripts, shots, and tasks.' },
+  { id: 'create', label: 'Create', helper: 'Upload, generate, and prepare image/video assets.' },
+  { id: 'review', label: 'Review', helper: 'Approve, reject, QA, and match assets to the manifest.' },
+  { id: 'schedule', label: 'Schedule', helper: 'Queue approved content for Metricool and publishing.' },
+  { id: 'analyze', label: 'Analyze', helper: 'Track performance and feed winners back into planning.' }
+];
 
 function formatSize(size: number) {
   if (!size) return 'Drive image';
@@ -155,6 +164,7 @@ function applyRecordToAsset(asset: Asset, record: IngestRecord): Asset {
 export default function EdenImageStackPage() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [ingestRecords, setIngestRecords] = useState<IngestRecord[]>([]);
+  const [activeStage, setActiveStage] = useState<StageId>('create');
   const [activeFilter, setActiveFilter] = useState<Filter>('All Images');
   const [view, setView] = useState<'grid' | 'dense'>('grid');
   const [sort, setSort] = useState<'newest' | 'name' | 'qa'>('newest');
@@ -225,9 +235,13 @@ export default function EdenImageStackPage() {
 
   const selectedCount = assets.filter((asset) => asset.selected).length;
   const driveCount = assets.filter((asset) => asset.source === 'drive').length;
+  const localCount = assets.filter((asset) => asset.source === 'local').length;
+  const approvedCount = assets.filter((asset) => asset.folder === 'Approved' || asset.folder === 'Drive Ready').length;
+  const reviewCount = assets.filter((asset) => asset.folder === 'Needs Review').length;
   const cleanMatches = mapSummary?.cleanMatches ?? 0;
   const provisionalMatches = mapSummary?.provisionalMatches ?? 0;
   const lastRecord = ingestRecords[0];
+  const activeStageMeta = stages.find((stage) => stage.id === activeStage) || stages[0];
 
   async function recordAsset(asset: Asset, reason: string, overrides: Partial<Asset> = {}) {
     setIngestState('recording');
@@ -294,6 +308,7 @@ export default function EdenImageStackPage() {
       };
     });
     setAssets((current) => [...nextAssets, ...current]);
+    setActiveStage('review');
     setActiveFilter('Needs Review');
     nextAssets.forEach((asset) => void recordAsset(asset, 'local_upload_metadata_ingest'));
   }
@@ -348,79 +363,69 @@ export default function EdenImageStackPage() {
     return assets.filter((asset) => asset.folder === filter).length;
   }
 
-  return (
-    <main className={styles.shell}>
-      <aside className={styles.sidebar}>
-        <div className={styles.brandMark}>ES</div>
-        <div>
-          <p>Eden Skye Studios</p>
-          <h1>Image Stack Admin</h1>
-          <span>{primaryEmail}</span>
+  function renderCreateStage() {
+    return (
+      <section className={styles.stageGrid}>
+        <div className={styles.actionPanel}>
+          <span className={styles.stepBadge}>1</span>
+          <h3>Add source images</h3>
+          <p>Drop approved references, GPT drafts, product shots, thumbnails, or visual ideas here. Every upload moves into Review and creates an ingest receipt.</p>
+          <label className={styles.dropZone} onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
+            <input type="file" accept="image/*" multiple onChange={handleInput} />
+            <b>Drop images or click to upload</b>
+            <span>Images are renamed, categorized, routed to review, saved as receipts, and prepared for Supabase/Drive notation.</span>
+          </label>
         </div>
-        <div className={styles.statusPanel}>
-          <b>Drive pool</b>
-          <span>{loadState === 'loading' ? 'Loading TEMP IMAGES...' : loadState === 'error' ? 'Approval map unavailable' : `${driveCount} Drive images loaded`}</span>
-          <span>{cleanMatches} clean matches / {provisionalMatches} provisional / PR #8 blocked</span>
-        </div>
-        <div className={styles.ingestPanel}>
-          <b>Ingest receipts</b>
-          <span>{ingestRecords.length} browser-saved records</span>
-          <span>{ingestState === 'recording' ? 'Recording...' : ingestState === 'error' ? 'Last record failed' : lastRecord ? `Last: ${lastRecord.receiptId}` : 'Ready for uploads'}</span>
-          {lastRecord && <em>{lastRecord.filename} / {lastRecord.approvalColor.toUpperCase()} / {lastRecord.manifestSlot}</em>}
-        </div>
-        <div className={styles.legend}>
-          <span><i className={styles.greenDot} /> Green verified</span>
-          <span><i className={styles.yellowDot} /> Yellow needs review</span>
-          <span><i className={styles.redDot} /> Red blocked</span>
-        </div>
-        <label className={styles.dropZone} onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
-          <input type="file" accept="image/*" multiple onChange={handleInput} />
-          <b>Drop images here</b>
-          <span>Uploads are titled, categorized, routed to review, saved as browser receipts, and sent to the ingest API for notation.</span>
-        </label>
-        <div className={styles.folderList}>
-          {filters.map((filter) => (
-            <button key={filter} type="button" className={activeFilter === filter ? styles.activeFolder : ''} onClick={() => setActiveFilter(filter)}>
-              <b>{filter}</b>
-              <span>{countFor(filter)}</span>
-            </button>
-          ))}
-        </div>
-      </aside>
-
-      <section className={styles.workspace}>
-        <header className={styles.topbar}>
-          <div>
-            <p>Admin-safe approval plane</p>
-            <h2>{activeFilter}</h2>
-            <span>{assets.length} stacked images / {selectedCount} selected / every change creates an ingest receipt</span>
+        <div className={styles.actionPanel}>
+          <span className={styles.stepBadge}>2</span>
+          <h3>Create with Eden</h3>
+          <p>Use the editor to generate images, scripts, captions, and video ideas. Generated assets should return here as records before publishing.</p>
+          <div className={styles.buttonStack}>
+            <a href="/eden-source-images">Open Eden Editor</a>
+            <a href="/api/eden/source-images/generate-image">Image API status</a>
+            <button type="button" onClick={() => setActiveStage('review')}>Review created assets</button>
           </div>
-          <nav>
-            <a href="/eden-source-images">Editor</a>
-            <a href="/api/eden/source-images/ingest-generated">Ingest API</a>
-            <button type="button" onClick={() => setView(view === 'grid' ? 'dense' : 'grid')}>{view === 'grid' ? 'Dense View' : 'Grid View'}</button>
-            <select value={sort} onChange={(event) => setSort(event.currentTarget.value as 'newest' | 'name' | 'qa')}>
-              <option value="newest">Newest</option>
-              <option value="name">Name</option>
-              <option value="qa">QA score</option>
-            </select>
-          </nav>
-        </header>
-
-        <div className={styles.batchBar}>
-          <button type="button" onClick={selectVisible}>Select visible</button>
-          <button type="button" onClick={clearSelection}>Clear</button>
-          <button type="button" onClick={() => moveSelected('Needs Review')} disabled={!selectedCount}>Move to review</button>
-          <button type="button" onClick={() => moveSelected('Approved')} disabled={!selectedCount}>Approve</button>
-          <button type="button" onClick={() => moveSelected('Rejected')} disabled={!selectedCount}>Reject</button>
-          <button type="button" onClick={() => moveSelected('Drive Ready')} disabled={!selectedCount}>Drive ready</button>
         </div>
+        <div className={styles.actionPanel}>
+          <span className={styles.stepBadge}>3</span>
+          <h3>Prepare video drafts</h3>
+          <p>HeyGen will live here as the video engine: pick an approved image/avatar, script, voice, format, then generate a gated draft.</p>
+          <div className={styles.statusList}>
+            <span>HeyGen avatar/video inventory: verified by connector</span>
+            <span>Live create-video action: keep approval-gated</span>
+            <span>Video Stack: next module</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
+  function renderReviewStage() {
+    return (
+      <>
+        <div className={styles.reviewControls}>
+          <div className={styles.folderListInline}>
+            {filters.map((filter) => (
+              <button key={filter} type="button" className={activeFilter === filter ? styles.activeFolder : ''} onClick={() => setActiveFilter(filter)}>
+                <b>{filter}</b>
+                <span>{countFor(filter)}</span>
+              </button>
+            ))}
+          </div>
+          <div className={styles.batchBar}>
+            <button type="button" onClick={selectVisible}>Select visible</button>
+            <button type="button" onClick={clearSelection}>Clear</button>
+            <button type="button" onClick={() => moveSelected('Needs Review')} disabled={!selectedCount}>Move to review</button>
+            <button type="button" onClick={() => moveSelected('Approved')} disabled={!selectedCount}>Approve</button>
+            <button type="button" onClick={() => moveSelected('Rejected')} disabled={!selectedCount}>Reject</button>
+            <button type="button" onClick={() => moveSelected('Drive Ready')} disabled={!selectedCount}>Drive ready</button>
+          </div>
+        </div>
         {visibleAssets.length === 0 ? (
           <section className={styles.emptyState}>
             <span>{loadState === 'loading' ? 'Loading' : 'Ready'}</span>
             <h3>{loadState === 'loading' ? 'Pulling Drive images into the stack.' : `No images in ${activeFilter}.`}</h3>
-            <p>Drop a batch on the left or switch to All Images. Nothing publishes from this preview until Drive approval and manifest matching are verified.</p>
+            <p>Go to Create and drop a batch, or switch to All Images. Nothing publishes until approval and manifest matching are verified.</p>
           </section>
         ) : (
           <section className={view === 'grid' ? styles.grid : styles.denseList}>
@@ -463,6 +468,136 @@ export default function EdenImageStackPage() {
             ))}
           </section>
         )}
+      </>
+    );
+  }
+
+  function renderPlanningStage(kind: Exclude<StageId, 'create' | 'review'>) {
+    const copy = {
+      discover: {
+        title: 'Discovery Queue',
+        body: 'This is where GPT, trends, competitors, Shopify products, and content ideas should become ranked opportunities before anything gets made.',
+        actions: ['Scan trends', 'Capture competitor pattern', 'Create idea brief']
+      },
+      plan: {
+        title: 'Campaign Plan',
+        body: 'Turn selected ideas into scripts, prompts, shot lists, offers, captions, and approval tasks before creation starts.',
+        actions: ['Draft campaign', 'Generate script batch', 'Build shot list']
+      },
+      schedule: {
+        title: 'Publishing Queue',
+        body: 'Approved assets should move here for Metricool scheduling, platform captions, hashtags, links, and final approval.',
+        actions: ['Prepare Metricool queue', 'Create caption set', 'Hold for approval']
+      },
+      analyze: {
+        title: 'Performance Loop',
+        body: 'Pull metrics back into Supabase, score winners, flag weak content, and feed winning hooks back into Discovery.',
+        actions: ['Review analytics', 'Find winners', 'Generate next tests']
+      }
+    }[kind];
+
+    return (
+      <section className={styles.stageGrid}>
+        <div className={styles.actionPanelLarge}>
+          <span className={styles.stepBadge}>{stages.findIndex((stage) => stage.id === kind) + 1}</span>
+          <h3>{copy.title}</h3>
+          <p>{copy.body}</p>
+          <div className={styles.buttonStack}>
+            {copy.actions.map((action) => <button key={action} type="button">{action}</button>)}
+          </div>
+        </div>
+        <div className={styles.actionPanel}>
+          <h3>Current signal</h3>
+          <div className={styles.metricGridCompact}>
+            <span><b>{assets.length}</b>Total assets</span>
+            <span><b>{approvedCount}</b>Approved</span>
+            <span><b>{reviewCount}</b>Needs review</span>
+            <span><b>{ingestRecords.length}</b>Receipts</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <main className={styles.shell}>
+      <aside className={styles.sidebar}>
+        <div className={styles.brandRow}>
+          <div className={styles.brandMark}>ES</div>
+          <div>
+            <p>Eden Skye Studios</p>
+            <h1>Content Machine</h1>
+            <span>{primaryEmail}</span>
+          </div>
+        </div>
+
+        <div className={styles.sidebarTabs}>
+          {stages.map((stage, index) => (
+            <button key={stage.id} type="button" className={activeStage === stage.id ? styles.activeStage : ''} onClick={() => setActiveStage(stage.id)}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <b>{stage.label}</b>
+            </button>
+          ))}
+        </div>
+
+        <div className={styles.statusPanel}>
+          <b>System state</b>
+          <span>{loadState === 'loading' ? 'Loading TEMP IMAGES...' : loadState === 'error' ? 'Approval map unavailable' : `${driveCount} Drive images loaded / ${localCount} local uploads`}</span>
+          <span>{cleanMatches} clean matches / {provisionalMatches} provisional / PR #8 blocked</span>
+        </div>
+        <div className={styles.ingestPanel}>
+          <b>Ingest receipts</b>
+          <span>{ingestRecords.length} browser-saved records</span>
+          <span>{ingestState === 'recording' ? 'Recording...' : ingestState === 'error' ? 'Last record failed' : lastRecord ? `Last: ${lastRecord.receiptId}` : 'Ready for uploads'}</span>
+          {lastRecord && <em>{lastRecord.filename} / {lastRecord.approvalColor.toUpperCase()} / {lastRecord.manifestSlot}</em>}
+        </div>
+        <div className={styles.legend}>
+          <span><i className={styles.greenDot} /> Green verified</span>
+          <span><i className={styles.yellowDot} /> Yellow needs review</span>
+          <span><i className={styles.redDot} /> Red blocked</span>
+        </div>
+      </aside>
+
+      <section className={styles.workspace}>
+        <header className={styles.topbar}>
+          <div>
+            <p>Workflow control plane</p>
+            <h2>{activeStageMeta.label}</h2>
+            <span>{activeStageMeta.helper}</span>
+          </div>
+          <nav>
+            <a href="/eden-source-images">Editor</a>
+            <a href="/api/eden/source-images/ingest-generated">Ingest API</a>
+            <button type="button" onClick={() => setView(view === 'grid' ? 'dense' : 'grid')}>{view === 'grid' ? 'Dense View' : 'Grid View'}</button>
+            <select value={sort} onChange={(event) => setSort(event.currentTarget.value as 'newest' | 'name' | 'qa')}>
+              <option value="newest">Newest</option>
+              <option value="name">Name</option>
+              <option value="qa">QA score</option>
+            </select>
+          </nav>
+        </header>
+
+        <section className={styles.workflowTabs} aria-label="Content workflow tabs">
+          {stages.map((stage, index) => (
+            <button key={stage.id} type="button" className={activeStage === stage.id ? styles.activeWorkflowTab : ''} onClick={() => setActiveStage(stage.id)}>
+              <span>{index + 1}</span>
+              <b>{stage.label}</b>
+              <em>{stage.helper}</em>
+            </button>
+          ))}
+        </section>
+
+        <section className={styles.summaryStrip}>
+          <span><b>{assets.length}</b> Assets</span>
+          <span><b>{reviewCount}</b> Review</span>
+          <span><b>{approvedCount}</b> Approved</span>
+          <span><b>{ingestRecords.length}</b> Receipts</span>
+          <span><b>Blocked</b> PR #8</span>
+        </section>
+
+        {activeStage === 'create' && renderCreateStage()}
+        {activeStage === 'review' && renderReviewStage()}
+        {activeStage !== 'create' && activeStage !== 'review' && renderPlanningStage(activeStage)}
       </section>
 
       {expandedAsset && (
