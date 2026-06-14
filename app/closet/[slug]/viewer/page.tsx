@@ -103,9 +103,9 @@ export default function Viewer({ params }: { params: { slug: string } }) {
 
       <section className="environment-strip" aria-label="Closet environment selector">
         {closetEnvironments.map((environment) => (
-          <button key={environment.name} type="button">
-            <img src={environment.image} alt={`${environment.name} standalone environment`} />
-            <span>{environment.name}</span>
+          <button key={environment.key} type="button">
+            <img src={environment.src} alt={`${environment.label} standalone environment`} />
+            <span>{environment.label}</span>
           </button>
         ))}
       </section>
