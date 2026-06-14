@@ -1,20 +1,31 @@
+import Link from "next/link";
 import { Header } from "../components";
 
 const statusCards = [
-  ["Entitlement", "Black Card test entitlement", "Granted only from approved paid test events."],
-  ["Webhook", "Signed event required", "Unsigned payloads are rejected."],
-  ["Activation", "Draft/test only", "Live Shopify activation remains blocked."],
-  ["Next step", "Dashboard handoff", "Move the user into the protected member surfaces."]
+  ["Membership", "Black Card access", "Your account is ready for the member experience once payment verification is complete."],
+  ["Eden's Closet", "Private wardrobe studio", "Choose your model, style a look, preview environments, and enter the 360 viewer."],
+  ["AI Access", "Chat, voice, and video", "AI text, voice, and video surfaces are protected behind verified member access."],
+  ["Next step", "Open your dashboard", "Continue into the PWA member hub and launch Eden's Closet from there."]
 ];
 
 export default function SuccessPage() {
   return (
-    <main className="eden-site">
+    <main className="eden-site eden-closet-pwa">
       <Header />
-      <section className="page-head center">
-        <p className="pink">Payment Success / Draft Handoff</p>
-        <h1>Success</h1>
-        <p>This is the draft-safe handoff after a test paid event. It confirms the entitlement sync path without enabling any live commerce mutation.</p>
+      <section className="page-head center success-member-head">
+        <p className="pink">Black Card Handoff</p>
+        <h1>Welcome to Eden Skye</h1>
+        <p>
+          Your payment handoff is ready. Continue into the member dashboard to open Eden's Closet, explore private model experiences, and prepare your AI chat or video session.
+        </p>
+        <div className="hero-actions" style={{ justifyContent: "center" }}>
+          <Link className="hot-btn" href="/dashboard">
+            Open Dashboard
+          </Link>
+          <Link className="outline-btn" href="/closet">
+            Enter Eden's Closet
+          </Link>
+        </div>
       </section>
       <section className="pricing-grid">
         {statusCards.map(([label, value, body]) => (
@@ -26,18 +37,18 @@ export default function SuccessPage() {
         ))}
       </section>
       <section className="black-card-cta">
-        <p className="pink">Protected result</p>
-        <h2>Black Card access may proceed only after a test-mode paid event.</h2>
+        <p className="pink">Member Experience</p>
+        <h2>Eden's Closet is the protected PWA layer for Black Card members.</h2>
         <div className="hero-actions" style={{ justifyContent: "center" }}>
-          <a className="hot-btn" href="/dashboard">
-            Dashboard
-          </a>
-          <a className="outline-btn" href="/shopify">
-            Shopify Bridge
-          </a>
-          <a className="outline-btn" href="/admin/gates">
-            Review Gates
-          </a>
+          <Link className="hot-btn" href="/closet/alexis-voss">
+            Style Alexis
+          </Link>
+          <Link className="outline-btn" href="/closet/alexis-voss/chat">
+            AI Chat Preview
+          </Link>
+          <Link className="outline-btn" href="/payment">
+            Payment Details
+          </Link>
         </div>
       </section>
     </main>
