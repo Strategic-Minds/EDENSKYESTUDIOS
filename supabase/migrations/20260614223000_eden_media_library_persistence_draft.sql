@@ -119,22 +119,28 @@ alter table public.approval_receipts enable row level security;
 
 -- Admin-safe baseline: authenticated users can read draft/admin records only after app auth is connected.
 -- Public/anon writes are intentionally not granted.
-create policy if not exists "media portfolios authenticated read" on public.media_portfolios
+drop policy if exists "media portfolios authenticated read" on public.media_portfolios;
+create policy "media portfolios authenticated read" on public.media_portfolios
   for select to authenticated using (true);
 
-create policy if not exists "media assets authenticated read" on public.media_assets
+drop policy if exists "media assets authenticated read" on public.media_assets;
+create policy "media assets authenticated read" on public.media_assets
   for select to authenticated using (true);
 
-create policy if not exists "media variants authenticated read" on public.media_variants
+drop policy if exists "media variants authenticated read" on public.media_variants;
+create policy "media variants authenticated read" on public.media_variants
   for select to authenticated using (true);
 
-create policy if not exists "media videos authenticated read" on public.media_videos
+drop policy if exists "media videos authenticated read" on public.media_videos;
+create policy "media videos authenticated read" on public.media_videos
   for select to authenticated using (true);
 
-create policy if not exists "content drafts authenticated read" on public.content_drafts
+drop policy if exists "content drafts authenticated read" on public.content_drafts;
+create policy "content drafts authenticated read" on public.content_drafts
   for select to authenticated using (true);
 
-create policy if not exists "approval receipts authenticated read" on public.approval_receipts
+drop policy if exists "approval receipts authenticated read" on public.approval_receipts;
+create policy "approval receipts authenticated read" on public.approval_receipts
   for select to authenticated using (true);
 
 -- Service/admin writes should be performed by server-side routes only, never browser clients.
@@ -149,11 +155,14 @@ on conflict (id) do nothing;
 
 -- Storage policies intentionally allow authenticated reads only. Upload/write policies should be added
 -- after the admin auth model is confirmed so browser users cannot write directly into production buckets.
-create policy if not exists "eden images authenticated read" on storage.objects
+drop policy if exists "eden images authenticated read" on storage.objects;
+create policy "eden images authenticated read" on storage.objects
   for select to authenticated using (bucket_id = 'eden-images');
 
-create policy if not exists "eden videos authenticated read" on storage.objects
+drop policy if exists "eden videos authenticated read" on storage.objects;
+create policy "eden videos authenticated read" on storage.objects
   for select to authenticated using (bucket_id = 'eden-videos');
 
-create policy if not exists "eden generated authenticated read" on storage.objects
+drop policy if exists "eden generated authenticated read" on storage.objects;
+create policy "eden generated authenticated read" on storage.objects
   for select to authenticated using (bucket_id = 'eden-generated');
