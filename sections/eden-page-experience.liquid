@@ -1,10 +1,131 @@
+{% liquid
+  assign is_model_page = false
+  assign model_name = ''
+  assign model_role = 'Premium digital model'
+  assign model_image = ''
+  assign model_bio = ''
+  assign model_gallery_2 = ''
+  assign model_gallery_3 = ''
+  case page.handle
+    when 'model-alexis-voss'
+      assign is_model_page = true
+      assign model_name = 'Alexis Voss'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435'
+      assign model_bio = 'Signature brunette model with premium editorial media, private galleries, and Black Card access.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-portrait-neon.png?v=1781419527'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550'
+    when 'model-luna-moretti'
+      assign is_model_page = true
+      assign model_name = 'Luna Moretti'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-portrait-black-pink.png?v=1781419459'
+      assign model_bio = 'Luxury lounge and nightlife model with cinematic portfolio media and private member drops.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470'
+    when 'model-sienna-cole'
+      assign is_model_page = true
+      assign model_name = 'Sienna Cole'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-portrait-neon.png?v=1781419527'
+      assign model_bio = 'Neon-glam model for premium creator media, short-form visuals, and private galleries.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-fullbody-neon-closet.png?v=1781419447'
+    when 'model-eden-skye'
+      assign is_model_page = true
+      assign model_name = 'Eden Skye'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550'
+      assign model_bio = 'Flagship Eden Skye model with signature black/pink styling and private media access.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503'
+    when 'model-mila-stone'
+      assign is_model_page = true
+      assign model_name = 'Mila Stone'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-fullbody-neon-closet.png?v=1781419447'
+      assign model_bio = 'Full-body wardrobe and closet model for style-led member media and private looks.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550'
+    when 'model-valentina-rose'
+      assign is_model_page = true
+      assign model_name = 'Valentina Rose'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-black-neon.png?v=1781419488'
+      assign model_bio = 'Blonde glam model with lifestyle media, style shoots, and Black Card drops.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-evening-model.png?v=1781419539'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515'
+    when 'model-serena-vail'
+      assign is_model_page = true
+      assign model_name = 'Serena Vail'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-evening-model.png?v=1781419539'
+      assign model_bio = 'Blonde evening model with premium visual storytelling and private campaign media.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-black-neon.png?v=1781419488'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470'
+    when 'model-aria-noir'
+      assign is_model_page = true
+      assign model_name = 'Aria Noir'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-06-aria-noir.jpg?v=1781309068'
+      assign model_bio = 'Nightlife and fashion model with premium launch visuals and private content drops.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515'
+    when 'model-nova-lux'
+      assign is_model_page = true
+      assign model_name = 'Nova Lux'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-07-nova-lux.jpg?v=1781309076'
+      assign model_bio = 'Modern luxury model with visual hooks, fashion sets, and premium portfolio content.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-portrait-black-pink.png?v=1781419459'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503'
+    when 'model-isla-monroe'
+      assign is_model_page = true
+      assign model_name = 'Isla Monroe'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-10-redhead-isla-monroe.png?v=1781416374'
+      assign model_bio = 'Redhead fashion model for boutique, social, and member-only portfolio drops.'
+      assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515'
+      assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470'
+    when 'model-dante-cross'
+      assign is_model_page = true
+      assign model_name = 'Dante Cross'
+      assign model_role = 'Premium male model'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-01-dante-cross.jpg?v=1781309108'
+      assign model_bio = 'Luxury male model for fashion, nightlife, and lifestyle portfolio media.'
+    when 'model-jax-rhodes'
+      assign is_model_page = true
+      assign model_name = 'Jax Rhodes'
+      assign model_role = 'Premium male model'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-02-jax-rhodes.jpg?v=1781309117'
+      assign model_bio = 'Bold male model for fitness-luxury, editorial shoots, and member content.'
+    when 'model-roman-kade'
+      assign is_model_page = true
+      assign model_name = 'Roman Kade'
+      assign model_role = 'Premium male model'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-03-roman-kade.jpg?v=1781309142'
+      assign model_bio = 'Premium male model for editorial, fashion, and private media drops.'
+    when 'model-kai-voss'
+      assign is_model_page = true
+      assign model_name = 'Kai Voss'
+      assign model_role = 'Premium male model'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-04-kai-voss.jpg?v=1781309134'
+      assign model_bio = 'Modern male model for lifestyle, fashion, and premium content campaigns.'
+    when 'model-marco-slate'
+      assign is_model_page = true
+      assign model_name = 'Marco Slate'
+      assign model_role = 'Premium male model'
+      assign model_image = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-05-marco-slate.jpg?v=1781309149'
+      assign model_bio = 'Upscale male model for concierge-style media and member-only campaign drops.'
+  endcase
+  if model_gallery_2 == blank
+    assign model_gallery_2 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470'
+  endif
+  if model_gallery_3 == blank
+    assign model_gallery_3 = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515'
+  endif
+%}
 <section class="eden-page eden-experience-page">
   {% if page.handle == 'payment' %}
-    <p class="eden-eyebrow">Secure Access</p><h1>Black Card Payment</h1><div class="eden-blackcard-layout"><div><p>Black Card is the premium access layer for Eden Skye Studios: model discovery, AI video workflows, private creative approval, Shopify/Xyla content batches, and concierge automation.</p><div class="eden-price">$49<span>/month launch offer</span></div><div class="eden-payment-stack"><article><strong>Included</strong><span>Model portfolio, content batches, Xyla video packets, approval studio access, and priority Black Card drops.</span></article><article><strong>Status</strong><span>Storefront page ready. Live Shopify checkout activation remains approval-gated until Jeremy turns it on.</span></article><article><strong>Next</strong><span>Connect the Black Card Shopify product or payment link here after final payment approval.</span></article></div><a class="eden-button" href="/collections/black-card">Review Black Card</a></div><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-product-01-black-card.jpg?v=1781309179" alt="Black Card"></div>
+    <p class="eden-eyebrow">Black Card Access</p><h1>Unlock Eden Skye</h1><div class="eden-blackcard-layout"><div><p>Join Black Card for private model portfolios, member-only media drops, and access to Eden's Closet.</p><div class="eden-price">$49<span>/month launch offer</span></div><div class="eden-payment-stack"><article><strong>Step 1</strong><span>Choose a model or media experience.</span></article><article><strong>Step 2</strong><span>Join Black Card using the secure Shopify checkout link.</span></article><article><strong>Step 3</strong><span>Access Eden's Closet and member content after payment.</span></article></div><a class="eden-button" href="/collections/black-card">Select Black Card</a><a class="eden-button secondary" href="/pages/edens-closet">Preview Eden's Closet</a></div><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-product-01-black-card.jpg?v=1781309179" alt="Black Card"></div>
+  {% elsif page.handle == 'edens-closet' %}
+    <p class="eden-eyebrow">Member Access</p><h1>Eden's Closet</h1><div class="eden-blackcard-layout"><div><p>Eden's Closet is the private member area for wardrobe looks, premium model visuals, styling scenes, and locked media drops.</p><div class="eden-payment-stack"><article><strong>Status</strong><span>Black Card members get access after checkout.</span></article><article><strong>Inside</strong><span>Wardrobe scenes, model looks, favorites, and private galleries.</span></article><article><strong>Access</strong><span>Log in with your Shopify customer account after payment.</span></article></div><a class="eden-button" href="/pages/payment">Join Black Card</a><a class="eden-button secondary" href="/account/login">Member Log In</a></div><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503" alt="Eden's Closet"></div>
+  {% elsif is_model_page %}
+    <p class="eden-eyebrow">{{ model_role }}</p><h1>{{ model_name }}</h1><div class="eden-profile-layout"><img src="{{ model_image }}" alt="{{ model_name | escape }}"><div><h2>Portfolio</h2><p>{{ model_bio }}</p><div class="eden-stat-grid"><span>Private gallery</span><span>Member drops</span><span>Digital media</span><span>Black Card</span></div><a class="eden-button" href="/pages/payment">Unlock this model</a></div></div><div class="eden-section-head eden-inline-head"><div><p class="eden-eyebrow">Gallery Preview</p><h2>Selected looks</h2></div><p>Preview the model's visual world. Full galleries unlock through Black Card.</p></div><div class="eden-reference-grid"><img src="{{ model_image }}" alt="{{ model_name | escape }} primary look"><img src="{{ model_gallery_2 }}" alt="{{ model_name | escape }} gallery look"><img src="{{ model_gallery_3 }}" alt="{{ model_name | escape }} environment look"></div><div class="eden-page-actions"><a class="eden-button" href="/pages/payment">Continue to payment</a><a class="eden-button secondary" href="/collections/ladies">Back to models</a></div>
   {% elsif page.handle == 'model-portfolio' %}
-    <p class="eden-eyebrow">Model Portfolio</p><h1>Eden Skye Model Portfolio</h1><div class="eden-profile-layout"><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435" alt="Alexis Voss"><div><h2>Alexis Voss</h2><p>Signature brunette Black Card model for premium content, product storytelling, gallery campaigns, videos, and member discovery.</p><div class="eden-stat-grid"><span>Editorial</span><span>Fashion</span><span>AI video</span><span>Shopify content</span></div><a class="eden-button" href="/pages/payment">Work with this model</a></div></div><div class="eden-section-head eden-inline-head"><div><p class="eden-eyebrow">Gallery</p><h2>Approved portfolio source images</h2></div><p>Only standalone approved Shopify-hosted files are used here. No collage crops.</p></div><div class="eden-grid eden-showcase-grid">{% render 'eden-card', title: 'Alexis Voss', text: 'Night lounge portrait and flagship Black Card look.', tag: 'Portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435', url: '/pages/payment' %}{% render 'eden-card', title: 'Eden Skye', text: 'Full-body black styling for hero, closet, and campaign drafts.', tag: 'Portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550', url: '/pages/payment' %}{% render 'eden-card', title: 'Valentina Rose', text: 'Blonde neon styling for premium lifestyle campaigns.', tag: 'Portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-black-neon.png?v=1781419488', url: '/pages/payment' %}{% render 'eden-card', title: 'Serena Vail', text: 'Blonde evening source for Shopify and Xyla content.', tag: 'Portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-evening-model.png?v=1781419539', url: '/pages/payment' %}{% render 'eden-card', title: 'Mila Stone', text: 'Full-body closet styling source for wardrobe and viewer workflows.', tag: 'Portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-fullbody-neon-closet.png?v=1781419447', url: '/pages/payment' %}{% render 'eden-card', title: 'Sienna Cole', text: 'Hot-pink neon portrait for social and video drafts.', tag: 'Portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-portrait-neon.png?v=1781419527', url: '/pages/payment' %}</div>
+    <p class="eden-eyebrow">Model Portfolio</p><h1>Explore Eden Skye Models</h1><p class="eden-richtext">Select any model card to open a dedicated portfolio page. Black Card unlocks private media and Eden's Closet access.</p><div class="eden-grid eden-showcase-grid">{% render 'eden-card', title: 'Alexis Voss', text: 'Signature brunette model with private editorial media.', tag: 'View portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435', url: '/pages/model-alexis-voss' %}{% render 'eden-card', title: 'Valentina Rose', text: 'Blonde glam model with lifestyle and style shoots.', tag: 'View portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-black-neon.png?v=1781419488', url: '/pages/model-valentina-rose' %}{% render 'eden-card', title: 'Dante Cross', text: 'Luxury male model for fashion and lifestyle media.', tag: 'View portfolio', fallback_image_url: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-01-dante-cross.jpg?v=1781309108', url: '/pages/model-dante-cross' %}</div><div class="eden-page-actions"><a class="eden-button" href="/collections/ladies">Ladies</a><a class="eden-button secondary" href="/collections/gentlemen">Gentlemen</a></div>
   {% elsif page.handle == 'eden-admin' %}
-    <p class="eden-eyebrow">Hidden Admin</p><h1>Eden Skye Admin Control Plane</h1><div class="eden-admin-hero"><div><h2>AI content creation approval system</h2><p>This hidden page is the storefront-visible control-plane shell for image, video, content, Shopify, and automation approval. It is intentionally not linked in public navigation.</p><div class="eden-page-actions"><a class="eden-button" href="/collections/ladies">Review Ladies</a><a class="eden-button secondary" href="/pages/payment">Payment Gate</a></div></div><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-roster.png?v=1781419417" alt="Eden Skye admin approval UI reference"></div><div class="eden-admin-grid"><article><span>Images</span><strong>Approval Gallery</strong><p>Approved source images, replacement slots, manifest status, and creator-ready assets.</p></article><article><span>Video</span><strong>HeyGen / Xyla Queue</strong><p>Draft scripts, model video packets, social reels, and automation-ready clips.</p></article><article><span>Commerce</span><strong>Black Card Gate</strong><p>Payment activation, products, collections, Shopify sync, and protected launch approvals.</p></article><article><span>Automation</span><strong>GPT Pipeline</strong><p>Content generation, social drafts, validation, receipts, and evidence capture.</p></article></div><div class="eden-reference-grid"><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-desktop-home-reference.png?v=1781419565" alt="Approved desktop reference"><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-mobile-full-reference.png?v=1781419576" alt="Approved mobile reference"><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-home.png?v=1781419405" alt="Approved mobile home reference"></div>
+    <p class="eden-eyebrow">Hidden Admin</p><h1>Eden Skye Admin</h1><div class="eden-admin-hero"><div><h2>Approval chat and media control plane</h2><p>Private approval workspace for image review, video packets, content drafts, model manifests, Drive source files, and storefront release gates.</p><div class="eden-admin-chat"><div class="eden-chat-line user">Jeremy: Review this batch for site approval.</div><div class="eden-chat-line assistant">Eden Admin: I found 15 model assets, 3 media drops, 1 payment gate, and 2 items needing approval.</div><div class="eden-chat-input">Ask Eden Admin to review images, approve content, or prepare a Shopify update...</div></div></div><img src="https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-roster.png?v=1781419417" alt="Eden Skye admin approval UI reference"></div><div class="eden-admin-grid"><article><span>Images</span><strong>Approval Gallery</strong><p>Approve, reject, or quarantine source images before public use.</p></article><article><span>Video</span><strong>Video Queue</strong><p>Review scripts, avatar packets, reels, and content drafts.</p></article><article><span>Drive</span><strong>Source Truth</strong><p>Track manifests, filenames, and canonical assets.</p></article><article><span>Store</span><strong>Release Gate</strong><p>Approve payment links, product activation, and storefront changes.</p></article></div>
   {% else %}
     <p class="eden-eyebrow">Eden Skye Studios</p><h1>{{ page.title }}</h1><div class="eden-richtext">{{ page.content }}</div>
   {% endif %}
