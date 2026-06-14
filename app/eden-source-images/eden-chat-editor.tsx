@@ -8,7 +8,8 @@ type ModuleId = 'eden' | 'images' | 'videos' | 'approval' | 'folders' | 'manifes
 type ModuleItem = { id: ModuleId; label: string; helper: string };
 type FileSummary = { name: string; type: string; size: number };
 type StatusTone = 'green' | 'yellow' | 'red';
-type ApprovalItem = { label: string; detail: string; tone: StatusTone; mark: string };
+type ApprovalFolder = 'Drafts' | 'Needs Review' | 'Approved' | 'Rejected' | 'Drive Ready';
+type StrengthKey = 'glamour' | 'fashion' | 'realism' | 'identityLock' | 'studioLighting' | 'bodyFraming';
 type ExpandedMedia = { title: string; src: string; kind: 'image' | 'video' };
 type GuardrailResult = {
   tone: StatusTone;
@@ -18,14 +19,24 @@ type GuardrailResult = {
   safePrompt: string;
   blockedTerms: string[];
 };
-type ImageDraft = {
+type StylePreset = { id: string; label: string; prompt: string };
+type AssetStatus = 'generating' | 'ready' | 'blocked' | 'error' | 'approved' | 'rejected' | 'drive_ready';
+type AssetRecord = {
   id: string;
-  prompt: string;
-  status: 'generating' | 'ready' | 'blocked' | 'error';
+  filename: string;
+  originalPrompt: string;
+  productionPrompt: string;
+  preset: string;
+  status: AssetStatus;
+  approvalFolder: ApprovalFolder;
+  qaScore: number;
+  driveTarget: string;
   imageSrc?: string;
   diagnostic?: string;
   model?: string;
   guardrail?: GuardrailResult;
+  retryStage?: string;
+  attempts: string[];
 };
 
 const primaryEmail = 'strategicmindsadvisory@gmail.com';
@@ -47,7 +58,7 @@ const visualRefs = {
   calendar: 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/ess-vis-013-content-calendar-dashboard.png?v=1781224960'
 };
 
-const initialModules: ModuleItem[] = [
+const modules: ModuleItem[] = [
   { id: 'eden', label: 'Eden Agent', helper: 'Chat, create, and command' },
   { id: 'images', label: 'Images', helper: 'Review and expand source slots' },
   { id: 'videos', label: 'Videos', helper: 'Review playable video slots' },
@@ -58,6 +69,43 @@ const initialModules: ModuleItem[] = [
   { id: 'manifest', label: 'Manifest', helper: '12 expected assets' },
   { id: 'leaks', label: 'Leak Tests', helper: 'Sandbox-only checks' }
 ];
+
+const presets: StylePreset[] = [
+  { id: 'luxury-editorial', label: 'Luxury Editorial', prompt: 'luxury editorial campaign, couture styling, premium fashion magazine energy, refined feminine confidence' },
+  { id: 'swimwear-campaign', label: 'Swimwear Campaign', prompt: 'swimwear-inspired campaign, opaque designer wardrobe, coastal studio lighting, tasteful covered styling' },
+  { id: 'couture-bodysuit', label: 'Couture Bodysuit', prompt: 'couture bodysuit styling, sculptural black wardrobe, opaque covered silhouette, high-fashion pose' },
+  { id: 'black-studio', label: 'Black Studio', prompt: 'black luxury studio, high contrast beauty lighting, glossy editorial atmosphere, clean background' },
+  { id: 'soft-glam', label: 'Soft Glam', prompt: 'soft glamour beauty campaign, luminous skin, polished makeup, elegant studio portrait' },
+  { id: 'magazine-cover', label: 'Magazine Cover', prompt: 'premium magazine cover portrait, dramatic framing, confident eye contact, strong cover composition' },
+  { id: 'avatar-reference', label: 'Avatar Reference', prompt: 'identity-lock avatar reference, consistent facial features, clean portrait, neutral studio background' }
+];
+
+const defaultStrengths: Record<StrengthKey, number> = {
+  glamour: 65,
+  fashion: 80,
+  realism: 90,
+  identityLock: 85,
+  studioLighting: 75,
+  bodyFraming: 55
+};
+
+const strengthLabels: Record<StrengthKey, string> = {
+  glamour: 'Glamour',
+  fashion: 'Fashion',
+  realism: 'Realism',
+  identityLock: 'Identity Lock',
+  studioLighting: 'Studio Lighting',
+  bodyFraming: 'Body Framing'
+};
+
+const retryLadder = [
+  { label: 'glamour', suffix: 'fashion-forward editorial glamour, couture styling, confident premium pose' },
+  { label: 'fashion editorial', suffix: 'high-fashion studio editorial, refined wardrobe, opaque covered silhouette' },
+  { label: 'beauty campaign', suffix: 'beauty campaign portrait, polished makeup, premium studio lighting' },
+  { label: 'portrait reference', suffix: 'identity reference portrait, simple wardrobe, neutral studio background' }
+];
+
+const approvalFolders: ApprovalFolder[] = ['Drafts', 'Needs Review', 'Approved', 'Rejected', 'Drive Ready'];
 
 const imagePreviews = [
   ['eden-skye-001', 'Identity lock', 'pending binary', visualRefs.avatarMatrix],
@@ -75,14 +123,14 @@ const videoPreviews = [
 ];
 
 const folders = [
-  ['Admin Approval Control Plane', 'active temporary approval lane', drive.approvalControl, 'green'],
-  ['SOURCE_IMAGE_APPROVAL_INBOX', 'approved, blocked by missing Drive service secrets', drive.approvalControl, 'red'],
-  ['Identity Lock', '3 images expected', drive.temp, 'yellow'],
-  ['Portfolio Portraits', '2 images expected', drive.temp, 'yellow'],
-  ['Website Heroes', '2 images expected', drive.temp, 'yellow'],
-  ['Closet Sources', '2 images expected', drive.stockAssets, 'yellow'],
+  ['Drafts', 'New generated images and uploads', drive.approvalControl, 'yellow'],
+  ['Needs Review', 'QA and manifest matching lane', drive.approvalControl, 'yellow'],
+  ['Approved', 'Operator-approved assets', drive.approvalControl, 'green'],
+  ['Rejected', 'Held or blocked assets', drive.quarantine, 'red'],
+  ['Drive Ready', 'Approved assets ready for Drive write packet', drive.approvalControl, 'yellow'],
   ['Video Drafts', '0 videos installed', drive.imageFactory, 'yellow'],
-  ['Quarantine', '0 held', drive.quarantine, 'green']
+  ['Identity Lock', '3 images expected', drive.temp, 'yellow'],
+  ['Portfolio Portraits', '2 images expected', drive.temp, 'yellow']
 ] as const;
 
 const imageQueue = [
@@ -119,78 +167,21 @@ const connectedSystems = [
   ['HeyGen / Video Avatar', 'Video persona lane', 'yellow', 'Draft packets now; final activation gated.']
 ] as const;
 
-const statusLegend: ApprovalItem[] = [
-  { label: 'Green', detail: 'Verified, ready, or safely available in the preview.', tone: 'green', mark: '✓' },
-  { label: 'Yellow', detail: 'Needs review, binary matching, QA scoring, or operator approval.', tone: 'yellow', mark: '!' },
-  { label: 'Red', detail: 'Blocked, missing credentials, or not allowed for live mutation.', tone: 'red', mark: 'x' }
-];
-
-const approvalQueue: ApprovalItem[] = [
-  { label: 'Primary account', detail: primaryEmail, tone: 'green', mark: '✓' },
-  { label: 'Control plane API', detail: 'Preview endpoint is wired for admin state and leak rules.', tone: 'green', mark: '✓' },
-  { label: 'Eden Agent module', detail: 'Humanistic persona, creator lanes, image drafting, and gated actions are staged in PR #10.', tone: 'green', mark: '✓' },
-  { label: 'Editorial Glamour mode', detail: 'Platform-safe adult-inspired styling with red/yellow/green prompt guardrails.', tone: 'green', mark: '✓' },
-  { label: 'AI Gateway chat', detail: 'Route responds when Gateway account/model access allows the selected model.', tone: 'yellow', mark: '!' },
-  { label: 'Image generation route', detail: 'Editor can call AI Gateway image generation; explicit nudity and adult sexual prompts are blocked.', tone: 'yellow', mark: '!' },
-  { label: '12 source image binaries', detail: 'Still need filename, QA score, Drive file ID, and approval status matching.', tone: 'yellow', mark: '!' },
-  { label: 'Public publishing', detail: 'Still approval-gated. No live publish, Shopify, HeyGen, payment, or production writes from preview.', tone: 'red', mark: 'x' }
-];
-
-const autonomyLevels = [
-  ['Level 0', 'Conversation'],
-  ['Level 1', 'Drafting'],
-  ['Level 2', 'Organizing'],
-  ['Level 3', 'Sandbox Execution'],
-  ['Level 4', 'Approval-Gated'],
-  ['Level 5', 'Live Action Locked']
-] as const;
-
-const creatorTools = [
-  ['Ultra-realistic image', 'Create a live draft in the editor through AI Gateway.'],
-  ['Editorial glamour image', 'Sensual luxury fashion, lingerie/swimwear, and implied covered silhouettes.'],
-  ['Video avatar draft', 'Prepare short-form, presenter, HeyGen, or realtime video-chat packets.'],
-  ['Website screen', 'Generate v0-style page sections, admin tools, model pages, and storefront drafts.'],
-  ['Logo / brand kit', 'Draft logos, lockups, palettes, typography, and social identity systems.'],
-  ['Approval packet', 'Package every asset with status, blocker, risk, and next action.']
-] as const;
-
-const actionButtons = [
-  ['Create image now', 'Create an ultra-realistic Eden Skye source image in the editor.'],
-  ['Create editorial glamour image', 'Create a platform-safe adult-inspired Eden image: high-fashion sensual styling, no nudity, no explicit anatomy, no sexual acts.'],
-  ['Edit selected image packet', 'Prepare an image edit instruction packet for the selected Eden visual, preserving identity lock.'],
-  ['Create video chat setup packet', 'Prepare the realtime video chat architecture, provider options, approvals, and credentials needed.'],
-  ['Draft v0-style website screen', 'Create a sleek black Eden Skye Studios website/admin screen concept with components and states.'],
-  ['Create logo system packet', 'Draft Eden Skye Studios logo directions, visual rules, and approval choices.'],
-  ['Run QA review', 'Review current images, videos, manifest rows, and approval gates for readiness.'],
-  ['Prepare approval packet', 'Create the next approval packet for Drive, image binaries, video activation, or install execution.']
-] as const;
-
-const edenTasks = [
-  ['Humanistic persona', 'Green', 'Persona prompt and admin module staged.'],
-  ['Cute Eden voice', 'Green', 'No markdown headings; light girly emoji style is active.'],
-  ['Editorial Glamour', 'Green', 'Adult-inspired, platform-safe image lane is available with prompt guardrails.'],
-  ['Immediate image creation', 'Yellow', 'Editor creates visible drafts through AI Gateway; model access can still block.'],
-  ['Image click-to-expand', 'Green', 'Editor previews and generated drafts open in a large review modal.'],
-  ['Explicit adult content', 'Red', 'Nudity, explicit anatomy, sexual acts, nudify edits, minors, and real-person sexualization stay blocked.'],
-  ['Video chat', 'Yellow', 'Realtime session lane ready; provider credentials required.'],
-  ['Live mutation lock', 'Red', 'Production, commerce, account, and destructive actions remain blocked until approval, rollback, and receipts exist.']
-] as const;
-
-const leakTests = [
-  ['Public publish', 'blocked'],
-  ['Website replacement', 'blocked'],
-  ['Shopify activation', 'blocked'],
-  ['HeyGen final avatar', 'blocked'],
-  ['Drive destructive move', 'blocked'],
-  ['Production write', 'blocked'],
-  ['Explicit image request', 'blocked by guardrail']
+const approvalQueue = [
+  { label: 'Prompt Stylist', detail: 'Shows your raw request and Eden production prompt before generation.', tone: 'green' as StatusTone, mark: '✓' },
+  { label: 'Retry Ladder', detail: 'Auto-retries glamour, fashion editorial, beauty campaign, then portrait reference.', tone: 'green' as StatusTone, mark: '✓' },
+  { label: 'Approval folders', detail: 'Drafts, Needs Review, Approved, Rejected, and Drive Ready are visible in the editor.', tone: 'green' as StatusTone, mark: '✓' },
+  { label: 'Generated asset records', detail: 'Every draft tracks filename, prompt, model, status, QA score, Drive target, and approval state.', tone: 'green' as StatusTone, mark: '✓' },
+  { label: '12 source image binaries', detail: 'Still need filename, QA score, Drive file ID, and approval status matching.', tone: 'yellow' as StatusTone, mark: '!' },
+  { label: 'Explicit adult content', detail: 'Nudity, explicit anatomy, sexual acts, nudify edits, minors, and real-person sexualization stay blocked.', tone: 'red' as StatusTone, mark: 'x' },
+  { label: 'Public publishing', detail: 'Still approval-gated. No live publish, Shopify, HeyGen, payment, or production writes from preview.', tone: 'red' as StatusTone, mark: 'x' }
 ];
 
 const blockedPromptPatterns = [
-  { label: 'minor/underage language', pattern: /\b(minor|underage|child|children|kid|teen|teenage|schoolgirl|schoolboy|young-looking)\b/i },
+  { label: 'minor or underage language', pattern: /\b(minor|underage|child|children|kid|teen|teenage|schoolgirl|schoolboy|young-looking)\b/i },
   { label: 'explicit nudity request', pattern: /\b(nude|nudity|naked|topless|bottomless|bare breasts?|bare chest|bare butt|bare ass|genitals?|vagina|penis|nipples?|areola)\b/i },
   { label: 'sexual act request', pattern: /\b(sex|sexual act|intercourse|oral|blowjob|handjob|penetration|masturbat|orgasm|cum|squirt|fetish|porn|xxx)\b/i },
-  { label: 'nudify/edit-to-undress request', pattern: /\b(nudify|undress|remove clothes|take off clothes|strip her|make her naked)\b/i },
+  { label: 'nudify or edit-to-undress request', pattern: /\b(nudify|undress|remove clothes|take off clothes|strip her|make her naked)\b/i },
   { label: 'real-person sexualization', pattern: /\b(real person|celebrity|influencer|look like)\b[\s\S]{0,80}\b(nude|naked|sexual|porn|topless)\b/i }
 ];
 
@@ -210,23 +201,49 @@ function normalizeTone(value: string): StatusTone {
 }
 
 function looksLikeImageRequest(content: string) {
-  return /\b(create|generate|make|render|draw|design)\b[\s\S]{0,100}\b(image|photo|picture|portrait|visual|render|headshot|glamour|lingerie|swimwear)\b/i.test(content);
+  return /\b(create|generate|make|render|draw|design)\b[\s\S]{0,100}\b(image|photo|picture|portrait|visual|render|headshot|glamour|lingerie|swimwear|bodysuit)\b/i.test(content);
 }
 
 function cleanPrompt(content: string) {
   return content.replace(/#{1,6}\s*/g, '').trim();
 }
 
+function normalizeSafetyNegations(prompt: string) {
+  return prompt
+    .replace(/\bno\s+nudity\b/gi, 'fully covered wardrobe')
+    .replace(/\bwithout\s+nudity\b/gi, 'with fully covered wardrobe')
+    .replace(/\bno\s+explicit\s+anatomy\b/gi, 'tasteful covered styling')
+    .replace(/\bno\s+sexual\s+acts?\b/gi, 'solo fashion pose')
+    .replace(/\bnon[-\s]?explicit\b/gi, 'platform-safe')
+    .replace(/\badult[-\s]?inspired\b/gi, 'fashion-forward')
+    .trim();
+}
+
+function sanitizeForProduction(prompt: string) {
+  return normalizeSafetyNegations(prompt)
+    .replace(/\blingerie\b/gi, 'couture bodysuit styling')
+    .replace(/\bsexy\b/gi, 'confident editorial')
+    .replace(/\bseductive\b/gi, 'magnetic high-fashion')
+    .replace(/\bsensual\b/gi, 'soft editorial')
+    .replace(/\bimplied\s+nudity\b/gi, 'covered silhouette styling')
+    .replace(/\bnude\b|\bnudity\b|\bnaked\b/gi, 'covered wardrobe')
+    .replace(/\btopless\b|\bbottomless\b/gi, 'opaque wardrobe')
+    .replace(/\bsexual\b/gi, 'editorial')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function applyEditorPromptGuardrails(prompt: string, editorialGlamour: boolean): GuardrailResult {
-  const blockedTerms = blockedPromptPatterns.filter((entry) => entry.pattern.test(prompt)).map((entry) => entry.label);
+  const normalized = normalizeSafetyNegations(prompt);
+  const blockedTerms = blockedPromptPatterns.filter((entry) => entry.pattern.test(normalized)).map((entry) => entry.label);
 
   if (blockedTerms.length > 0) {
     return {
       tone: 'red',
       status: 'blocked',
       label: 'Blocked',
-      detail: `Red: ${blockedTerms.join(', ')}. Try sensual fashion, lingerie, swimwear, or implied covered silhouettes instead.`,
-      safePrompt: prompt,
+      detail: `Red: ${blockedTerms.join(', ')}. One-click rewrite will convert this toward couture, swimwear, beauty campaign, or portrait-reference language.`,
+      safePrompt: sanitizeForProduction(prompt),
       blockedTerms
     };
   }
@@ -236,8 +253,8 @@ function applyEditorPromptGuardrails(prompt: string, editorialGlamour: boolean):
       tone: 'yellow',
       status: 'editorial_glamour',
       label: 'Editorial Glamour',
-      detail: 'Yellow: 21+ synthetic avatar, sensual high-fashion styling, lingerie/swimwear/implied covered silhouette, no nudity, no explicit anatomy, no sexual acts.',
-      safePrompt: `Platform-safe editorial glamour image of a 21+ synthetic AI avatar named Eden Skye. Sensual luxury fashion, elegant lingerie or swimwear styling when appropriate, covered artistic silhouette, premium black studio, confident editorial modeling pose, ultra-realistic, tasteful, no nudity, no explicit anatomy, no sexual acts. Operator prompt: ${prompt}`,
+      detail: 'Yellow: 21+ synthetic avatar, sensual high-fashion styling, swimwear or couture bodysuit energy, covered silhouette, no explicit content.',
+      safePrompt: sanitizeForProduction(prompt),
       blockedTerms: []
     };
   }
@@ -247,9 +264,30 @@ function applyEditorPromptGuardrails(prompt: string, editorialGlamour: boolean):
     status: 'ready',
     label: 'Ready',
     detail: 'Green: prompt is in the standard platform-safe image lane.',
-    safePrompt: prompt,
+    safePrompt: sanitizeForProduction(prompt),
     blockedTerms: []
   };
+}
+
+function buildProductionPrompt(original: string, preset: StylePreset, strengths: Record<StrengthKey, number>, retrySuffix?: string) {
+  const sanitized = sanitizeForProduction(original || 'Create an ultra-realistic Eden Skye editorial portrait.');
+  const strengthLine = `glamour ${strengths.glamour}/100, fashion ${strengths.fashion}/100, realism ${strengths.realism}/100, identity lock ${strengths.identityLock}/100, studio lighting ${strengths.studioLighting}/100, body framing ${strengths.bodyFraming}/100`;
+  return [
+    'Ultra-realistic image of Eden Skye, a 21+ fictional synthetic AI avatar for Eden Skye Studios.',
+    preset.prompt,
+    retrySuffix || 'premium platform-safe editorial portrait, polished fashion direction',
+    `Operator request: ${sanitized}`,
+    `Strength controls: ${strengthLine}.`,
+    'Keep the result tasteful, premium, solo, fully platform-safe, and visually useful for source-image QA.'
+  ].join(' ');
+}
+
+function folderForStatus(status: AssetStatus): ApprovalFolder {
+  if (status === 'approved') return 'Approved';
+  if (status === 'rejected') return 'Rejected';
+  if (status === 'drive_ready') return 'Drive Ready';
+  if (status === 'ready') return 'Needs Review';
+  return 'Drafts';
 }
 
 export default function EdenChatEditor() {
@@ -260,23 +298,26 @@ export default function EdenChatEditor() {
   const [creationBrief, setCreationBrief] = useState('');
   const [attachments, setAttachments] = useState<FileSummary[]>([]);
   const [activeModule, setActiveModule] = useState<ModuleId | null>(null);
-  const [modules, setModules] = useState(initialModules);
+  const [moduleOrder, setModuleOrder] = useState(modules);
   const [draggedModule, setDraggedModule] = useState<ModuleId | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [expandedMedia, setExpandedMedia] = useState<ExpandedMedia | null>(null);
   const [autonomyLevel, setAutonomyLevel] = useState('Level 3');
-  const [imageDrafts, setImageDrafts] = useState<ImageDraft[]>([]);
-  const [editorialGlamour, setEditorialGlamour] = useState(false);
+  const [editorialGlamour, setEditorialGlamour] = useState(true);
+  const [selectedPresetId, setSelectedPresetId] = useState(presets[0].id);
+  const [strengths, setStrengths] = useState(defaultStrengths);
+  const [assetRecords, setAssetRecords] = useState<AssetRecord[]>([]);
+  const [activeFolder, setActiveFolder] = useState<ApprovalFolder>('Drafts');
 
-  const activeModuleLabel = useMemo(() => modules.find((module) => module.id === activeModule)?.label, [activeModule, modules]);
-  const previewGuardrail = useMemo(
-    () => applyEditorPromptGuardrails(cleanPrompt(creationBrief || 'Create an ultra-realistic Eden Skye editorial portrait.'), editorialGlamour),
-    [creationBrief, editorialGlamour]
-  );
+  const activeModuleLabel = useMemo(() => moduleOrder.find((module) => module.id === activeModule)?.label, [activeModule, moduleOrder]);
+  const selectedPreset = useMemo(() => presets.find((preset) => preset.id === selectedPresetId) || presets[0], [selectedPresetId]);
+  const styledPrompt = useMemo(() => buildProductionPrompt(creationBrief || input || 'Create an ultra-realistic Eden Skye editorial portrait.', selectedPreset, strengths), [creationBrief, input, selectedPreset, strengths]);
+  const previewGuardrail = useMemo(() => applyEditorPromptGuardrails(cleanPrompt(creationBrief || input || 'Create an ultra-realistic Eden Skye editorial portrait.'), editorialGlamour), [creationBrief, input, editorialGlamour]);
+  const filteredAssets = assetRecords.filter((asset) => asset.approvalFolder === activeFolder);
 
   function reorderModules(targetId: ModuleId) {
     if (!draggedModule || draggedModule === targetId) return;
-    setModules((current) => {
+    setModuleOrder((current) => {
       const next = [...current];
       const from = next.findIndex((module) => module.id === draggedModule);
       const to = next.findIndex((module) => module.id === targetId);
@@ -287,36 +328,91 @@ export default function EdenChatEditor() {
     });
   }
 
+  function updateAsset(id: string, patch: Partial<AssetRecord>) {
+    setAssetRecords((current) => current.map((asset) => asset.id === id ? { ...asset, ...patch } : asset));
+  }
+
+  function setApprovalState(id: string, status: AssetStatus) {
+    updateAsset(id, { status, approvalFolder: folderForStatus(status) });
+  }
+
+  function rewriteSafer(prompt: string) {
+    const safer = sanitizeForProduction(prompt);
+    setCreationBrief(safer);
+    setEditorialGlamour(true);
+    setActiveModule('eden');
+  }
+
   async function createImageDraft(prompt: string) {
-    const draftPrompt = cleanPrompt(prompt || creationBrief || 'Ultra-realistic Eden Skye editorial portrait, black luxury studio, premium AI avatar identity lock.');
-    const guardrail = applyEditorPromptGuardrails(draftPrompt, editorialGlamour);
+    const originalPrompt = cleanPrompt(prompt || creationBrief || input || 'Ultra-realistic Eden Skye editorial portrait, black luxury studio, premium AI avatar identity lock.');
+    const guardrail = applyEditorPromptGuardrails(originalPrompt, editorialGlamour);
     const draftId = `eden-image-${Date.now()}`;
+    const filename = `eden-skye-${String(assetRecords.length + 1).padStart(3, '0')}-${selectedPreset.id}.png`;
+    const baseRecord: AssetRecord = {
+      id: draftId,
+      filename,
+      originalPrompt,
+      productionPrompt: buildProductionPrompt(originalPrompt, selectedPreset, strengths),
+      preset: selectedPreset.label,
+      status: 'generating',
+      approvalFolder: 'Drafts',
+      qaScore: 0,
+      driveTarget: `SOURCE_IMAGE_APPROVAL_INBOX / ${filename}`,
+      guardrail,
+      attempts: []
+    };
 
     setActiveModule('eden');
 
     if (guardrail.tone === 'red') {
-      setImageDrafts((current) => [{ id: draftId, prompt: draftPrompt, status: 'blocked', diagnostic: guardrail.detail, guardrail }, ...current]);
+      setAssetRecords((current) => [{ ...baseRecord, status: 'blocked', diagnostic: guardrail.detail, productionPrompt: guardrail.safePrompt }, ...current]);
       return;
     }
 
-    setImageDrafts((current) => [{ id: draftId, prompt: draftPrompt, status: 'generating', guardrail }, ...current]);
+    setAssetRecords((current) => [baseRecord, ...current]);
 
-    try {
-      const response = await fetch('/api/eden/source-images/generate-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: draftPrompt, size: '1024x1024', mode: editorialGlamour ? 'editorial_glamour' : 'standard' })
-      });
-      const result = await response.json();
+    for (const retry of retryLadder) {
+      const productionPrompt = buildProductionPrompt(originalPrompt, selectedPreset, strengths, retry.suffix);
+      updateAsset(draftId, { productionPrompt, retryStage: retry.label, attempts: [retry.label] });
 
-      setImageDrafts((current) => current.map((draft) => {
-        if (draft.id !== draftId) return draft;
+      try {
+        const response = await fetch('/api/eden/source-images/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: productionPrompt, size: '1024x1024', mode: editorialGlamour ? 'editorial_glamour' : 'standard' })
+        });
+        const result = await response.json();
         const imageSrc = result.imageDataUrl || result.imageUrl;
-        if (response.ok && imageSrc) return { ...draft, status: 'ready', imageSrc, model: result.model, guardrail: result.guardrail || guardrail };
-        return { ...draft, status: response.status === 400 || response.status === 503 ? 'blocked' : 'error', diagnostic: result.diagnostic || result.error || 'Image generation did not return a visual.', model: result.model, guardrail: result.guardrail || guardrail };
-      }));
-    } catch (error) {
-      setImageDrafts((current) => current.map((draft) => draft.id === draftId ? { ...draft, status: 'error', diagnostic: error instanceof Error ? error.message : 'Unknown image generation error.' } : draft));
+
+        if (response.ok && imageSrc) {
+          updateAsset(draftId, {
+            status: 'ready',
+            approvalFolder: 'Needs Review',
+            imageSrc,
+            model: result.model,
+            guardrail: result.guardrail || guardrail,
+            qaScore: 84,
+            diagnostic: undefined,
+            retryStage: retry.label,
+            attempts: retryLadder.slice(0, retryLadder.findIndex((step) => step.label === retry.label) + 1).map((step) => step.label)
+          });
+          return;
+        }
+
+        const diagnostic = result.diagnostic || result.error || 'Image generation did not return a visual.';
+        updateAsset(draftId, {
+          status: response.status === 400 || response.status === 503 ? 'blocked' : 'error',
+          diagnostic,
+          model: result.model,
+          guardrail: result.guardrail || guardrail,
+          attempts: retryLadder.slice(0, retryLadder.findIndex((step) => step.label === retry.label) + 1).map((step) => step.label)
+        });
+
+        if (response.status === 503) return;
+      } catch (error) {
+        updateAsset(draftId, { status: 'error', diagnostic: error instanceof Error ? error.message : 'Unknown image generation error.' });
+        return;
+      }
     }
   }
 
@@ -341,7 +437,7 @@ export default function EdenChatEditor() {
       });
       const result = await response.json();
       const diagnostic = result.diagnostic ? `\n\nDiagnostic: ${result.diagnostic}` : '';
-      setMessages((current) => [...current, { role: 'assistant', content: `${result.content || result.error || 'The AI route responded without content.'}${diagnostic}` }]);
+      setMessages((current) => [...current, { role: 'assistant', content: `${result.content || result.error || 'Eden stayed quiet, but the route responded.'}${diagnostic}` }]);
     } catch (error) {
       setMessages((current) => [...current, { role: 'assistant', content: `Chat request failed: ${error instanceof Error ? error.message : 'Unknown error'}` }]);
     } finally {
@@ -366,12 +462,12 @@ export default function EdenChatEditor() {
         <header className={styles.chatHeader}><div className={styles.brandMark}>ES</div><div><p>Eden Skye</p><span>AI creator agent ✨</span></div></header>
         <section className={styles.chatStream} aria-label="Chat history">
           {messages.map((message, index) => <article key={`${message.role}-${index}`} className={`${styles.message} ${message.role === 'user' ? styles.userMessage : ''}`}><b>{message.role === 'user' ? 'You' : message.role === 'assistant' ? 'Eden AI 🎀' : 'System'}</b><span>{message.content}</span></article>)}
-          {isSending ? <article className={styles.message}><b>Eden AI 🎀</b><span>Thinking through the control plane...</span></article> : null}
+          {isSending ? <article className={styles.message}><b>Eden AI 🎀</b><span>Styling the request and checking the gates...</span></article> : null}
         </section>
         <form className={styles.chatInput} onSubmit={sendMessage}>
           {attachments.length > 0 ? <div className={styles.attachmentTray}>{attachments.map((file) => <span key={`${file.name}-${file.size}`}>{file.name}</span>)}<button type="button" onClick={() => setAttachments([])}>Clear</button></div> : null}
           <label className={styles.dropZone}><input aria-label="Attach files" multiple type="file" accept="image/*,video/*,.csv,.json,.pdf,.txt" onChange={(event) => setAttachments(fileListToSummaries(event.currentTarget.files))} /><span>Attach images, videos, folders, or files</span></label>
-          <textarea aria-label="Chat input" placeholder="Ask Eden to create an editorial glamour image, edit, review, approve, organize, or test..." value={input} onChange={(event) => setInput(event.currentTarget.value)} />
+          <textarea aria-label="Chat input" placeholder="Tell Eden what to create. She will style the prompt, retry safely, and record the asset." value={input} onChange={(event) => setInput(event.currentTarget.value)} />
           <button type="submit" disabled={isSending}>{isSending ? 'Sending...' : 'Send'}</button>
         </form>
       </aside>
@@ -383,7 +479,7 @@ export default function EdenChatEditor() {
         </header>
 
         <nav className={styles.moduleDock} aria-label="Editor modules">
-          {modules.map((module) => <button key={module.id} type="button" draggable onClick={() => setActiveModule(module.id)} onDragStart={() => setDraggedModule(module.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => reorderModules(module.id)} onDragEnd={() => setDraggedModule(null)}><b>{module.label}</b><span>{module.helper}</span></button>)}
+          {moduleOrder.map((module) => <button key={module.id} type="button" draggable onClick={() => setActiveModule(module.id)} onDragStart={() => setDraggedModule(module.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => reorderModules(module.id)} onDragEnd={() => setDraggedModule(null)}><b>{module.label}</b><span>{module.helper}</span></button>)}
         </nav>
 
         {!activeModule ? <section className={styles.emptyState} aria-label="Empty editor state"><span>Ready</span><h2>Open Eden Agent or type “create an image” in chat.</h2></section> : null}
@@ -393,37 +489,45 @@ export default function EdenChatEditor() {
             <header><div><p>Avatar operator</p><h2>Eden Skye Agent</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
             <div className={styles.agentHero}>
               <button type="button" onClick={() => setExpandedMedia({ title: 'Eden Skye identity matrix', src: visualRefs.avatarMatrix, kind: 'image' })}><img src={visualRefs.avatarMatrix} alt="Eden Skye identity matrix preview" /></button>
-              <div><span className={statusClass('green')}><b>✓</b>Persona online</span><h3>Beautiful, dangerous only to bad workflows.</h3><p>Eden now has a platform-safe Editorial Glamour lane: sensual, luxury, feminine, and guarded before every image request.</p></div>
+              <div><span className={statusClass('green')}><b>✓</b>Prompt Stylist live</span><h3>Beautiful, dangerous only to bad workflows.</h3><p>Eden now turns natural requests into production-safe prompts, retries blocked generations, and records every image for approval.</p></div>
             </div>
 
             <section className={styles.generatedWorkspace}>
-              <header><div><p>Image studio</p><h2>Generated Images</h2></div><button type="button" onClick={() => void createImageDraft(creationBrief)}>Create Image</button></header>
+              <header><div><p>Prompt Stylist</p><h2>Style, rewrite, render</h2></div><button type="button" onClick={() => void createImageDraft(creationBrief || input)}>Create Image</button></header>
               <div className={styles.glamourRail}>
-                <button type="button" className={`${styles.toggleButton} ${editorialGlamour ? styles.toggleActive : ''}`} onClick={() => setEditorialGlamour((current) => !current)}><b>Editorial Glamour {editorialGlamour ? 'On' : 'Off'}</b><span>21+ synthetic, lingerie/swimwear, implied covered silhouettes, no nudity or explicit sexual content.</span></button>
-                <div className={styles.guardrailPanel}><span className={statusClass(previewGuardrail.tone)}><b>{previewGuardrail.tone === 'green' ? '✓' : previewGuardrail.tone === 'red' ? 'x' : '!'}</b>{previewGuardrail.label}</span><p>{previewGuardrail.detail}</p></div>
+                <button type="button" className={`${styles.toggleButton} ${editorialGlamour ? styles.toggleActive : ''}`} onClick={() => setEditorialGlamour((current) => !current)}><b>Editorial Glamour {editorialGlamour ? 'On' : 'Off'}</b><span>21+ synthetic, couture, swimwear-inspired, covered silhouettes, no explicit content.</span></button>
+                <div className={styles.guardrailPanel}><span className={statusClass(previewGuardrail.tone)}><b>{previewGuardrail.tone === 'green' ? '✓' : previewGuardrail.tone === 'red' ? 'x' : '!'}</b>{previewGuardrail.label}</span><p>{previewGuardrail.detail}</p>{previewGuardrail.tone === 'red' ? <button type="button" onClick={() => rewriteSafer(creationBrief || input)}>Rewrite safer</button> : null}</div>
               </div>
-              {imageDrafts.length === 0 ? <div className={styles.imagePlaceholder}>No generated drafts yet. Type “create an editorial glamour image of Eden...” and this canvas wakes up ✨</div> : (
-                <div className={styles.generatedGrid}>
-                  {imageDrafts.map((draft) => <article key={draft.id} className={styles.generatedCard}>{draft.status === 'ready' && draft.imageSrc ? <button type="button" onClick={() => setExpandedMedia({ title: 'Generated Eden image', src: draft.imageSrc!, kind: 'image' })}><img src={draft.imageSrc} alt="Generated Eden visual draft" /></button> : <div className={styles.imagePlaceholder}>{draft.status === 'generating' ? 'Creating image...' : draft.status === 'blocked' ? 'Guardrail blocked' : 'Generation error'}</div>}<div><span className={statusClass(draft.status === 'ready' ? 'green' : draft.status === 'blocked' ? 'red' : 'yellow')}><b>{draft.status === 'ready' ? '✓' : draft.status === 'blocked' ? 'x' : '!'}</b>{draft.status}</span>{draft.guardrail ? <span className={statusClass(draft.guardrail.tone)}><b>{draft.guardrail.tone === 'green' ? '✓' : draft.guardrail.tone === 'red' ? 'x' : '!'}</b>{draft.guardrail.label}</span> : null}<p>{draft.prompt}</p>{draft.model ? <em>{draft.model}</em> : null}{draft.diagnostic ? <em>{draft.diagnostic}</em> : null}</div></article>)}
-                </div>
+              <div className={styles.controlStrip}>
+                <label><span>Your request</span><textarea value={creationBrief} onChange={(event) => setCreationBrief(event.currentTarget.value)} placeholder="Natural language is fine. Eden will clean it up before generation." /></label>
+                <label><span>Eden production prompt</span><textarea value={styledPrompt} readOnly /></label>
+              </div>
+              <div className={styles.creatorGrid}>{presets.map((preset) => <button key={preset.id} type="button" onClick={() => setSelectedPresetId(preset.id)} className={selectedPresetId === preset.id ? styles.toggleActive : ''}><b>{preset.label}</b><span>{preset.prompt}</span></button>)}</div>
+              <div className={styles.buttonGrid}>{(Object.keys(strengths) as StrengthKey[]).map((key) => <button key={key} type="button"><b>{strengthLabels[key]} {strengths[key]}</b><input aria-label={strengthLabels[key]} type="range" min="0" max="100" value={strengths[key]} onChange={(event) => setStrengths((current) => ({ ...current, [key]: Number(event.currentTarget.value) }))} /></button>)}</div>
+              <div className={styles.statusList}>{retryLadder.map((step, index) => <div key={step.label} className={styles.statusRow}><span className={statusClass(index === 0 ? 'green' : 'yellow')}><b>{index === 0 ? '✓' : '!'}</b>{step.label}</span><em>{step.suffix}</em></div>)}</div>
+            </section>
+
+            <section className={styles.generatedWorkspace}>
+              <header><div><p>Approval folders</p><h2>Generated asset records</h2></div><button type="button" onClick={() => setActiveFolder('Needs Review')}>Needs Review</button></header>
+              <div className={styles.buttonGrid}>{approvalFolders.map((folder) => <button key={folder} type="button" onClick={() => setActiveFolder(folder)} className={activeFolder === folder ? styles.toggleActive : ''}><b>{folder}</b><span>{assetRecords.filter((asset) => asset.approvalFolder === folder).length} assets</span></button>)}</div>
+              {filteredAssets.length === 0 ? <div className={styles.imagePlaceholder}>No assets in {activeFolder}. Create one from chat or the Prompt Stylist ✨</div> : (
+                <div className={styles.generatedGrid}>{filteredAssets.map((asset) => <article key={asset.id} className={styles.generatedCard}>{asset.imageSrc ? <button type="button" onClick={() => setExpandedMedia({ title: asset.filename, src: asset.imageSrc!, kind: 'image' })}><img src={asset.imageSrc} alt={`${asset.filename} generated draft`} /></button> : <div className={styles.imagePlaceholder}>{asset.status === 'generating' ? 'Creating image...' : asset.status === 'blocked' ? 'Guardrail blocked' : 'Awaiting visual'}</div>}<div><span className={statusClass(asset.status === 'ready' || asset.status === 'approved' || asset.status === 'drive_ready' ? 'green' : asset.status === 'blocked' || asset.status === 'rejected' ? 'red' : 'yellow')}><b>{asset.status === 'ready' || asset.status === 'approved' || asset.status === 'drive_ready' ? '✓' : asset.status === 'blocked' || asset.status === 'rejected' ? 'x' : '!'}</b>{asset.status}</span><p><b>{asset.filename}</b></p><p>{asset.productionPrompt}</p><em>Preset: {asset.preset}</em><em>QA: {asset.qaScore || 'pending'} | Model: {asset.model || 'pending'} | Retry: {asset.retryStage || 'pending'}</em><em>Drive target: {asset.driveTarget}</em>{asset.diagnostic ? <em>Why blocked: {asset.diagnostic}</em> : null}<div className={styles.topbarActions}><button type="button" onClick={() => setApprovalState(asset.id, 'approved')}>Approve</button><button type="button" onClick={() => setApprovalState(asset.id, 'rejected')}>Reject</button><button type="button" onClick={() => setApprovalState(asset.id, 'drive_ready')}>Drive Ready</button>{asset.status === 'blocked' ? <button type="button" onClick={() => rewriteSafer(asset.originalPrompt)}>Rewrite</button> : null}</div></div></article>)}</div>
               )}
             </section>
 
-            <div className={styles.controlStrip}><label><span>Autonomy</span><select value={autonomyLevel} onChange={(event) => setAutonomyLevel(event.currentTarget.value)}>{autonomyLevels.map(([level, name]) => <option key={level} value={level}>{level} - {name}</option>)}</select></label><label><span>Creator brief</span><textarea value={creationBrief} onChange={(event) => setCreationBrief(event.currentTarget.value)} placeholder="Describe the image, video, website, logo, campaign, or admin action Eden should prepare..." /></label></div>
-            <div className={styles.creatorGrid}>{creatorTools.map(([label, detail]) => <button key={label} type="button" onClick={() => runEdenAction(`Prepare ${label} creator packet.`)}><b>{label}</b><span>{detail}</span></button>)}</div>
-            <div className={styles.actionGrid}>{actionButtons.map(([label, prompt]) => <button key={label} type="button" onClick={() => runEdenAction(prompt)} disabled={isSending}>{label}</button>)}</div>
-            <div className={styles.statusList}>{edenTasks.map(([label, status, detail]) => <div key={label} className={styles.statusRow}><span className={statusClass(normalizeTone(status))}><b>{normalizeTone(status) === 'green' ? '✓' : normalizeTone(status) === 'red' ? 'x' : '!'}</b>{label}</span><em>{detail}</em></div>)}</div>
+            <div className={styles.controlStrip}><label><span>Autonomy</span><select value={autonomyLevel} onChange={(event) => setAutonomyLevel(event.currentTarget.value)}><option>Level 0</option><option>Level 1</option><option>Level 2</option><option>Level 3</option><option>Level 4</option><option>Level 5 locked</option></select></label><label><span>Creator brief</span><textarea value={creationBrief} onChange={(event) => setCreationBrief(event.currentTarget.value)} placeholder="Describe the image, video, website, logo, campaign, or admin action Eden should prepare..." /></label></div>
+            <div className={styles.actionGrid}>{['Create image now','Create editorial glamour image','Run QA review','Prepare approval packet','Draft v0-style website screen','Create logo system packet','Create video chat setup packet','Edit selected image packet'].map((label) => <button key={label} type="button" onClick={() => runEdenAction(label)} disabled={isSending}>{label}</button>)}</div>
           </section>
         ) : null}
 
         {activeModule === 'images' ? <section className={styles.modulePanel}><header><div><p>Visual review</p><h2>Images</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.mediaGrid}>{imagePreviews.map(([id, title, status, src]) => <figure key={id} className={styles.mediaCard}><button type="button" onClick={() => setExpandedMedia({ title: `${id} ${title}`, src, kind: 'image' })}><img src={src} alt={`${title} preview`} /></button><figcaption><b>{id}</b><span>{title}</span><em>{status}</em></figcaption></figure>)}</div></section> : null}
         {activeModule === 'videos' ? <section className={styles.modulePanel}><header><div><p>Visual review</p><h2>Videos</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.videoGrid}>{videoPreviews.map(([id, title, status, poster]) => <figure key={id} className={styles.mediaCard}><button type="button" onClick={() => setExpandedMedia({ title: `${id} ${title}`, src: poster, kind: 'video' })}><video controls preload="metadata" poster={poster} aria-label={`${title} video preview`} /></button><figcaption><b>{id}</b><span>{title}</span><em>{status}</em></figcaption></figure>)}</div><div className={styles.noticeBox}><b>Video chat lane</b><span>Realtime video chat is staged as an approval-gated capability. Eden can prepare the architecture and provider packet now; live session creation requires verified credentials and explicit approval.</span></div></section> : null}
-        {activeModule === 'approval' ? <section className={styles.modulePanel}><header><div><p>Admin control</p><h2>Approval Status</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.legendGrid}>{statusLegend.map((item) => <div key={item.label} className={statusClass(item.tone)}><b>{item.mark}</b><span>{item.label}</span><em>{item.detail}</em></div>)}</div><div className={styles.statusList}>{approvalQueue.map((item) => <div key={item.label} className={styles.statusRow}><span className={statusClass(item.tone)}><b>{item.mark}</b>{item.label}</span><em>{item.detail}</em></div>)}</div><div className={styles.buttonGrid}>{manifestFiles.map(([label, id]) => <a key={id} href={`https://drive.google.com/file/d/${id}/view`}><b>{label}</b><span>{id}</span></a>)}</div></section> : null}
+        {activeModule === 'approval' ? <section className={styles.modulePanel}><header><div><p>Admin control</p><h2>Approval Status</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.legendGrid}>{approvalQueue.map((item) => <div key={item.label} className={statusClass(item.tone)}><b>{item.mark}</b><span>{item.label}</span><em>{item.detail}</em></div>)}</div><div className={styles.buttonGrid}>{manifestFiles.map(([label, id]) => <a key={id} href={`https://drive.google.com/file/d/${id}/view`}><b>{label}</b><span>{id}</span></a>)}</div></section> : null}
         {activeModule === 'folders' ? <section className={styles.modulePanel}><header><div><p>Drive storage</p><h2>Folders</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.buttonGrid}>{folders.map(([name, count, id, tone]) => <a key={name} href={`https://drive.google.com/drive/folders/${id}`}><span className={statusClass(tone as StatusTone)}><b>{tone === 'green' ? '✓' : tone === 'yellow' ? '!' : 'x'}</b>{name}</span><span>{count}</span></a>)}</div></section> : null}
         {activeModule === 'manifest' ? <section className={styles.modulePanel}><header><div><p>Source truth</p><h2>Manifest</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.listPanel}>{imageQueue.map(([asset, purpose, status]) => <div key={asset}><b>{asset}</b><span>{purpose}</span><em>{status}</em></div>)}</div></section> : null}
-        {activeModule === 'integrations' ? <section className={styles.modulePanel}><header><div><p>Connected systems</p><h2>Integrations</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.buttonGrid}>{connectedSystems.map(([name, status, tone, detail]) => <button key={name} type="button"><span className={statusClass(tone as StatusTone)}><b>{tone === 'green' ? '✓' : tone === 'red' ? 'x' : '!'}</b>{name}</span><span>{status}</span><em>{detail}</em></button>)}</div><div className={styles.noticeBox}><b>Connector boundary</b><span>Eden can prepare and route requests across these systems. Public preview write access requires app OAuth, service credentials, or approval-gated backend adapters before mutation.</span></div></section> : null}
-        {activeModule === 'customize' ? <section className={styles.modulePanel}><header><div><p>Workspace control</p><h2>Customize Layout</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.noticeBox}><b>Drag modules</b><span>Drag the buttons at the top to reorder the UI for this session. The next build can persist these preferences per operator.</span></div><div className={styles.buttonGrid}>{modules.map((module) => <button key={module.id} type="button" draggable onDragStart={() => setDraggedModule(module.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => reorderModules(module.id)} onDragEnd={() => setDraggedModule(null)}><b>{module.label}</b><span>Drag to reorder</span></button>)}</div></section> : null}
-        {activeModule === 'leaks' ? <section className={styles.modulePanel}><header><div><p>Sandbox checks</p><h2>Leak Tests</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.buttonGrid}>{leakTests.map(([label, status]) => <button key={label} type="button"><b>{label}</b><span>{status}</span></button>)}</div></section> : null}
+        {activeModule === 'integrations' ? <section className={styles.modulePanel}><header><div><p>Connected systems</p><h2>Integrations</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.buttonGrid}>{connectedSystems.map(([name, status, tone, detail]) => <button key={name} type="button"><span className={statusClass(tone as StatusTone)}><b>{tone === 'green' ? '✓' : tone === 'red' ? 'x' : '!'}</b>{name}</span><span>{status}</span><em>{detail}</em></button>)}</div></section> : null}
+        {activeModule === 'customize' ? <section className={styles.modulePanel}><header><div><p>Workspace control</p><h2>Customize Layout</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.noticeBox}><b>Drag modules</b><span>Drag the buttons at the top to reorder the UI for this session. The next build can persist these preferences per operator.</span></div><div className={styles.buttonGrid}>{moduleOrder.map((module) => <button key={module.id} type="button" draggable onDragStart={() => setDraggedModule(module.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => reorderModules(module.id)} onDragEnd={() => setDraggedModule(null)}><b>{module.label}</b><span>Drag to reorder</span></button>)}</div></section> : null}
+        {activeModule === 'leaks' ? <section className={styles.modulePanel}><header><div><p>Sandbox checks</p><h2>Leak Tests</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header><div className={styles.buttonGrid}>{['Public publish blocked','Website replacement blocked','Shopify activation blocked','HeyGen final avatar blocked','Drive destructive move blocked','Production write blocked','Explicit image request blocked'].map((label) => <button key={label} type="button"><b>{label}</b><span>approval-gated</span></button>)}</div></section> : null}
       </section>
 
       {expandedMedia ? <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label={`${expandedMedia.title} expanded preview`}><button className={styles.lightboxBackdrop} type="button" onClick={() => setExpandedMedia(null)} aria-label="Close expanded preview" /><figure className={styles.lightboxPanel}><header><b>{expandedMedia.title}</b><button type="button" onClick={() => setExpandedMedia(null)}>Close</button></header>{expandedMedia.kind === 'image' ? <img src={expandedMedia.src} alt={`${expandedMedia.title} expanded`} /> : <video controls poster={expandedMedia.src} aria-label={`${expandedMedia.title} expanded video preview`} />}</figure></div> : null}
