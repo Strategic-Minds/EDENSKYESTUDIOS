@@ -1,7 +1,7 @@
 {
   "system": "Eden's Closet PWA",
   "branch": "eden/readiness-scaffold-20260604",
-  "status": "gated_preview_ready",
+  "status": "production_entitlement_gate_active",
   "sourceTruth": {
     "approvedNeonClosetBackground": {
       "filename": "eden-closet-neon-walkin-approved-bg.png",
@@ -20,21 +20,25 @@
     "/closet": "PWA/member home with model discovery, Black Card gate, AI chat/video entry points, and approved neon closet background.",
     "/closet/[slug]": "Model profile plus outfit selector and Black Card unlock flow.",
     "/closet/[slug]/viewer": "Full-body 360 viewer with wardrobe, environment, measurement, capture, chat, and video controls.",
-    "/closet/[slug]/chat": "Gated AI text and voice chat UI.",
-    "/closet/[slug]/video": "Gated AI video chat UI.",
-    "/api/closet/access": "Read-only gate status for Supabase auth plus Shopify Black Card entitlement readiness."
+    "/closet/[slug]/chat": "Production-gated AI text and voice chat UI.",
+    "/closet/[slug]/video": "Production-gated AI video chat UI.",
+    "/api/closet/access": "Supabase auth plus Shopify Black Card entitlement check."
   },
   "commerceHandoff": {
-    "shopifyPaymentPath": "/pages/payment",
+    "shopifyPaymentPath": "https://edenskyestudios.com/pages/payment",
     "vercelPaymentPath": "/payment",
     "successPath": "/success",
+    "dashboardPath": "/dashboard",
+    "closetPath": "/closet",
     "entitlement": "black_card_member",
-    "livePaymentActivation": false
+    "livePaymentActivation": true,
+    "approvalReceipt": "jeremy_approved_full_production_2026_06_14"
   },
   "authAndEntitlement": {
     "authProvider": "Supabase",
+    "supabaseProjectRef": "prhppuuwcnmfdhwsagug",
     "entitlementProvider": "Shopify Black Card",
-    "gateState": "preview_locked_until_verified_member_session",
+    "gateState": "production_requires_authenticated_active_black_card_member",
     "protectedActions": [
       "voice_chat",
       "ai_video_chat",
@@ -47,13 +51,13 @@
   "integrations": {
     "heygen": "planned_for_ai_video_avatar_sessions",
     "realtimeVoice": "planned_for_member_voice_sessions",
-    "supabase": "auth_and_entitlement_check_required",
-    "shopify": "storefront_payment_and_customer_account_layer"
+    "supabase": "production_auth_and_entitlement_check_active",
+    "shopify": "production_storefront_payment_and_customer_account_layer"
   },
   "approvalRules": [
-    "Do not claim live voice/video is active until tested with a verified member entitlement.",
+    "Live voice/video provider calls still require provider credentials and runtime verification.",
     "Do not use collage-board crops as final source images.",
-    "Do not activate live Shopify payments without Jeremy approval.",
-    "Do not mutate Supabase production schema without explicit approval."
+    "Shopify Black Card payment handoff is approved for production by Jeremy on 2026-06-14.",
+    "Supabase production entitlement schema was approved by Jeremy on 2026-06-14."
   ]
 }
