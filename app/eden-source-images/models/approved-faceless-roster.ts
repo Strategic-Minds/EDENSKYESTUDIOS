@@ -7,7 +7,7 @@ export type ApprovedFacelessAccount = {
   riskLevel: 'Low-Medium' | 'Medium' | 'Medium-High';
   sourceFileName: string;
   sourceFileId: string;
-  status: 'source-verified' | 'asset-pending';
+  status: 'approved-source' | 'source-verified' | 'asset-pending';
 };
 
 export const approvedFacelessSourceBatch = {
@@ -18,9 +18,10 @@ export const approvedFacelessSourceBatch = {
   verificationFileId: '1PuB0JVZWtpGNErOnbJ4DeEzvG52rjUwh',
   count: 5,
   created: '2026-06-14',
+  approvalStatus: 'operator-approved',
   operatingNote: '30-day proof loop. No live publishing, billing, paid ads, or lead collection without approval.',
   validationThreshold: '1 sale, 10 leads, 50 clicks, or 1,000 views.',
-  sourceStatus: 'Five faceless account source docs verified from Drive. Visual brand kits, account handles, platform accounts, and publishing permissions remain pending.'
+  sourceStatus: 'Five faceless account source docs are verified from Drive and operator-approved for workflow buildout. Visual brand kits, account handles, platform accounts, and publishing permissions remain separate activation steps.'
 };
 
 export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
@@ -33,7 +34,7 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
     riskLevel: 'Medium',
     sourceFileName: '01_AI_FUTURE_LAB.source.md',
     sourceFileId: '1e6ZzCu9i7OtLgP4v8e-5x2sz9H1jloxy',
-    status: 'source-verified'
+    status: 'approved-source'
   },
   {
     rank: 2,
@@ -44,7 +45,7 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
     riskLevel: 'Low-Medium',
     sourceFileName: '02_BUSINESS_BREAKDOWNS_DAILY.source.md',
     sourceFileId: '17kg44wzmkBCIOcU2DEJXS9wHsKoFlJ0V',
-    status: 'source-verified'
+    status: 'approved-source'
   },
   {
     rank: 3,
@@ -55,7 +56,7 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
     riskLevel: 'Medium',
     sourceFileName: '03_HIDDEN_WEALTH_FILES.source.md',
     sourceFileId: '1ZcBsQKteyPm2I5ACWq7-GiSYAB9U956P',
-    status: 'source-verified'
+    status: 'approved-source'
   },
   {
     rank: 4,
@@ -66,7 +67,7 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
     riskLevel: 'Low-Medium',
     sourceFileName: '04_BILLIONAIRE_HABITS_BLUEPRINT.source.md',
     sourceFileId: '1Le7gRPs1VCRBGTJKKIaA6NpxGvHNUbSQ',
-    status: 'source-verified'
+    status: 'approved-source'
   },
   {
     rank: 5,
@@ -77,6 +78,6 @@ export const approvedFacelessAccounts: ApprovedFacelessAccount[] = [
     riskLevel: 'Medium-High',
     sourceFileName: '05_PSYCHOLOGY_DEFENSE_LAB.source.md',
     sourceFileId: '1VMPQcD91Hl-Sw-iHg9i39SbkduUGqi1k',
-    status: 'source-verified'
+    status: 'approved-source'
   }
 ];
