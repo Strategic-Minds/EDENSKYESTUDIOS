@@ -181,7 +181,8 @@ const edenTasks = [
   ['Video creation', 'Yellow', 'Draft packet lane ready; final provider execution gated.'],
   ['Video chat', 'Yellow', 'Realtime session lane ready; provider credentials required.'],
   ['v0-style website creation', 'Yellow', 'Draft screen generator lane ready; repo mutation requires approval.'],
-  ['Git/Vercel/Supabase/Shopify/Drive/Gmail/Calendar access', 'Yellow', 'Connected-system control plane mapped; live writes remain gated.']
+  ['Git/Vercel/Supabase/Shopify/Drive/Gmail/Calendar access', 'Yellow', 'Connected-system control plane mapped; live writes remain gated.'],
+  ['Live mutation lock', 'Red', 'Production, commerce, account, and destructive actions remain blocked until approval, rollback, and receipts exist.']
 ] as const;
 
 const leakTests = [
@@ -410,7 +411,7 @@ export default function EdenChatEditor() {
             </div>
             <div className={styles.creatorGrid}>{creatorTools.map(([label, detail]) => <button key={label} type="button" onClick={() => runEdenAction(`Prepare ${label} creator packet.`)}><b>{label}</b><span>{detail}</span></button>)}</div>
             <div className={styles.actionGrid}>{actionButtons.map(([label, prompt]) => <button key={label} type="button" onClick={() => runEdenAction(prompt)} disabled={isSending}>{label}</button>)}</div>
-            <div className={styles.statusList}>{edenTasks.map(([label, status, detail]) => <div key={label} className={styles.statusRow}><span className={statusClass(normalizeTone(status))}><b>{status === 'Green' ? '✓' : status === 'Red' ? 'x' : '!'}</b>{label}</span><em>{detail}</em></div>)}</div>
+            <div className={styles.statusList}>{edenTasks.map(([label, status, detail]) => <div key={label} className={styles.statusRow}><span className={statusClass(normalizeTone(status))}><b>{normalizeTone(status) === 'green' ? '✓' : normalizeTone(status) === 'red' ? 'x' : '!'}</b>{label}</span><em>{detail}</em></div>)}</div>
           </section>
         ) : null}
 
