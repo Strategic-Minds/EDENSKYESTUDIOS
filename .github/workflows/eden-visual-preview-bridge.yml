@@ -12,31 +12,40 @@ on:
       - eden/readiness-scaffold-20260604
     paths:
       - app/**
+      - lib/**
+      - config/**
       - public/**
-      - scripts/capture-eden-visual-preview.mjs
-      - tests/visual-source-truth.test.mjs
+      - scripts/**
+      - tests/**
       - package.json
+      - package-lock.json
       - .github/workflows/eden-visual-preview-bridge.yml
   pull_request:
     paths:
       - app/**
+      - lib/**
+      - config/**
       - public/**
-      - scripts/capture-eden-visual-preview.mjs
-      - tests/visual-source-truth.test.mjs
+      - scripts/**
+      - tests/**
       - package.json
+      - package-lock.json
       - .github/workflows/eden-visual-preview-bridge.yml
 
 permissions:
   contents: read
 
+env:
+  DEFAULT_PREVIEW_URL: https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app
+  VISUAL_OUTPUT_DIR: visual-evidence/eden-preview
+
 jobs:
   capture-visual-preview:
     name: Capture real Chromium screenshots
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     env:
       VISUAL_PREVIEW_URL: ${{ github.event.inputs.preview_url || 'https://edenskyestudios-git-eden-readin-91d0d0-strategic-minds-advisory.vercel.app' }}
-      VISUAL_OUTPUT_DIR: visual-evidence/eden-preview
     steps:
       - name: Checkout draft branch
         uses: actions/checkout@v4
@@ -46,27 +55,83 @@ jobs:
         with:
           node-version: 22
 
+      - name: Initialize evidence directory
+        run: |
+          mkdir -p "$VISUAL_OUTPUT_DIR"
+          cat > "$VISUAL_OUTPUT_DIR/run-context.json" <<JSON
+          {
+            "workflow": "Eden Visual Preview Bridge",
+            "branch": "${GITHUB_REF_NAME}",
+            "sha": "${GITHUB_SHA}",
+            "preview_url": "${VISUAL_PREVIEW_URL}",
+            "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "approval_status": "PENDING_HUMAN_VISUAL_REVIEW"
+          }
+          JSON
+
       - name: Install app dependencies
-        run: npm install
+        id: npm-install
+        run: |
+          npm install 2>&1 | tee "$VISUAL_OUTPUT_DIR/npm-install.log"
 
       - name: Install Playwright package for bridge
-        run: npm install --no-save playwright@1.60.0
+        id: playwright-package
+        run: |
+          npm install --no-save playwright 2>&1 | tee "$VISUAL_OUTPUT_DIR/playwright-package.log"
 
       - name: Install Chromium in runner
-        run: npx playwright install --with-deps chromium
+        id: chromium-install
+        run: |
+          npx playwright install --with-deps chromium 2>&1 | tee "$VISUAL_OUTPUT_DIR/chromium-install.log"
 
-      - name: Run source-truth guard
-        run: npm test
+      - name: Run source-truth and production guards
+        id: npm-test
+        continue-on-error: true
+        run: |
+          npm test 2>&1 | tee "$VISUAL_OUTPUT_DIR/npm-test.log"
 
       - name: Run production build
-        run: npm run build
+        id: npm-build
+        continue-on-error: true
+        run: |
+          npm run build 2>&1 | tee "$VISUAL_OUTPUT_DIR/npm-build.log"
 
       - name: Capture preview screenshots
-        run: npm run visual:preview-bridge
+        id: capture
+        continue-on-error: true
+        run: |
+          npm run visual:preview-bridge 2>&1 | tee "$VISUAL_OUTPUT_DIR/visual-preview-bridge.log"
+
+      - name: Write bridge summary
+        if: always()
+        run: |
+          cat > "$VISUAL_OUTPUT_DIR/bridge-status.json" <<JSON
+          {
+            "workflow": "Eden Visual Preview Bridge",
+            "branch": "${GITHUB_REF_NAME}",
+            "sha": "${GITHUB_SHA}",
+            "preview_url": "${VISUAL_PREVIEW_URL}",
+            "npm_install": "${{ steps.npm-install.outcome }}",
+            "playwright_package": "${{ steps.playwright-package.outcome }}",
+            "chromium_install": "${{ steps.chromium-install.outcome }}",
+            "npm_test": "${{ steps.npm-test.outcome }}",
+            "npm_build": "${{ steps.npm-build.outcome }}",
+            "capture": "${{ steps.capture.outcome }}",
+            "approval_status": "PENDING_HUMAN_VISUAL_REVIEW",
+            "finished_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          JSON
 
       - name: Upload screenshot evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eden-visual-preview-evidence
           path: visual-evidence/eden-preview
           if-no-files-found: error
+
+      - name: Fail if validation or capture failed
+        if: ${{ steps.npm-test.outcome != 'success' || steps.npm-build.outcome != 'success' || steps.capture.outcome != 'success' }}
+        run: |
+          echo "Eden Visual Preview Bridge collected evidence, but one or more gates failed. Download eden-visual-preview-evidence and review bridge-status.json plus logs."
+          exit 1
