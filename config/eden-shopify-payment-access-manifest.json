@@ -1,0 +1,24 @@
+{
+  "system": "Eden Skye Black Card payment and member access manifest",
+  "branch": "eden/shopify-theme-launch-20260612",
+  "public_payment_page": {"handle":"payment","route":"/pages/payment","template":"templates/page.payment.json","status":"customer_facing_route_ready"},
+  "black_card_collection": {"handle":"black-card","route":"/collections/black-card","status":"exists_but_products_unverified_or_empty"},
+  "member_access_page": {"handle":"edens-closet","route":"/pages/edens-closet","template":"templates/page.edens-closet.json","required_shopify_page_record":"missing_if_not_listed_by_pages_query"},
+  "pwa_preview": {"handle":"pwa-app","route":"/pages/pwa-app","template":"templates/page.pwa-app.json","status":"theme_template_installed"},
+  "customer_auth_routes": {"login":"/account/login","signup":"/account/register"},
+  "entitlement_target": "Black Card paid customer unlocks Eden's Closet and protected PWA member surfaces.",
+  "required_final_integrations": [
+    "Shopify Black Card product or payment link",
+    "Shopify customer account login enabled",
+    "paid order/customer tag or metafield entitlement",
+    "PWA/Supabase entitlement sync for private Closet access",
+    "webhook validation before live unlock"
+  ],
+  "protected_actions": {
+    "live_payment_activation":"requires explicit Jeremy approval",
+    "live_product_creation":"requires explicit Jeremy approval",
+    "theme_publish":"requires explicit Jeremy approval",
+    "production_entitlement_mutation":"requires test evidence and explicit approval"
+  },
+  "public_copy_rule": "Do not show internal missing-payment or approval language on public pages. Use admin/source manifests for operational blockers."
+}
