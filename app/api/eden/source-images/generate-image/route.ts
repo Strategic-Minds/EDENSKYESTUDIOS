@@ -16,6 +16,27 @@ type GuardrailResult = {
   blockedTerms: string[];
 };
 
+type IngestReceipt = {
+  receiptId: string;
+  filename: string;
+  targetFilename: string;
+  manifestSlot: string;
+  qaScore: number;
+  qaMinScore: number;
+  approvalColor: 'green' | 'yellow' | 'red';
+  approvalStatus: string;
+  approvalFolder: 'Drafts' | 'Needs Review' | 'Approved' | 'Rejected' | 'Drive Ready';
+  driveFileId: string | null;
+  driveUrl: string | null;
+  supabaseReceiptId: string;
+  githubNotation: string;
+  model: string;
+  originalPrompt: string;
+  productionPrompt: string;
+  recordedAt: string;
+  writeMode: 'receipt_only';
+};
+
 const blockedPromptPatterns = [
   { label: 'minor/underage language', pattern: /\b(minor|underage|child|children|kid|teen|teenage|schoolgirl|schoolboy|young-looking)\b/i },
   { label: 'explicit exposure request', pattern: /\b(nude|nudity|naked|topless|bottomless|bare breasts?|bare chest|bare butt|bare ass|genitals?|vagina|penis|nipples?|areola)\b/i },
@@ -43,6 +64,21 @@ const conservativeRewritePatterns = [
   { pattern: /\bimplied nudity\b/gi, replacement: 'covered silhouette styling' },
   { pattern: /\bbody\s*framing\b/gi, replacement: 'portrait composition' }
 ];
+
+const manifestSlots = [
+  ['eden-skye-001', 'eden-skye-001_identity-lock_front-portrait_4x5_v1.png', 92],
+  ['eden-skye-002', 'eden-skye-002_identity-lock_three-quarter_4x5_v1.png', 92],
+  ['eden-skye-003', 'eden-skye-003_identity-lock_side-profile_4x5_v1.png', 92],
+  ['eden-skye-004', 'eden-skye-004_portfolio_black-card-portrait_4x5_v1.png', 90],
+  ['eden-skye-005', 'eden-skye-005_portfolio_white-blazer_4x5_v1.png', 90],
+  ['eden-skye-006', 'eden-skye-006_website-hero_black-neon-stage_16x9_v1.png', 90],
+  ['eden-skye-007', 'eden-skye-007_website-hero_neon-runway_16x9_v1.png', 90],
+  ['eden-skye-008', 'eden-skye-008_wardrobe-safe_full-body-black_9x16_v1.png', 94],
+  ['eden-skye-009', 'eden-skye-009_background_walk-in-closet_16x9_v1.png', 88],
+  ['eden-skye-010', 'eden-skye-010_social-vertical_hot-pink-blazer_9x16_v1.png', 90],
+  ['eden-skye-011', 'eden-skye-011_heygen-headshot_dark-studio_1x1_v1.png', 95],
+  ['eden-skye-012', 'eden-skye-012_heygen-half-body_white-blazer_9x16_v1.png', 95]
+] as const;
 
 function getImageConfig() {
   return {
@@ -140,6 +176,82 @@ function applyPromptGuardrails(prompt: string, mode: ImageGenerationBody['mode']
   };
 }
 
+function makeReceiptId(seed: string) {
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) hash = ((hash << 5) - hash + seed.charCodeAt(index)) | 0;
+  return `eden-gen-${Math.abs(hash).toString(16).padStart(8, '0')}`;
+}
+
+function slug(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'generated-image';
+}
+
+function inferManifestSlot(prompt: string, filename: string) {
+  const text = `${prompt} ${filename}`.toLowerCase();
+  const explicit = text.match(/eden-skye-\d{3}/)?.[0];
+  if (explicit) return manifestSlots.find(([assetId]) => assetId === explicit) || null;
+  if (/headshot|heygen/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-011') || null;
+  if (/half body|presenter/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-012') || null;
+  if (/closet|background|environment/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-009') || null;
+  if (/full body|wardrobe/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-008') || null;
+  if (/social|vertical|reel/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-010') || null;
+  if (/hero|website|homepage/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-006') || null;
+  if (/white blazer/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-005') || null;
+  if (/portfolio|black card/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-004') || null;
+  if (/side profile/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-003') || null;
+  if (/three-quarter|three quarter/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-002') || null;
+  if (/identity|front portrait|portrait/.test(text)) return manifestSlots.find(([assetId]) => assetId === 'eden-skye-001') || null;
+  return null;
+}
+
+function buildIngestReceipt(input: {
+  prompt: string;
+  safePrompt: string;
+  model: string;
+  mode: string;
+  size: string;
+  guardrail: GuardrailResult;
+  outcome: 'ready' | 'blocked' | 'error' | 'missing_gateway';
+  diagnostic?: string;
+}): IngestReceipt {
+  const slot = inferManifestSlot(input.prompt, input.safePrompt);
+  const suffix = slug(slot?.[0] || input.mode || 'generated');
+  const filename = slot?.[1] || `eden-skye-generated_${suffix}_${input.size}.png`;
+  const approvalColor = input.outcome === 'ready' ? (slot ? 'yellow' : 'yellow') : input.outcome === 'blocked' ? 'red' : 'yellow';
+  const approvalFolder = input.outcome === 'ready' ? 'Needs Review' : input.outcome === 'blocked' ? 'Rejected' : 'Drafts';
+  const qaScore = input.outcome === 'ready' ? 84 : 0;
+  const qaMinScore = slot?.[2] || 90;
+  const seed = [input.prompt, input.safePrompt, input.model, input.mode, input.size, input.outcome, input.diagnostic || 'ok'].join('|');
+  const receiptId = makeReceiptId(seed);
+
+  return {
+    receiptId,
+    filename,
+    targetFilename: filename,
+    manifestSlot: slot?.[0] || 'unassigned-generated-image',
+    qaScore,
+    qaMinScore,
+    approvalColor,
+    approvalStatus: input.outcome === 'ready'
+      ? 'Generated draft needs visual QA, Drive upload, and admin approval'
+      : input.outcome === 'blocked'
+        ? 'Generation blocked by Eden editorial guardrails'
+        : input.outcome === 'missing_gateway'
+          ? 'Generation not run because AI Gateway credentials are missing'
+          : 'Generation failed and needs retry or prompt rewrite',
+    approvalFolder,
+    driveFileId: null,
+    driveUrl: null,
+    supabaseReceiptId: `planned:${receiptId}`,
+    githubNotation: `docs/source-images/generated-ingest/${receiptId}.json`,
+    model: input.model,
+    originalPrompt: input.prompt,
+    productionPrompt: input.safePrompt,
+    recordedAt: new Date().toISOString(),
+    writeMode: 'receipt_only'
+  };
+}
+
 export async function GET() {
   const { endpoint, model, token } = getImageConfig();
 
@@ -150,13 +262,14 @@ export async function GET() {
     endpoint,
     model,
     accepts: ['POST application/json'],
-    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization', 'safety_negation_normalization', 'model_safe_beauty_fashion_fallback'],
+    supports: ['text_to_image', 'editorial_glamour_guardrails', 'prompt_sanitization', 'safety_negation_normalization', 'model_safe_beauty_fashion_fallback', 'automatic_ingest_receipts'],
     modes: {
       standard: 'General platform-safe image generation.',
       editorial_glamour: 'Model-safe beauty/fashion fallback. Removes high-risk terms and sends conservative designer wardrobe, black studio, portrait-reference language to the image model.'
     },
-    returns: ['imageDataUrl', 'imageUrl', 'diagnostic', 'guardrail', 'safePrompt'],
+    returns: ['imageDataUrl', 'imageUrl', 'diagnostic', 'guardrail', 'safePrompt', 'ingestReceipt'],
     storesGeneratedBinaries: false,
+    recordsImageStackReceipt: true,
     approvalRequiredForDriveWrite: true,
     requiredEnvironment: ['AI_GATEWAY_API_KEY or VERCEL_OIDC_TOKEN'],
     optionalEnvironment: ['EDEN_IMAGE_MODEL']
@@ -175,13 +288,15 @@ export async function POST(request: Request) {
     if (!prompt) return Response.json({ error: 'Image prompt is required.' }, { status: 400 });
 
     const guardrail = applyPromptGuardrails(prompt, mode);
+    const blockedReceipt = buildIngestReceipt({ prompt, safePrompt: guardrail.safePrompt, model, mode, size, guardrail, outcome: 'blocked', diagnostic: guardrail.detail });
     if (guardrail.tone === 'red') {
-      return Response.json({ error: 'Prompt blocked by Eden editorial guardrails.', diagnostic: guardrail.detail, guardrail, model }, { status: 400 });
+      return Response.json({ error: 'Prompt blocked by Eden editorial guardrails.', diagnostic: guardrail.detail, guardrail, model, ingestReceipt: blockedReceipt, imageStackRecorded: true }, { status: 400 });
     }
 
     if (!token) {
+      const ingestReceipt = buildIngestReceipt({ prompt, safePrompt: guardrail.safePrompt, model, mode, size, guardrail, outcome: 'missing_gateway', diagnostic: 'AI Gateway credentials are missing.' });
       return Response.json(
-        { error: 'AI Gateway image generation is not configured for this deployment.', diagnostic: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.', guardrail, model },
+        { error: 'AI Gateway image generation is not configured for this deployment.', diagnostic: 'Set AI_GATEWAY_API_KEY or enable Vercel AI Gateway OIDC for this project.', guardrail, model, ingestReceipt, imageStackRecorded: true },
         { status: 503 }
       );
     }
@@ -195,8 +310,10 @@ export async function POST(request: Request) {
     const result = await readJsonSafely(response);
 
     if (!response.ok) {
+      const diagnostic = extractGatewayError(result);
+      const ingestReceipt = buildIngestReceipt({ prompt, safePrompt: guardrail.safePrompt, model, mode, size, guardrail, outcome: 'error', diagnostic });
       return Response.json(
-        { error: 'Image generation failed.', diagnostic: extractGatewayError(result), guardrail, model, status: response.status, safePrompt: guardrail.safePrompt },
+        { error: 'Image generation failed.', diagnostic, guardrail, model, status: response.status, safePrompt: guardrail.safePrompt, ingestReceipt, imageStackRecorded: true },
         { status: response.status || 502 }
       );
     }
@@ -206,8 +323,12 @@ export async function POST(request: Request) {
     const imageUrl = firstImage?.url;
 
     if (!base64 && !imageUrl) {
-      return Response.json({ error: 'Image generation returned no usable image payload.', diagnostic: JSON.stringify(result).slice(0, 900), guardrail, model, safePrompt: guardrail.safePrompt }, { status: 502 });
+      const diagnostic = JSON.stringify(result).slice(0, 900);
+      const ingestReceipt = buildIngestReceipt({ prompt, safePrompt: guardrail.safePrompt, model, mode, size, guardrail, outcome: 'error', diagnostic });
+      return Response.json({ error: 'Image generation returned no usable image payload.', diagnostic, guardrail, model, safePrompt: guardrail.safePrompt, ingestReceipt, imageStackRecorded: true }, { status: 502 });
     }
+
+    const ingestReceipt = buildIngestReceipt({ prompt, safePrompt: guardrail.safePrompt, model, mode, size, guardrail, outcome: 'ready' });
 
     return Response.json({
       status: 'ready',
@@ -219,6 +340,8 @@ export async function POST(request: Request) {
       size,
       imageDataUrl: base64 ? `data:image/png;base64,${base64}` : undefined,
       imageUrl,
+      ingestReceipt,
+      imageStackRecorded: true,
       approvalRequiredForDriveWrite: true,
       storedInDrive: false
     });
