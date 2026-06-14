@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./brand-lock.css";
 import "./generated-asset-styles.css";
+import "./closet-pwa.css";
 import { PwaRegister } from "./pwa-register";
 
 export const metadata: Metadata = {
