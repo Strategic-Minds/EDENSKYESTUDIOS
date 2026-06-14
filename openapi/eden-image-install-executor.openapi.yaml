@@ -1,0 +1,150 @@
+openapi: 3.1.0
+info:
+  title: Eden Skye Image Install Executor
+  version: 0.1.0-preview
+  description: Preview-only Action contract for validating and installing approved_public Eden Skye canonical images.
+servers:
+  - url: https://edenskyestudios-preview.example.com
+    description: Replace with the approved preview executor URL before Custom GPT registration.
+security:
+  - bearerAuth: []
+paths:
+  /api/eden/images/install-approved:
+    post:
+      operationId: installApprovedEdenImages
+      summary: Validate or install approved Eden Skye canonical images.
+      description: Defaults to dry_run. The executor must reject reference_board, temporary_preview, generated_pending_review, rejected, quarantined, and missing_asset images.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstallRequest'
+      responses:
+        '200':
+          description: Request is valid for dry-run or install planning.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstallPlan'
+        '401':
+          description: Missing or invalid bearer token.
+        '422':
+          description: Request is blocked by governance validation.
+  /api/eden/images/install-status/{request_id}:
+    get:
+      operationId: getEdenImageInstallStatus
+      summary: Return preview install status for an Eden image request.
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_id:
+                    type: string
+                  status:
+                    type: string
+                  message:
+                    type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    ImageStatus:
+      type: string
+      enum:
+        - reference_board
+        - temporary_preview
+        - generated_pending_review
+        - approved_public
+        - rejected
+        - quarantined
+        - missing_asset
+    InstallAsset:
+      type: object
+      required:
+        - asset_id
+        - status
+        - source_kind
+      properties:
+        asset_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/ImageStatus'
+        source_kind:
+          type: string
+          enum:
+            - generated_image
+            - uploaded_source
+            - page_board
+            - mockup
+            - temporary_crop
+        drive_target_folder_id:
+          type: string
+        supabase_bucket:
+          type: string
+        supabase_path:
+          type: string
+    InstallRequest:
+      type: object
+      required:
+        - request_id
+        - approval_receipt_id
+        - assets
+        - gates
+      properties:
+        request_id:
+          type: string
+        approval_receipt_id:
+          type: string
+        mode:
+          type: string
+          enum: [dry_run, install]
+          default: dry_run
+        gates:
+          type: object
+          required: [public_use, drive_use, supabase_use]
+          properties:
+            public_use:
+              type: boolean
+            drive_use:
+              type: boolean
+            supabase_use:
+              type: boolean
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstallAsset'
+    InstallPlan:
+      type: object
+      properties:
+        request_id:
+          type: string
+        mode:
+          type: string
+        status:
+          type: string
+          enum: [ready, blocked]
+        install_allowed:
+          type: boolean
+        dry_run:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: string
+        warnings:
+          type: array
+          items:
+            type: string
