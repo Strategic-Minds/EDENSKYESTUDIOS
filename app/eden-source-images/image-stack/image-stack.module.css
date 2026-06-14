@@ -6,9 +6,11 @@
 .sidebar p,.topbar p,.modalPanel p{margin:0 0 6px;color:#ff4fb3;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0}
 .sidebar h1,.topbar h2,.emptyState h3,.modalPanel h3{margin:0;line-height:1;letter-spacing:0}
 .sidebar h1{font-size:28px}
-.sidebar span,.topbar span,.dropZone span,.folderList span,.cardBody span,.cardBody em,.emptyState p,.statusPanel span,.legend span,.modalPanel span,.modalPanel footer a{color:#b8b8c2;font-size:12px;line-height:1.35;font-style:normal;overflow-wrap:anywhere}
-.statusPanel,.legend{display:grid;gap:7px;border:1px solid rgba(255,255,255,.1);background:#050505;padding:11px}
-.statusPanel b{font-size:13px;color:#fff}
+.sidebar span,.topbar span,.dropZone span,.folderList span,.cardBody span,.cardBody em,.emptyState p,.statusPanel span,.ingestPanel span,.ingestPanel em,.legend span,.modalPanel span,.modalPanel footer a{color:#b8b8c2;font-size:12px;line-height:1.35;font-style:normal;overflow-wrap:anywhere}
+.statusPanel,.ingestPanel,.legend{display:grid;gap:7px;border:1px solid rgba(255,255,255,.1);background:#050505;padding:11px}
+.statusPanel b,.ingestPanel b{font-size:13px;color:#fff}
+.ingestPanel{border-color:rgba(255,20,147,.28);background:#070207}
+.ingestPanel em{color:#ff9bd2}
 .legend{grid-template-columns:1fr;gap:8px}
 .legend span{display:flex;align-items:center;gap:8px}
 .legend i{display:block;width:10px;height:10px;border-radius:999px}
