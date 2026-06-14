@@ -1,0 +1,59 @@
+{
+  "system": "Eden's Closet PWA",
+  "branch": "eden/readiness-scaffold-20260604",
+  "status": "gated_preview_ready",
+  "sourceTruth": {
+    "approvedNeonClosetBackground": {
+      "filename": "eden-closet-neon-walkin-approved-bg.png",
+      "source": "user_files/01-ChatGPT-Image-Jun-11-2026-01_03_28-PM-4-.png",
+      "cdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-neon-walkin-approved-bg.png?v=1781424263",
+      "usage": ["/closet", "/closet/[slug]", "/closet/[slug]/viewer", "/closet/[slug]/chat", "/closet/[slug]/video"]
+    },
+    "pwaReferenceBoard": {
+      "filename": "ChatGPT-Image-Jun-11-2026-12_20_42-AM.png",
+      "source": "user_files/02-ChatGPT-Image-Jun-11-2026-12_20_42-AM.png",
+      "usage": "layout_reference_only",
+      "rule": "Do not crop, extract, or publish collage-board tiles as final model/background assets."
+    }
+  },
+  "routes": {
+    "/closet": "PWA/member home with model discovery, Black Card gate, AI chat/video entry points, and approved neon closet background.",
+    "/closet/[slug]": "Model profile plus outfit selector and Black Card unlock flow.",
+    "/closet/[slug]/viewer": "Full-body 360 viewer with wardrobe, environment, measurement, capture, chat, and video controls.",
+    "/closet/[slug]/chat": "Gated AI text and voice chat UI.",
+    "/closet/[slug]/video": "Gated AI video chat UI.",
+    "/api/closet/access": "Read-only gate status for Supabase auth plus Shopify Black Card entitlement readiness."
+  },
+  "commerceHandoff": {
+    "shopifyPaymentPath": "/pages/payment",
+    "vercelPaymentPath": "/payment",
+    "successPath": "/success",
+    "entitlement": "black_card_member",
+    "livePaymentActivation": false
+  },
+  "authAndEntitlement": {
+    "authProvider": "Supabase",
+    "entitlementProvider": "Shopify Black Card",
+    "gateState": "preview_locked_until_verified_member_session",
+    "protectedActions": [
+      "voice_chat",
+      "ai_video_chat",
+      "private_gallery",
+      "saved_favorites",
+      "member_media_export",
+      "closet_session_sync"
+    ]
+  },
+  "integrations": {
+    "heygen": "planned_for_ai_video_avatar_sessions",
+    "realtimeVoice": "planned_for_member_voice_sessions",
+    "supabase": "auth_and_entitlement_check_required",
+    "shopify": "storefront_payment_and_customer_account_layer"
+  },
+  "approvalRules": [
+    "Do not claim live voice/video is active until tested with a verified member entitlement.",
+    "Do not use collage-board crops as final source images.",
+    "Do not activate live Shopify payments without Jeremy approval.",
+    "Do not mutate Supabase production schema without explicit approval."
+  ]
+}
