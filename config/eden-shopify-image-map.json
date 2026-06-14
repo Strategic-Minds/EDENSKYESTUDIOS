@@ -2,7 +2,8 @@
   "status": "approved_uploaded_to_shopify_cdn_and_wired_to_theme",
   "branch": "eden/shopify-theme-launch-20260612",
   "theme_template": "templates/index.json",
-  "source_truth": "Jeremy-approved uploaded reference batch, 2026-06-14 runtime",
+  "drive_source_folder": "https://drive.google.com/drive/folders/1RZVPpvAhrBikTLJ2rwIOVedfwoTqpAsE",
+  "source_truth": "Jeremy-approved uploaded and Drive-visible image batch, verified 2026-06-14 runtime",
   "hero": {"slot":"hero_fallback_url","name":"Eden Skye flagship hero","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550"},
   "approved_reference_boards": [
     {"name":"Mobile home reference","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-home.png?v=1781419405"},
@@ -11,33 +12,33 @@
     {"name":"Full mobile reference","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-mobile-full-reference.png?v=1781419576"}
   ],
   "female_models": [
-    {"slot":"female_01","name":"Alexis Voss","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435"},
-    {"slot":"female_02","name":"Luna Moretti","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-portrait-black-pink.png?v=1781419459"},
-    {"slot":"female_03","name":"Sienna Cole","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-portrait-neon.png?v=1781419527"},
-    {"slot":"female_04","name":"Eden Skye","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550"},
-    {"slot":"female_05","name":"Mila Stone","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-fullbody-neon-closet.png?v=1781419447"},
-    {"slot":"female_06","name":"Aria Noir","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-06-aria-noir.jpg?v=1781309068"},
-    {"slot":"female_07","name":"Nova Lux","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-07-nova-lux.jpg?v=1781309076"},
-    {"slot":"female_08","name":"Valentina Rose","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-black-neon.png?v=1781419488"},
-    {"slot":"female_09","name":"Serena Vail","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-evening-model.png?v=1781419539"},
-    {"slot":"female_10","name":"Isla Monroe","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-10-redhead-isla-monroe.png?v=1781416374"}
+    {"slot":"female_01","name":"Alexis Voss","route":"/pages/model-alexis-voss","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-closeup-night-lounge.png?v=1781419435"},
+    {"slot":"female_02","name":"Luna Moretti","route":"/pages/model-luna-moretti","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-portrait-black-pink.png?v=1781419459"},
+    {"slot":"female_03","name":"Sienna Cole","route":"/pages/model-sienna-cole","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-portrait-neon.png?v=1781419527"},
+    {"slot":"female_04","name":"Eden Skye","route":"/pages/model-eden-skye","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-brunette-fullbody-black.png?v=1781419550"},
+    {"slot":"female_05","name":"Mila Stone","route":"/pages/model-mila-stone","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-model-fullbody-neon-closet.png?v=1781419447"},
+    {"slot":"female_06","name":"Aria Noir","route":"/pages/model-aria-noir","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-06-aria-noir.jpg?v=1781309068"},
+    {"slot":"female_07","name":"Nova Lux","route":"/pages/model-nova-lux","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-07-nova-lux.jpg?v=1781309076"},
+    {"slot":"female_08","name":"Valentina Rose","route":"/pages/model-valentina-rose","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-black-neon.png?v=1781419488"},
+    {"slot":"female_09","name":"Serena Vail","route":"/pages/model-serena-vail","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-blonde-evening-model.png?v=1781419539"},
+    {"slot":"female_10","name":"Isla Monroe","route":"/pages/model-isla-monroe","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-female-10-redhead-isla-monroe.png?v=1781416374"}
   ],
   "male_models": [
-    {"slot":"male_01","name":"Dante Cross","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-01-dante-cross.jpg?v=1781309108"},
-    {"slot":"male_02","name":"Jax Rhodes","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-02-jax-rhodes.jpg?v=1781309117"},
-    {"slot":"male_03","name":"Roman Kade","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-03-roman-kade.jpg?v=1781309142"},
-    {"slot":"male_04","name":"Kai Voss","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-04-kai-voss.jpg?v=1781309134"},
-    {"slot":"male_05","name":"Marco Slate","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-05-marco-slate.jpg?v=1781309149"}
+    {"slot":"male_01","name":"Dante Cross","route":"/pages/model-dante-cross","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-01-dante-cross.jpg?v=1781309108"},
+    {"slot":"male_02","name":"Jax Rhodes","route":"/pages/model-jax-rhodes","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-02-jax-rhodes.jpg?v=1781309117"},
+    {"slot":"male_03","name":"Roman Kade","route":"/pages/model-roman-kade","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-03-roman-kade.jpg?v=1781309142"},
+    {"slot":"male_04","name":"Kai Voss","route":"/pages/model-kai-voss","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-04-kai-voss.jpg?v=1781309134"},
+    {"slot":"male_05","name":"Marco Slate","route":"/pages/model-marco-slate","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-male-05-marco-slate.jpg?v=1781309149"}
   ],
   "faceless_environments": [
-    {"slot":"faceless_01","name":"Luxury Suite","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515"},
-    {"slot":"faceless_02","name":"Noir Rooftop","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470"},
-    {"slot":"faceless_03","name":"Eden Closet","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503"}
+    {"slot":"faceless_01","name":"Luxury Suite","route":"/collections/faceless-content","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-luxury-suite-environment.png?v=1781419515"},
+    {"slot":"faceless_02","name":"Noir Rooftop","route":"/collections/faceless-content","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-rooftop-night-environment.png?v=1781419470"},
+    {"slot":"faceless_03","name":"Eden Closet","route":"/pages/edens-closet","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503"}
   ],
   "products": [
-    {"slot":"product_01","name":"Black Card","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-product-01-black-card.jpg?v=1781309179"},
-    {"slot":"product_02","name":"AI Model Content Pack","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-roster.png?v=1781419417"},
-    {"slot":"product_03","name":"Xyla Video Draft Pack","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-mobile-full-reference.png?v=1781419576"}
+    {"slot":"product_01","name":"Black Card","route":"/pages/payment","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-skye-product-01-black-card.jpg?v=1781309179"},
+    {"slot":"product_02","name":"Private Media Drops","route":"/pages/payment","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-roster.png?v=1781419417"},
+    {"slot":"product_03","name":"Eden's Closet Access","route":"/pages/edens-closet","url":"https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503"}
   ],
   "protected_actions": {"live_product_creation":false,"payment_activation":false,"theme_publish":false}
 }
