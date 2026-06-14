@@ -44,7 +44,7 @@ export default function EdenModelInventoryPage() {
         <div className={styles.metric}><b>{loadedRosterRecords}</b><span>Roster records loaded</span></div>
         <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Female/basic portraits</span></div>
         <div className={styles.metric}><b>{approvedInternationalRosterBatch.count}</b><span>International sources</span></div>
-        <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male profiles approved</span></div>
+        <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male portraits approved</span></div>
         <div className={styles.metric}><b>{approvedFacelessSourceBatch.count}</b><span>Faceless accounts approved</span></div>
         <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified production slots</span></div>
         <div className={styles.metric}><b>{missingSources}</b><span>Production images needed</span></div>
@@ -130,7 +130,7 @@ export default function EdenModelInventoryPage() {
             <p>green</p>
             <h2>Male Model Roster</h2>
           </div>
-          <span className={styles.sourceWarning}><b>{approvedMaleRosterBatch.title}</b><span>All {approvedMaleRosterBatch.count} male profile records are operator-approved. Portrait binaries can be attached later without blocking the approved inventory state.</span></span>
+          <span className={styles.sourceWarning}><b>{approvedMaleRosterBatch.title}</b><span>All {approvedMaleRosterBatch.count} male profiles are operator-approved and now matched to Drive-backed portrait PNGs.</span></span>
         </div>
         <div className={styles.manifestEmpty}>
           <b>Root folder</b>
@@ -138,22 +138,27 @@ export default function EdenModelInventoryPage() {
           <b>Profile text folder</b>
           <span>{approvedMaleRosterBatch.profileTextFolderId}</span>
           <b>Portrait folder</b>
-          <span>{approvedMaleRosterBatch.portraitsFolderId}</span>
+          <span>{approvedMaleRosterBatch.duplicatePortraitsFolderId}</span>
           <b>Status</b>
           <span>{approvedMaleRosterBatch.portraitStatus}</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginTop: 18 }}>
           {approvedMaleModels.map((model) => (
             <article key={model.textFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
-              <div style={{ display: 'grid', placeItems: 'center', minHeight: 220, aspectRatio: '4 / 5', background: 'linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.018))', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <span className={`${styles.badge} ${styles.green}`}>approved profile</span>
-              </div>
+              {model.portraitFileId ? (
+                <img src={driveThumbnailUrl(model.portraitFileId)} alt={`${model.name} male portrait`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block', background: '#050505' }} />
+              ) : (
+                <div style={{ display: 'grid', placeItems: 'center', minHeight: 220, aspectRatio: '4 / 5', background: 'linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.018))', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                  <span className={`${styles.badge} ${styles.green}`}>approved profile</span>
+                </div>
+              )}
               <div style={{ display: 'grid', gap: 8, padding: 12 }}>
-                <span className={`${styles.badge} ${styles.green}`}>approved</span>
+                <span className={`${styles.badge} ${styles.green}`}>approved portrait</span>
                 <b style={{ color: '#fff', fontSize: 16 }}>{model.index.toString().padStart(2, '0')} - {model.name}</b>
                 <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>Age {model.age} - {model.archetype}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.notes}</span>
-                <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Text ID: {model.textFileId}</span>
+                <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.portraitFileName ?? 'Portrait file pending'}</span>
+                <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Drive ID: {model.portraitFileId ?? 'Missing'}</span>
               </div>
             </article>
           ))}
