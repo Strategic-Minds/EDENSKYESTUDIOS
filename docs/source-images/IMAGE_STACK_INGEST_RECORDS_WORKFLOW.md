@@ -2,11 +2,13 @@
 
 ## Status
 
-Preview-safe implementation for routing GPT, Eden editor, and uploaded image metadata into the Image Stack approval ledger.
+Preview-safe implementation for routing GPT, Eden editor, generated image, and uploaded image metadata into the Image Stack approval ledger.
 
 ## Live Surfaces
 
 - UI: `/eden-source-images/image-stack`
+- Editor: `/eden-source-images`
+- Image generation API: `/api/eden/source-images/generate-image`
 - Ingest API: `/api/eden/source-images/ingest-generated`
 - Control plane: `/api/eden/source-images/control-plane`
 - Drive approval map: `/api/eden/source-images/drive-approval-map`
@@ -50,6 +52,13 @@ The Image Stack page now:
 - stores the latest receipts in browser localStorage under `eden-image-stack-ingest-records-v1`
 - keeps binary upload and external writes blocked from preview
 
+The image generation API now:
+
+- automatically builds an `ingestReceipt` for every image generation response
+- records prompt, safe production prompt, model, QA placeholder, approval color, approval folder, manifest slot, Supabase receipt placeholder, and GitHub notation path
+- returns receipt metadata for successful generations, blocked prompts, missing gateway credentials, and failed generations
+- does not upload generated binaries to Drive from preview
+
 The ingest API now:
 
 - returns a deterministic receipt ID
@@ -73,4 +82,4 @@ Blocked until verified approval and connector execution exist:
 
 ## Next Build Step
 
-Promote this from receipt-only to durable persistence by adding an approved Supabase migration for `eden_source_image_assets` and `eden_source_image_ingest_receipts`, then wire the ingest API to insert records with service-role credentials only after approval and rollback notes are present.
+Promote this from receipt-only to durable persistence by adding an approved Supabase migration for `eden_source_image_assets` and `eden_source_image_ingest_receipts`, then wire the ingest API and generation API to insert records with service-role credentials only after approval and rollback notes are present.
