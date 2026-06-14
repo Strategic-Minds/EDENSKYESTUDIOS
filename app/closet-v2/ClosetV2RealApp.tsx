@@ -1,9 +1,10 @@
 "use client";
 
+import "./closet-v2-real.css";
 import { useMemo, useState } from "react";
 
 type View = "home" | "models" | "profile" | "closet" | "environments" | "viewer" | "chat" | "video" | "dashboard";
-type Model = { name: string; slug: string; image: string; title: string; stats: string[] };
+type Model = { name: string; slug: string; image: string; title: string };
 
 const assets = {
   lounge: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-model-lounge-01.png?v=1781428263",
@@ -12,48 +13,142 @@ const assets = {
   body: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-full-body-viewer.png?v=1781428288",
   front: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-front.png?v=1781431146",
   left: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-left-45.png?v=1781431138",
-  side: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-left-side.png?v=1781431168",
-  back: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-back.png?v=1781431152",
-  right: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-right-side.png?v=1781431160",
-  right45: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-right-45.png?v=1781431175"
+  right: "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-angle-right-45.png?v=1781431175"
 };
 
 const models: Model[] = [
-  { name: "Alexis Voss", slug: "alexis-voss", image: assets.lounge, title: "Noir lounge muse", stats: ["5.2M", "98%", "200+"] },
-  { name: "Eden Skye", slug: "eden-skye", image: assets.eden, title: "Signature Black Card model", stats: ["4.8M", "96%", "180+"] },
-  { name: "Luna Moretti", slug: "luna-moretti", image: assets.body, title: "Closet and runway styling", stats: ["3.7M", "94%", "140+"] },
-  { name: "Sienna Cole", slug: "sienna-cole", image: assets.front, title: "360 full-body selector", stats: ["2.9M", "92%", "115+"] },
-  { name: "Mila Rose", slug: "mila-rose", image: assets.left, title: "Private glam editorials", stats: ["2.4M", "91%", "90+"] },
-  { name: "Amara James", slug: "amara-james", image: assets.right45, title: "AI video lounge sessions", stats: ["2.1M", "90%", "84+"] },
-  { name: "Nova Saint", slug: "nova-saint", image: assets.side, title: "Wardrobe-safe looks", stats: ["1.9M", "89%", "72+"] },
-  { name: "Serena Vale", slug: "serena-vale", image: assets.back, title: "Premium member content", stats: ["1.6M", "88%", "68+"] }
+  { name: "Eden Skye", slug: "eden-skye", image: assets.eden, title: "Signature closet muse" },
+  { name: "Alexis Voss", slug: "alexis-voss", image: assets.lounge, title: "Noir lounge model" },
+  { name: "Luna Moretti", slug: "luna-moretti", image: assets.body, title: "Full-body wardrobe model" },
+  { name: "Sienna Cole", slug: "sienna-cole", image: assets.front, title: "360 preview model" }
 ];
 
-const nav = [["DASHBOARD", "/closet-v2/dashboard"], ["MODELS", "/closet-v2/models"], ["AI CHAT", "/closet-v2/chat"], ["VIDEO CHAT", "/closet-v2/video"], ["CLOSET", "/closet-v2/closet"], ["SETTINGS", "/payment"]];
-const outfits = ["Black evening set", "Silk lace set", "Noir robe", "Hot pink mini", "Poolside look", "Luxury heels"];
-const rooms = ["Modern Bedroom", "Walk-in Closet", "Penthouse Living", "Beach Villa", "Luxury Hotel", "Photo Studio", "Pool Room", "Rooftop"];
-const frameList = [assets.front, assets.left, assets.side, assets.back, assets.right, assets.right45];
+const bottomNav = [
+  ["Home", "/closet-v2"],
+  ["Models", "/closet-v2/models"],
+  ["Closet", "/closet-v2/closet"],
+  ["Unlock", "/payment"]
+];
+
+const outfits = ["Black set", "Pink dress", "Silk robe", "Heels"];
+const rooms = ["Closet", "Bedroom", "Bathroom", "Pool"];
 
 export function ClosetV2RealApp({ view = "home", slug }: { view?: View; slug?: string }) {
-  const [activeOutfit, setActiveOutfit] = useState(outfits[0]);
-  const [activeFrame, setActiveFrame] = useState(0);
-  const [activeRoom, setActiveRoom] = useState(rooms[1]);
+  const [outfit, setOutfit] = useState(outfits[0]);
+  const [room, setRoom] = useState(rooms[0]);
   const model = useMemo(() => models.find((item) => item.slug === slug) ?? models[0], [slug]);
 
-  return <main className="ec2-app"><Topbar /><div className="ec2-shell">{view === "home" && <Home />}{view === "models" && <ModelSelect />}{view === "profile" && <Profile model={model} />}{view === "closet" && <Closet activeOutfit={activeOutfit} setActiveOutfit={setActiveOutfit} />}{view === "environments" && <Environments activeRoom={activeRoom} setActiveRoom={setActiveRoom} />}{view === "viewer" && <Viewer activeFrame={activeFrame} setActiveFrame={setActiveFrame} />}{view === "chat" && <Chat model={model} />}{view === "video" && <Video />}{view === "dashboard" && <Dashboard />}</div></main>;
+  const normalizedView = view === "viewer" || view === "closet" || view === "environments" ? "closet" : view;
+
+  return (
+    <main className="ecm-app">
+      <section className="ecm-phone" aria-label="Eden's Closet mobile app">
+        <header className="ecm-top">
+          <a href="/closet-v2" className="ecm-logo">ES</a>
+          <span>Eden&apos;s Closet</span>
+          <a href="/payment" className="ecm-pill">Black Card</a>
+        </header>
+
+        {normalizedView === "home" && <Home />}
+        {normalizedView === "models" && <ChooseModel />}
+        {normalizedView === "profile" && <ModelProfile model={model} />}
+        {normalizedView === "closet" && <FullBodyCloset model={model} outfit={outfit} setOutfit={setOutfit} room={room} setRoom={setRoom} />}
+        {(normalizedView === "chat" || normalizedView === "video" || normalizedView === "dashboard") && <FullBodyCloset model={model} outfit={outfit} setOutfit={setOutfit} room={room} setRoom={setRoom} />}
+
+        <nav className="ecm-bottom" aria-label="Primary mobile flow">
+          {bottomNav.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
+        </nav>
+      </section>
+    </main>
+  );
 }
 
-function Topbar() { return <header className="ec2-topbar"><a className="ec2-brand" href="/closet-v2"><b>ES</b><span>EDEN SKYE STUDIOS</span></a><nav>{nav.map(([label, href]) => <a key={href} href={href}>{label}</a>)}</nav><div className="ec2-orbs"><i /><i /></div></header>; }
-function Home() { return <section className="ec2-home ec2-screen"><div className="ec2-copy"><small>EDEN&apos;S CLOSET</small><h1>Exclusive Access</h1><p>Step into a private digital wardrobe experience with model discovery, outfit styling, AI chat, voice, and immersive video sessions.</p><ul><li>AI model discovery</li><li>Virtual closet</li><li>AI video chat</li><li>Member dashboard</li></ul><a className="ec2-primary" href="/closet-v2/models">Enter private closet</a></div><PreviewBoard /><Steps /></section>; }
-function PreviewBoard() { const tiles = [assets.lounge, assets.eden, assets.closet, assets.body, assets.front, assets.left, assets.right45, assets.back, assets.side]; return <div className="ec2-preview-board">{tiles.map((src, index) => <img key={src + index} src={src} alt="Eden's Closet preview" />)}</div>; }
-function Steps() { return <div className="ec2-steps">{["Choose your model", "Style wardrobe", "Open private chat", "Enter AI video"].map((step, index) => <a href={["/closet-v2/models", "/closet-v2/closet", "/closet-v2/chat", "/closet-v2/video"][index]} key={step}><b>{index + 1}</b><span>{step}</span></a>)}</div>; }
-function ModelSelect() { return <section className="ec2-screen"><PageTitle title="Select your model" sub="Choose the model and unlock your Black Card experience." /><div className="ec2-model-board">{models.map((model) => <a href={`/closet-v2/models/${model.slug}`} key={model.slug}><img src={model.image} alt={model.name} /><b>{model.name}</b><span>{model.title}</span></a>)}</div><footer className="ec2-footer-line"><span>Your AI model experience is private</span><a href="/payment">Join Black Card</a></footer></section>; }
-function Profile({ model }: { model: Model }) { return <section className="ec2-profile ec2-screen"><aside className="ec2-profile-left"><small>MODEL PROFILE</small><h1>{model.name}</h1><p>Confident, polished, and cinematic. Build a private wardrobe, voice, and video session around this model.</p><div className="ec2-stats">{model.stats.map((stat) => <b key={stat}>{stat}</b>)}</div></aside><div className="ec2-profile-center"><img src={model.image} alt={model.name} /><div><a href="/closet-v2/chat">CHAT</a><a href="/closet-v2/video">VIDEO</a><a href="/payment">UNLOCK</a></div></div><aside className="ec2-action-stack"><a href="/closet-v2/closet">Open Closet</a><a href="/closet-v2/viewer">360 Viewer</a><a href="/closet-v2/chat">AI Chat</a><a href="/closet-v2/video">AI Video</a></aside><div className="ec2-gallery-strip">{[assets.front, assets.left, assets.side, assets.back, assets.right, assets.right45].map((src) => <img src={src} alt={`${model.name} gallery`} key={src} />)}</div></section>; }
-function Closet({ activeOutfit, setActiveOutfit }: { activeOutfit: string; setActiveOutfit: (value: string) => void }) { return <section className="ec2-workbench ec2-screen"><SideList title="Wardrobe" items={outfits} active={activeOutfit} onSelect={setActiveOutfit} /><div className="ec2-closet-stage"><div className="ec2-mini-grid"><PreviewBoard /></div><img src={assets.body} alt="Virtual wardrobe model" /><a href="/closet-v2/viewer">View 360</a></div><aside className="ec2-control-panel"><h2>Customize</h2>{["Hair color", "Hair type", "Bust", "Waist", "Shoes", "Gesture"].map((label) => <label key={label}>{label}<input type="range" min="0" max="10" defaultValue="6" /></label>)}<a className="ec2-primary" href="/closet-v2/environments">Apply session</a></aside></section>; }
-function Environments({ activeRoom, setActiveRoom }: { activeRoom: string; setActiveRoom: (value: string) => void }) { return <section className="ec2-screen"><PageTitle title="Environments" sub="Select your background, room, and mood angle." /><div className="ec2-room-grid">{rooms.map((room, index) => <button className={room === activeRoom ? "active" : ""} key={room} onClick={() => setActiveRoom(room)}><img src={[assets.closet, assets.lounge, assets.eden, assets.body][index % 4]} alt={room} /><b>{room}</b></button>)}</div><div className="ec2-mode-row">{["Bedroom", "Bathroom", "Closet", "Penthouse", "Pool"].map((mode) => <span key={mode}>{mode}</span>)}<a href="/closet-v2/viewer">Enter viewer</a></div></section>; }
-function Viewer({ activeFrame, setActiveFrame }: { activeFrame: number; setActiveFrame: (value: number) => void }) { return <section className="ec2-viewer ec2-screen"><aside className="ec2-slider-panel"><b>Pose</b><input type="range" defaultValue="7" /><b>Angle</b><input type="range" defaultValue="4" /><b>Zoom</b><input type="range" defaultValue="5" /><p>Full-body selector</p></aside><div className="ec2-viewer-stage"><nav>{["Standing", "Walking", "Lounge", "Sit pose", "Arms up"].map((item) => <button key={item}>{item}</button>)}</nav><img src={frameList[activeFrame]} alt="Full body 360 viewer" /><div className="ec2-ring" /></div><aside className="ec2-map"><h2>Model map</h2><img src={assets.body} alt="Model map" />{frameList.map((_, index) => <button className={index === activeFrame ? "active" : ""} key={index} onClick={() => setActiveFrame(index)}>View {index + 1}</button>)}</aside></section>; }
-function Chat({ model }: { model: Model }) { return <section className="ec2-chat ec2-screen"><SideList title="AI chat with Alexis" items={["New conversation", "Wardrobe", "Audio notes", "Saved style", "Translate"]} active="New conversation" onSelect={() => undefined} /><div className="ec2-chat-window"><h1>AI text + voice</h1><p className="bubble">Can you style something bold for a private session?</p><p className="bubble user">Of course. Let me show you something polished and cinematic.</p><div className="ec2-input">Type your message...</div></div><div className="ec2-phone-card"><img src={model.image} alt={`${model.name} chat card`} /><h2>{model.name}</h2><a href="/closet-v2/video">Open video</a></div></section>; }
-function Video() { return <section className="ec2-video ec2-screen"><SideList title="AI video chat" items={["Normal", "Flirty", "Playful", "Luxury", "Soft"]} active="Playful" onSelect={() => undefined} /><div className="ec2-video-room"><img src={assets.closet} alt="AI video room" /><div className="ec2-call-controls"><button>Mic</button><button>Voice</button><button>Video</button><button>End</button></div></div><aside className="ec2-control-panel"><h2>Session settings</h2>{["Resolution", "Voice volume", "Video quality", "Background room"].map((label) => <label key={label}>{label}<input type="range" min="0" max="10" defaultValue="7" /></label>)}<a className="ec2-primary" href="/payment">Join call</a></aside></section>; }
-function Dashboard() { return <section className="ec2-dashboard ec2-screen"><aside className="ec2-dash-nav">{["Dashboard", "Closet", "AI Chat", "AI Video", "Gallery", "Payments", "Settings"].map((item) => <a href={item === "Dashboard" ? "/closet-v2/dashboard" : "/closet-v2"} key={item}>{item}</a>)}</aside><div className="ec2-dash-main"><PageTitle title="Dashboard" sub="Welcome back. Your Black Card experience is ready." /><div className="ec2-metrics">{["Black Card Active", "Unlimited", "12", "May 24, 2026"].map((item) => <b key={item}>{item}</b>)}</div><div className="ec2-activity">{["You had a video chat with Alexis", "You saved 3 new outfits", "You opened 6 new photos", "New environment unlocked"].map((item) => <p key={item}>{item}<span>1 hr ago</span></p>)}</div><a className="ec2-primary" href="/closet-v2/video">Open AI activity</a></div><aside className="ec2-quick"><a href="/closet-v2/closet">Eden's Closet</a><a href="/payment">Black Card</a><a href="/closet-v2/chat">AI Chat</a><a href="/closet-v2/models">Gallery</a></aside></section>; }
-function SideList({ title, items, active, onSelect }: { title: string; items: string[]; active: string; onSelect: (value: string) => void }) { return <aside className="ec2-side-list"><h2>{title}</h2>{items.map((item) => <button className={item === active ? "active" : ""} key={item} onClick={() => onSelect(item)}>{item}</button>)}</aside>; }
-function PageTitle({ title, sub }: { title: string; sub: string }) { return <div className="ec2-title"><h1>{title}</h1><p>{sub}</p></div>; }
+function Home() {
+  return (
+    <div className="ecm-screen ecm-home">
+      <img className="ecm-bg" src={assets.closet} alt="Neon Eden's Closet" />
+      <div className="ecm-shade" />
+      <div className="ecm-home-copy">
+        <small>Private member app</small>
+        <h1>Eden&apos;s Closet</h1>
+        <p>Choose your model, open her closet, and view the full-body experience in a private room.</p>
+        <a href="/closet-v2/models">Start</a>
+      </div>
+      <div className="ecm-flow-cards">
+        <span>1 Home</span>
+        <span>2 Model</span>
+        <span>3 Full Body</span>
+        <span>4 Unlock</span>
+      </div>
+    </div>
+  );
+}
+
+function ChooseModel() {
+  return (
+    <div className="ecm-screen ecm-models">
+      <div className="ecm-heading">
+        <small>Step 2</small>
+        <h1>Choose your model</h1>
+        <p>Tap a model to open her private closet preview.</p>
+      </div>
+      <div className="ecm-model-list">
+        {models.map((model) => (
+          <a className="ecm-model-card" href={`/closet-v2/models/${model.slug}`} key={model.slug}>
+            <img src={model.image} alt={model.name} />
+            <b>{model.name}</b>
+            <span>{model.title}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ModelProfile({ model }: { model: Model }) {
+  return (
+    <div className="ecm-screen ecm-profile">
+      <div className="ecm-heading">
+        <small>Step 3</small>
+        <h1>{model.name}</h1>
+        <p>Open a clean full-body view in her closet, bedroom, or private room.</p>
+      </div>
+      <div className="ecm-portrait-card">
+        <img src={model.image} alt={`${model.name} portrait`} />
+        <div>
+          <span>AI chat</span>
+          <span>Voice</span>
+          <span>Video</span>
+        </div>
+      </div>
+      <a className="ecm-primary" href="/closet-v2/closet">Open full body closet</a>
+    </div>
+  );
+}
+
+function FullBodyCloset({ model, outfit, setOutfit, room, setRoom }: { model: Model; outfit: string; setOutfit: (value: string) => void; room: string; setRoom: (value: string) => void }) {
+  return (
+    <div className="ecm-screen ecm-closet">
+      <div className="ecm-view-stage">
+        <img className="ecm-room" src={assets.closet} alt={`${room} environment`} />
+        <img className="ecm-body" src={assets.body} alt={`${model.name} full body in closet`} />
+        <div className="ecm-view-label">
+          <b>{model.name}</b>
+          <span>{room} · {outfit}</span>
+        </div>
+      </div>
+
+      <div className="ecm-controls">
+        <div>
+          <small>Outfit</small>
+          <div className="ecm-chips">{outfits.map((item) => <button className={item === outfit ? "active" : ""} key={item} onClick={() => setOutfit(item)}>{item}</button>)}</div>
+        </div>
+        <div>
+          <small>Room</small>
+          <div className="ecm-chips">{rooms.map((item) => <button className={item === room ? "active" : ""} key={item} onClick={() => setRoom(item)}>{item}</button>)}</div>
+        </div>
+        <a className="ecm-primary" href="/payment">Unlock private access</a>
+      </div>
+    </div>
+  );
+}
