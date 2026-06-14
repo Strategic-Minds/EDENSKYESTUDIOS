@@ -37,6 +37,15 @@ type ExpandedMedia = {
   kind: 'image' | 'video';
 };
 
+type ImageDraft = {
+  id: string;
+  prompt: string;
+  status: 'generating' | 'ready' | 'blocked' | 'error';
+  imageSrc?: string;
+  diagnostic?: string;
+  model?: string;
+};
+
 const primaryEmail = 'strategicmindsadvisory@gmail.com';
 
 const drive = {
@@ -57,7 +66,7 @@ const visualRefs = {
 };
 
 const initialModules: ModuleItem[] = [
-  { id: 'eden', label: 'Eden Agent', helper: 'Humanistic autonomous avatar' },
+  { id: 'eden', label: 'Eden Agent', helper: 'Chat, create, and command' },
   { id: 'images', label: 'Images', helper: 'Review and expand source slots' },
   { id: 'videos', label: 'Videos', helper: 'Review playable video slots' },
   { id: 'approval', label: 'Approval', helper: 'Green, yellow, red gates' },
@@ -137,25 +146,25 @@ const statusLegend: ApprovalItem[] = [
 const approvalQueue: ApprovalItem[] = [
   { label: 'Primary account', detail: primaryEmail, tone: 'green', mark: '✓' },
   { label: 'Control plane API', detail: 'Preview endpoint is wired for admin state and leak rules.', tone: 'green', mark: '✓' },
-  { label: 'Eden Agent module', detail: 'Humanistic persona, autonomy controls, creator lanes, and gated actions are staged in PR #10.', tone: 'green', mark: '✓' },
+  { label: 'Eden Agent module', detail: 'Humanistic persona, creator lanes, image drafting, and gated actions are staged in PR #10.', tone: 'green', mark: '✓' },
   { label: 'AI Gateway chat', detail: 'Route responds when Gateway account/model access allows the selected model.', tone: 'yellow', mark: '!' },
+  { label: 'Image generation route', detail: 'Editor can call AI Gateway image generation; Drive storage still requires approval.', tone: 'yellow', mark: '!' },
   { label: '12 source image binaries', detail: 'Still need filename, QA score, Drive file ID, and approval status matching.', tone: 'yellow', mark: '!' },
   { label: 'Video chat', detail: 'UI lane is staged; live realtime avatar session needs provider credentials and approval.', tone: 'yellow', mark: '!' },
-  { label: 'SOURCE_IMAGE_APPROVAL_INBOX', detail: 'Approval received, but Drive creation is blocked until GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are configured.', tone: 'red', mark: 'x' },
   { label: 'Public publishing', detail: 'Still approval-gated. No live publish, Shopify, HeyGen, payment, or production writes from preview.', tone: 'red', mark: 'x' }
 ];
 
 const autonomyLevels = [
-  ['Level 0', 'Conversation', 'Eden explains, thinks, and keeps the operator oriented.'],
-  ['Level 1', 'Drafting', 'Prompts, scripts, captions, image briefs, websites, logos, and video concepts.'],
-  ['Level 2', 'Organizing', 'Folders, manifest rows, approval packets, QA notes, and task routing.'],
-  ['Level 3', 'Sandbox Execution', 'Draft generation packets, QA simulations, leak checks, and install plans.'],
-  ['Level 4', 'Approval-Gated', 'Drive writes, Shopify, HeyGen, Supabase, Vercel, Gmail, and Calendar requests.'],
-  ['Level 5', 'Live Action', 'Locked until verified credentials, explicit approval, rollback, and receipts exist.']
+  ['Level 0', 'Conversation'],
+  ['Level 1', 'Drafting'],
+  ['Level 2', 'Organizing'],
+  ['Level 3', 'Sandbox Execution'],
+  ['Level 4', 'Approval-Gated'],
+  ['Level 5', 'Live Action Locked']
 ] as const;
 
 const creatorTools = [
-  ['Ultra-realistic image', 'Create or edit lifelike Eden visuals with identity-lock and QA rules.'],
+  ['Ultra-realistic image', 'Create a live draft in the editor through AI Gateway.'],
   ['Video avatar draft', 'Prepare short-form, presenter, HeyGen, or realtime video-chat packets.'],
   ['Website screen', 'Generate v0-style page sections, admin tools, model pages, and storefront drafts.'],
   ['Logo / brand kit', 'Draft logos, lockups, palettes, typography, and social identity systems.'],
@@ -164,7 +173,7 @@ const creatorTools = [
 ] as const;
 
 const actionButtons = [
-  ['Generate ultra-realistic image packet', 'Create a manifest-safe, ultra-realistic Eden Skye source-image prompt packet with QA gates.'],
+  ['Create image now', 'Create an ultra-realistic Eden Skye source image in the editor.'],
   ['Edit selected image packet', 'Prepare an image edit instruction packet for the selected Eden visual, preserving identity lock.'],
   ['Create video chat setup packet', 'Prepare the realtime video chat architecture, provider options, approvals, and credentials needed.'],
   ['Draft v0-style website screen', 'Create a sleek black Eden Skye Studios website/admin screen concept with components and states.'],
@@ -175,13 +184,12 @@ const actionButtons = [
 
 const edenTasks = [
   ['Humanistic persona', 'Green', 'Persona prompt and admin module staged.'],
-  ['Ultra-realistic image creation', 'Yellow', 'Prompt/action lane ready; binary generation provider and storage need final connection.'],
-  ['Image click-to-expand', 'Green', 'Editor previews open in a large review modal.'],
+  ['Cute Eden voice', 'Green', 'No markdown headings; light girly emoji style is active.'],
+  ['Immediate image creation', 'Yellow', 'Editor creates visible drafts through AI Gateway; model access can still block.'],
+  ['Image click-to-expand', 'Green', 'Editor previews and generated drafts open in a large review modal.'],
   ['Image editing', 'Yellow', 'Instruction packets ready; provider edit endpoint still gated.'],
   ['Video creation', 'Yellow', 'Draft packet lane ready; final provider execution gated.'],
   ['Video chat', 'Yellow', 'Realtime session lane ready; provider credentials required.'],
-  ['v0-style website creation', 'Yellow', 'Draft screen generator lane ready; repo mutation requires approval.'],
-  ['Git/Vercel/Supabase/Shopify/Drive/Gmail/Calendar access', 'Yellow', 'Connected-system control plane mapped; live writes remain gated.'],
   ['Live mutation lock', 'Red', 'Production, commerce, account, and destructive actions remain blocked until approval, rollback, and receipts exist.']
 ] as const;
 
@@ -209,11 +217,19 @@ function normalizeTone(value: string): StatusTone {
   return 'yellow';
 }
 
+function looksLikeImageRequest(content: string) {
+  return /\b(create|generate|make|render|draw|design)\b[\s\S]{0,80}\b(image|photo|picture|portrait|visual|render|headshot)\b/i.test(content);
+}
+
+function cleanPrompt(content: string) {
+  return content.replace(/#{1,6}\s*/g, '').trim();
+}
+
 export default function EdenChatEditor() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'system',
-      content: `Eden Skye is online. Primary account: ${primaryEmail}. She can draft, design, organize, QA, and prepare governed action packets. Live mutation stays locked until verified approval.`
+      content: `Eden Skye is online ✨ Primary account: ${primaryEmail}. She can draft, design, organize, QA, create image drafts, and prepare governed action packets. Live mutation stays locked until verified approval.`
     }
   ]);
   const [input, setInput] = useState('');
@@ -225,6 +241,7 @@ export default function EdenChatEditor() {
   const [isSending, setIsSending] = useState(false);
   const [expandedMedia, setExpandedMedia] = useState<ExpandedMedia | null>(null);
   const [autonomyLevel, setAutonomyLevel] = useState('Level 3');
+  const [imageDrafts, setImageDrafts] = useState<ImageDraft[]>([]);
 
   const activeModuleLabel = useMemo(
     () => modules.find((module) => module.id === activeModule)?.label,
@@ -244,6 +261,50 @@ export default function EdenChatEditor() {
     });
   }
 
+  async function createImageDraft(prompt: string) {
+    const draftPrompt = cleanPrompt(prompt || creationBrief || 'Ultra-realistic Eden Skye editorial portrait, black luxury studio, premium AI avatar identity lock.');
+    const draftId = `eden-image-${Date.now()}`;
+
+    setActiveModule('eden');
+    setImageDrafts((current) => [
+      {
+        id: draftId,
+        prompt: draftPrompt,
+        status: 'generating'
+      },
+      ...current
+    ]);
+
+    try {
+      const response = await fetch('/api/eden/source-images/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: draftPrompt, size: '1024x1024' })
+      });
+      const result = await response.json();
+
+      setImageDrafts((current) => current.map((draft) => {
+        if (draft.id !== draftId) return draft;
+        const imageSrc = result.imageDataUrl || result.imageUrl;
+        if (response.ok && imageSrc) {
+          return { ...draft, status: 'ready', imageSrc, model: result.model };
+        }
+        return {
+          ...draft,
+          status: response.status === 503 ? 'blocked' : 'error',
+          diagnostic: result.diagnostic || result.error || 'Image generation did not return a visual.',
+          model: result.model
+        };
+      }));
+    } catch (error) {
+      setImageDrafts((current) => current.map((draft) => draft.id === draftId ? {
+        ...draft,
+        status: 'error',
+        diagnostic: error instanceof Error ? error.message : 'Unknown image generation error.'
+      } : draft));
+    }
+  }
+
   async function submitUserMessage(content: string) {
     const trimmed = content.trim();
     if (!trimmed && attachments.length === 0) return;
@@ -254,8 +315,15 @@ export default function EdenChatEditor() {
     };
 
     const nextMessages = [...messages, userMessage];
+    const shouldCreateImage = looksLikeImageRequest(trimmed);
+
     setMessages(nextMessages);
     setInput('');
+
+    if (shouldCreateImage) {
+      void createImageDraft(trimmed);
+    }
+
     setIsSending(true);
 
     try {
@@ -292,8 +360,12 @@ export default function EdenChatEditor() {
   }
 
   function runEdenAction(action: string) {
-    const brief = creationBrief.trim() ? `\n\nOperator brief: ${creationBrief.trim()}` : '';
-    void submitUserMessage(`${action}\n\nAutonomy setting: ${autonomyLevel}. Keep all live mutations approval-gated and return green/yellow/red readiness.${brief}`);
+    const brief = creationBrief.trim() ? creationBrief.trim() : action;
+    if (/image/i.test(action)) {
+      void createImageDraft(brief);
+    }
+
+    void submitUserMessage(`${action}\n\nAutonomy setting: ${autonomyLevel}. Keep all live mutations approval-gated and return green/yellow/red readiness. Use cute polished emojis and no markdown headings.\n\nOperator brief: ${brief}`);
   }
 
   return (
@@ -303,18 +375,18 @@ export default function EdenChatEditor() {
           <div className={styles.brandMark}>ES</div>
           <div>
             <p>Eden Skye</p>
-            <span>Humanistic avatar agent</span>
+            <span>AI creator agent ✨</span>
           </div>
         </header>
 
         <section className={styles.chatStream} aria-label="Chat history">
           {messages.map((message, index) => (
             <article key={`${message.role}-${index}`} className={`${styles.message} ${message.role === 'user' ? styles.userMessage : ''}`}>
-              <b>{message.role === 'user' ? 'You' : message.role === 'assistant' ? 'Eden AI' : 'System'}</b>
+              <b>{message.role === 'user' ? 'You' : message.role === 'assistant' ? 'Eden AI 🎀' : 'System'}</b>
               <span>{message.content}</span>
             </article>
           ))}
-          {isSending ? <article className={styles.message}><b>Eden AI</b><span>Thinking through the control plane...</span></article> : null}
+          {isSending ? <article className={styles.message}><b>Eden AI 🎀</b><span>Thinking through the control plane...</span></article> : null}
         </section>
 
         <form className={styles.chatInput} onSubmit={sendMessage}>
@@ -336,7 +408,7 @@ export default function EdenChatEditor() {
           </label>
           <textarea
             aria-label="Chat input"
-            placeholder="Ask Eden to create, edit, review, approve, organize, or test..."
+            placeholder="Ask Eden to create an image, edit, review, approve, organize, or test..."
             value={input}
             onChange={(event) => setInput(event.currentTarget.value)}
           />
@@ -353,6 +425,7 @@ export default function EdenChatEditor() {
           </div>
           <div className={styles.topbarActions}>
             <a href="/api/eden/source-images/agent">Agent API</a>
+            <a href="/api/eden/source-images/generate-image">Image API</a>
             <a href="/api/eden/source-images/chat?selfTest=1">Gateway Test</a>
             <a href="/api/eden/source-images/control-plane">Control API</a>
             <button type="button" onClick={() => setActiveModule('customize')}>Customize</button>
@@ -380,7 +453,7 @@ export default function EdenChatEditor() {
         {!activeModule ? (
           <section className={styles.emptyState} aria-label="Empty editor state">
             <span>Ready</span>
-            <h2>Open Eden Agent or type in chat.</h2>
+            <h2>Open Eden Agent or type “create an image” in chat.</h2>
           </section>
         ) : null}
 
@@ -394,9 +467,40 @@ export default function EdenChatEditor() {
               <div>
                 <span className={statusClass('green')}><b>✓</b>Persona online</span>
                 <h3>Beautiful, dangerous only to bad workflows.</h3>
-                <p>Eden is staged as a humanistic, premium, flirtatious-but-safe avatar operator for image creation, video drafts, websites, logos, social content, QA, and approval routing.</p>
+                <p>Eden is staged as a premium, cute, flirty-but-safe avatar operator. Ask her for an image and the editor opens a generated draft card immediately.</p>
               </div>
             </div>
+
+            <section className={styles.generatedWorkspace}>
+              <header>
+                <div><p>Image studio</p><h2>Generated Images</h2></div>
+                <button type="button" onClick={() => void createImageDraft(creationBrief)}>Create Image</button>
+              </header>
+              {imageDrafts.length === 0 ? (
+                <div className={styles.imagePlaceholder}>No generated drafts yet. Type “create an image of Eden...” and this canvas wakes up ✨</div>
+              ) : (
+                <div className={styles.generatedGrid}>
+                  {imageDrafts.map((draft) => (
+                    <article key={draft.id} className={styles.generatedCard}>
+                      {draft.status === 'ready' && draft.imageSrc ? (
+                        <button type="button" onClick={() => setExpandedMedia({ title: 'Generated Eden image', src: draft.imageSrc!, kind: 'image' })}>
+                          <img src={draft.imageSrc} alt="Generated Eden visual draft" />
+                        </button>
+                      ) : (
+                        <div className={styles.imagePlaceholder}>{draft.status === 'generating' ? 'Creating image...' : draft.status === 'blocked' ? 'Gateway blocked' : 'Generation error'}</div>
+                      )}
+                      <div>
+                        <span className={statusClass(draft.status === 'ready' ? 'green' : draft.status === 'blocked' ? 'red' : 'yellow')}><b>{draft.status === 'ready' ? '✓' : draft.status === 'blocked' ? 'x' : '!'}</b>{draft.status}</span>
+                        <p>{draft.prompt}</p>
+                        {draft.model ? <em>{draft.model}</em> : null}
+                        {draft.diagnostic ? <em>{draft.diagnostic}</em> : null}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+
             <div className={styles.controlStrip}>
               <label>
                 <span>Autonomy</span>
@@ -435,7 +539,6 @@ export default function EdenChatEditor() {
             <header><div><p>Admin control</p><h2>Approval Status</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
             <div className={styles.legendGrid}>{statusLegend.map((item) => <div key={item.label} className={statusClass(item.tone)}><b>{item.mark}</b><span>{item.label}</span><em>{item.detail}</em></div>)}</div>
             <div className={styles.statusList}>{approvalQueue.map((item) => <div key={item.label} className={styles.statusRow}><span className={statusClass(item.tone)}><b>{item.mark}</b>{item.label}</span><em>{item.detail}</em></div>)}</div>
-            <div className={styles.noticeBox}><b>Drive folder create approval received</b><span>The requested SOURCE_IMAGE_APPROVAL_INBOX can be created only after the Drive executor has GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY configured. Until then, use the existing Admin Approval Control Plane folder.</span><code>APPROVE DRIVE FOLDER CREATE</code></div>
             <div className={styles.buttonGrid}>{manifestFiles.map(([label, id]) => <a key={id} href={`https://drive.google.com/file/d/${id}/view`}><b>{label}</b><span>{id}</span></a>)}</div>
           </section>
         ) : null}
