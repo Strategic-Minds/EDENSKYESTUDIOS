@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { AutomationCommandCenter } from './automation-command-center';
 import {
   automationLanes,
   automationQueue,
@@ -47,6 +48,13 @@ const modelGroups = [
   { label: 'Faceless', total: approvedFacelessAccounts.length, items: approvedFacelessAccounts.map((item) => item.concept) }
 ];
 
+const approvedOptions = [
+  ...approvedBasicPortraits.map((item) => ({ id: slug(item.name), label: item.name, group: 'Female' })),
+  ...approvedMaleModels.map((item) => ({ id: slug(item.name), label: item.name, group: 'Male' })),
+  ...approvedInternationalModels.map((item) => ({ id: slug(item.name), label: `${item.name} / ${item.market}`, group: 'International' })),
+  ...approvedFacelessAccounts.map((item) => ({ id: slug(item.concept), label: item.concept, group: 'Faceless' }))
+];
+
 const totalApprovedModels = approvedBasicPortraits.length + approvedMaleModels.length + approvedInternationalModels.length + approvedFacelessAccounts.length;
 const totalContentDrafts = approvedFacelessAccounts.reduce((count, item) => count + item.contentCalendar.length, 0);
 
@@ -55,8 +63,8 @@ export default function AutomationPage() {
     <main style={{ minHeight: '100vh', background: '#030303', color: '#f7f4ee', padding: '32px clamp(18px, 4vw, 56px)' }}>
       <section style={{ display: 'grid', gap: 20, marginBottom: 28 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-          <div style={{ maxWidth: 780 }}>
-            <p style={{ margin: '0 0 8px', color: '#d6b56d', textTransform: 'uppercase', fontSize: 12, letterSpacing: 0 }}>Admin Control Automation Engine v1</p>
+          <div style={{ maxWidth: 800 }}>
+            <p style={eyebrowStyle}>Admin Control Automation Engine v1</p>
             <h1 style={{ margin: 0, fontSize: 'clamp(34px, 5vw, 66px)', lineHeight: 0.95, letterSpacing: 0 }}>Create, plan, QA, and export from one governed console.</h1>
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -81,6 +89,8 @@ export default function AutomationPage() {
         </div>
       </section>
 
+      <AutomationCommandCenter approvedOptions={approvedOptions} />
+
       <section style={sectionStyle}>
         <div style={sectionHeaderStyle}>
           <div>
@@ -89,7 +99,7 @@ export default function AutomationPage() {
           </div>
           <span style={{ color: '#9f988c', fontSize: 13 }}>Draft now. Approve before live action.</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+        <div style={gridStyle}>
           {automationLanes.map((lane, index) => (
             <article key={lane.id} style={cardStyle}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
@@ -99,7 +109,6 @@ export default function AutomationPage() {
               <h3 style={cardTitleStyle}>{lane.label}</h3>
               <p style={bodyStyle}>{lane.goal}</p>
               <p style={mutedBodyStyle}>{lane.nextAction}</p>
-              <small style={{ color: '#8d867a' }}>{lane.automationLevel}</small>
             </article>
           ))}
         </div>
@@ -155,7 +164,7 @@ export default function AutomationPage() {
             <h2 style={headingStyle}>Everything the batch must pass through</h2>
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 12 }}>
+        <div style={gridStyle}>
           {moduleCards.map((module) => (
             <article key={module.title} style={cardStyle}>
               <span style={{ ...statusPill, color: toneColor[module.tone], borderColor: toneColor[module.tone] }}>{module.tone}</span>
@@ -239,7 +248,7 @@ export default function AutomationPage() {
           </div>
           <span style={{ color: toneColor.yellow }}>Not applied yet</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+        <div style={gridStyle}>
           {['media_portfolios', 'media_assets', 'media_variants', 'media_videos', 'content_drafts', 'approval_receipts'].map((table) => (
             <article key={table} style={cardStyle}>
               <h3 style={cardTitleStyle}>{table}</h3>
@@ -251,6 +260,13 @@ export default function AutomationPage() {
       </section>
     </main>
   );
+}
+
+function slug(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
 }
 
 const pillLink = {
@@ -284,6 +300,12 @@ const splitSectionStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
   gap: 18
+};
+
+const gridStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
+  gap: 12
 };
 
 const sectionHeaderStyle = {
