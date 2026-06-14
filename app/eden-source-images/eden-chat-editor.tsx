@@ -8,7 +8,7 @@ type Message = {
   content: string;
 };
 
-type ModuleId = 'images' | 'videos' | 'approval' | 'folders' | 'manifest' | 'integrations' | 'customize' | 'leaks';
+type ModuleId = 'eden' | 'images' | 'videos' | 'approval' | 'folders' | 'manifest' | 'integrations' | 'customize' | 'leaks';
 
 type ModuleItem = {
   id: ModuleId;
@@ -31,6 +31,12 @@ type ApprovalItem = {
   mark: string;
 };
 
+type ExpandedMedia = {
+  title: string;
+  src: string;
+  kind: 'image' | 'video';
+};
+
 const primaryEmail = 'strategicmindsadvisory@gmail.com';
 
 const drive = {
@@ -51,11 +57,12 @@ const visualRefs = {
 };
 
 const initialModules: ModuleItem[] = [
-  { id: 'images', label: 'Images', helper: 'Review visible image slots' },
+  { id: 'eden', label: 'Eden Agent', helper: 'Humanistic autonomous avatar' },
+  { id: 'images', label: 'Images', helper: 'Review and expand source slots' },
   { id: 'videos', label: 'Videos', helper: 'Review playable video slots' },
   { id: 'approval', label: 'Approval', helper: 'Green, yellow, red gates' },
   { id: 'folders', label: 'Folders', helper: 'Organized Drive lanes' },
-  { id: 'integrations', label: 'Gmail + Calendar', helper: 'Primary account lanes' },
+  { id: 'integrations', label: 'Integrations', helper: 'Git, Vercel, Supabase, Shopify' },
   { id: 'customize', label: 'Customize', helper: 'Drag and reorder UI sections' },
   { id: 'manifest', label: 'Manifest', helper: '12 expected assets' },
   { id: 'leaks', label: 'Leak Tests', helper: 'Sandbox-only checks' }
@@ -111,11 +118,15 @@ const manifestFiles = [
 ];
 
 const connectedSystems = [
-  ['Gmail', 'Primary account target', primaryEmail],
-  ['Google Calendar', 'Primary account target', primaryEmail],
-  ['Google Drive', 'Connected primary workspace', primaryEmail],
-  ['ChatGPT passthrough', 'Use AI Gateway OpenAI route', primaryEmail]
-];
+  ['GitHub', 'PR-safe repo control', 'yellow', 'Can inspect and prepare branch-safe changes; merges stay approval-gated.'],
+  ['Vercel', 'Preview-first deployment', 'green', 'Preview routes are active; production deploys stay gated.'],
+  ['Supabase', 'Data architecture lane', 'yellow', 'Schema writes require migration, approval, and rollback.'],
+  ['Shopify', 'Commerce asset lane', 'red', 'No live product/theme/checkout mutation from preview.'],
+  ['Google Drive', 'Primary workspace', 'yellow', primaryEmail],
+  ['Gmail', 'Primary account target', 'yellow', primaryEmail],
+  ['Google Calendar', 'Primary account target', 'yellow', primaryEmail],
+  ['HeyGen / Video Avatar', 'Video persona lane', 'yellow', 'Draft packets now; final activation gated.']
+] as const;
 
 const statusLegend: ApprovalItem[] = [
   { label: 'Green', detail: 'Verified, ready, or safely available in the preview.', tone: 'green', mark: '✓' },
@@ -126,11 +137,52 @@ const statusLegend: ApprovalItem[] = [
 const approvalQueue: ApprovalItem[] = [
   { label: 'Primary account', detail: primaryEmail, tone: 'green', mark: '✓' },
   { label: 'Control plane API', detail: 'Preview endpoint is wired for admin state and leak rules.', tone: 'green', mark: '✓' },
-  { label: 'AI Gateway chat', detail: 'Diagnostics added. Responses API is tried before chat completions.', tone: 'yellow', mark: '!' },
+  { label: 'Eden Agent module', detail: 'Humanistic persona, autonomy controls, creator lanes, and gated actions are staged in PR #10.', tone: 'green', mark: '✓' },
+  { label: 'AI Gateway chat', detail: 'Route responds when Gateway account/model access allows the selected model.', tone: 'yellow', mark: '!' },
   { label: '12 source image binaries', detail: 'Still need filename, QA score, Drive file ID, and approval status matching.', tone: 'yellow', mark: '!' },
+  { label: 'Video chat', detail: 'UI lane is staged; live realtime avatar session needs provider credentials and approval.', tone: 'yellow', mark: '!' },
   { label: 'SOURCE_IMAGE_APPROVAL_INBOX', detail: 'Approval received, but Drive creation is blocked until GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are configured.', tone: 'red', mark: 'x' },
   { label: 'Public publishing', detail: 'Still approval-gated. No live publish, Shopify, HeyGen, payment, or production writes from preview.', tone: 'red', mark: 'x' }
 ];
+
+const autonomyLevels = [
+  ['Level 0', 'Conversation', 'Eden explains, thinks, and keeps the operator oriented.'],
+  ['Level 1', 'Drafting', 'Prompts, scripts, captions, image briefs, websites, logos, and video concepts.'],
+  ['Level 2', 'Organizing', 'Folders, manifest rows, approval packets, QA notes, and task routing.'],
+  ['Level 3', 'Sandbox Execution', 'Draft generation packets, QA simulations, leak checks, and install plans.'],
+  ['Level 4', 'Approval-Gated', 'Drive writes, Shopify, HeyGen, Supabase, Vercel, Gmail, and Calendar requests.'],
+  ['Level 5', 'Live Action', 'Locked until verified credentials, explicit approval, rollback, and receipts exist.']
+] as const;
+
+const creatorTools = [
+  ['Ultra-realistic image', 'Create or edit lifelike Eden visuals with identity-lock and QA rules.'],
+  ['Video avatar draft', 'Prepare short-form, presenter, HeyGen, or realtime video-chat packets.'],
+  ['Website screen', 'Generate v0-style page sections, admin tools, model pages, and storefront drafts.'],
+  ['Logo / brand kit', 'Draft logos, lockups, palettes, typography, and social identity systems.'],
+  ['Social campaign', 'Draft hooks, captions, reels, calendar slots, and distribution packets.'],
+  ['Approval packet', 'Package every asset with status, blocker, risk, and next action.']
+] as const;
+
+const actionButtons = [
+  ['Generate ultra-realistic image packet', 'Create a manifest-safe, ultra-realistic Eden Skye source-image prompt packet with QA gates.'],
+  ['Edit selected image packet', 'Prepare an image edit instruction packet for the selected Eden visual, preserving identity lock.'],
+  ['Create video chat setup packet', 'Prepare the realtime video chat architecture, provider options, approvals, and credentials needed.'],
+  ['Draft v0-style website screen', 'Create a sleek black Eden Skye Studios website/admin screen concept with components and states.'],
+  ['Create logo system packet', 'Draft Eden Skye Studios logo directions, visual rules, and approval choices.'],
+  ['Run QA review', 'Review current images, videos, manifest rows, and approval gates for readiness.'],
+  ['Prepare approval packet', 'Create the next approval packet for Drive, image binaries, video activation, or install execution.']
+] as const;
+
+const edenTasks = [
+  ['Humanistic persona', 'Green', 'Persona prompt and admin module staged.'],
+  ['Ultra-realistic image creation', 'Yellow', 'Prompt/action lane ready; binary generation provider and storage need final connection.'],
+  ['Image click-to-expand', 'Green', 'Editor previews open in a large review modal.'],
+  ['Image editing', 'Yellow', 'Instruction packets ready; provider edit endpoint still gated.'],
+  ['Video creation', 'Yellow', 'Draft packet lane ready; final provider execution gated.'],
+  ['Video chat', 'Yellow', 'Realtime session lane ready; provider credentials required.'],
+  ['v0-style website creation', 'Yellow', 'Draft screen generator lane ready; repo mutation requires approval.'],
+  ['Git/Vercel/Supabase/Shopify/Drive/Gmail/Calendar access', 'Yellow', 'Connected-system control plane mapped; live writes remain gated.']
+] as const;
 
 const leakTests = [
   ['Public publish', 'blocked'],
@@ -150,19 +202,28 @@ function statusClass(tone: StatusTone) {
   return `${styles.statusPill} ${styles[tone]}`;
 }
 
+function normalizeTone(value: string): StatusTone {
+  if (value.toLowerCase() === 'green') return 'green';
+  if (value.toLowerCase() === 'red') return 'red';
+  return 'yellow';
+}
+
 export default function EdenChatEditor() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'system',
-      content: `Chat is wired to the Eden AI Gateway route. Primary account: ${primaryEmail}. Ask for image batches, approvals, uploads, Gmail, Calendar, or folder actions.`
+      content: `Eden Skye is online. Primary account: ${primaryEmail}. She can draft, design, organize, QA, and prepare governed action packets. Live mutation stays locked until verified approval.`
     }
   ]);
   const [input, setInput] = useState('');
+  const [creationBrief, setCreationBrief] = useState('');
   const [attachments, setAttachments] = useState<FileSummary[]>([]);
   const [activeModule, setActiveModule] = useState<ModuleId | null>(null);
   const [modules, setModules] = useState(initialModules);
   const [draggedModule, setDraggedModule] = useState<ModuleId | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const [expandedMedia, setExpandedMedia] = useState<ExpandedMedia | null>(null);
+  const [autonomyLevel, setAutonomyLevel] = useState('Level 3');
 
   const activeModuleLabel = useMemo(
     () => modules.find((module) => module.id === activeModule)?.label,
@@ -182,9 +243,8 @@ export default function EdenChatEditor() {
     });
   }
 
-  async function sendMessage(event: FormEvent) {
-    event.preventDefault();
-    const trimmed = input.trim();
+  async function submitUserMessage(content: string) {
+    const trimmed = content.trim();
     if (!trimmed && attachments.length === 0) return;
 
     const userMessage: Message = {
@@ -225,14 +285,24 @@ export default function EdenChatEditor() {
     }
   }
 
+  function sendMessage(event: FormEvent) {
+    event.preventDefault();
+    void submitUserMessage(input);
+  }
+
+  function runEdenAction(action: string) {
+    const brief = creationBrief.trim() ? `\n\nOperator brief: ${creationBrief.trim()}` : '';
+    void submitUserMessage(`${action}\n\nAutonomy setting: ${autonomyLevel}. Keep all live mutations approval-gated and return green/yellow/red readiness.${brief}`);
+  }
+
   return (
     <main className={styles.shell}>
       <aside className={styles.chat}>
         <header className={styles.chatHeader}>
           <div className={styles.brandMark}>ES</div>
           <div>
-            <p>Eden Media OS</p>
-            <span>OpenAI primary via AI Gateway</span>
+            <p>Eden Skye</p>
+            <span>Humanistic avatar agent</span>
           </div>
         </header>
 
@@ -265,7 +335,7 @@ export default function EdenChatEditor() {
           </label>
           <textarea
             aria-label="Chat input"
-            placeholder="Tell Eden what to generate, review, approve, organize, or test..."
+            placeholder="Ask Eden to create, edit, review, approve, organize, or test..."
             value={input}
             onChange={(event) => setInput(event.currentTarget.value)}
           />
@@ -281,8 +351,9 @@ export default function EdenChatEditor() {
             <span className={styles.primaryEmail}>{primaryEmail}</span>
           </div>
           <div className={styles.topbarActions}>
+            <a href="/api/eden/source-images/agent">Agent API</a>
             <a href="/api/eden/source-images/chat?selfTest=1">Gateway Test</a>
-            <a href="/api/eden/source-images/control-plane">API</a>
+            <a href="/api/eden/source-images/control-plane">Control API</a>
             <button type="button" onClick={() => setActiveModule('customize')}>Customize</button>
           </div>
         </header>
@@ -308,21 +379,53 @@ export default function EdenChatEditor() {
         {!activeModule ? (
           <section className={styles.emptyState} aria-label="Empty editor state">
             <span>Ready</span>
-            <h2>Open a module or type in chat.</h2>
+            <h2>Open Eden Agent or type in chat.</h2>
+          </section>
+        ) : null}
+
+        {activeModule === 'eden' ? (
+          <section className={styles.modulePanel}>
+            <header><div><p>Avatar operator</p><h2>Eden Skye Agent</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
+            <div className={styles.agentHero}>
+              <button type="button" onClick={() => setExpandedMedia({ title: 'Eden Skye identity matrix', src: visualRefs.avatarMatrix, kind: 'image' })}>
+                <img src={visualRefs.avatarMatrix} alt="Eden Skye identity matrix preview" />
+              </button>
+              <div>
+                <span className={statusClass('green')}><b>✓</b>Persona online</span>
+                <h3>Beautiful, dangerous only to bad workflows.</h3>
+                <p>Eden is staged as a humanistic, premium, flirtatious-but-safe avatar operator for image creation, video drafts, websites, logos, social content, QA, and approval routing.</p>
+              </div>
+            </div>
+            <div className={styles.controlStrip}>
+              <label>
+                <span>Autonomy</span>
+                <select value={autonomyLevel} onChange={(event) => setAutonomyLevel(event.currentTarget.value)}>
+                  {autonomyLevels.map(([level, name]) => <option key={level} value={level}>{level} - {name}</option>)}
+                </select>
+              </label>
+              <label>
+                <span>Creator brief</span>
+                <textarea value={creationBrief} onChange={(event) => setCreationBrief(event.currentTarget.value)} placeholder="Describe the image, video, website, logo, campaign, or admin action Eden should prepare..." />
+              </label>
+            </div>
+            <div className={styles.creatorGrid}>{creatorTools.map(([label, detail]) => <button key={label} type="button" onClick={() => runEdenAction(`Prepare ${label} creator packet.`)}><b>{label}</b><span>{detail}</span></button>)}</div>
+            <div className={styles.actionGrid}>{actionButtons.map(([label, prompt]) => <button key={label} type="button" onClick={() => runEdenAction(prompt)} disabled={isSending}>{label}</button>)}</div>
+            <div className={styles.statusList}>{edenTasks.map(([label, status, detail]) => <div key={label} className={styles.statusRow}><span className={statusClass(normalizeTone(status))}><b>{status === 'Green' ? '✓' : status === 'Red' ? 'x' : '!'}</b>{label}</span><em>{detail}</em></div>)}</div>
           </section>
         ) : null}
 
         {activeModule === 'images' ? (
           <section className={styles.modulePanel}>
             <header><div><p>Visual review</p><h2>Images</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
-            <div className={styles.mediaGrid}>{imagePreviews.map(([id, title, status, src]) => <figure key={id} className={styles.mediaCard}><img src={src} alt={`${title} preview`} /><figcaption><b>{id}</b><span>{title}</span><em>{status}</em></figcaption></figure>)}</div>
+            <div className={styles.mediaGrid}>{imagePreviews.map(([id, title, status, src]) => <figure key={id} className={styles.mediaCard}><button type="button" onClick={() => setExpandedMedia({ title: `${id} ${title}`, src, kind: 'image' })}><img src={src} alt={`${title} preview`} /></button><figcaption><b>{id}</b><span>{title}</span><em>{status}</em></figcaption></figure>)}</div>
           </section>
         ) : null}
 
         {activeModule === 'videos' ? (
           <section className={styles.modulePanel}>
             <header><div><p>Visual review</p><h2>Videos</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
-            <div className={styles.videoGrid}>{videoPreviews.map(([id, title, status, poster]) => <figure key={id} className={styles.mediaCard}><video controls preload="metadata" poster={poster} aria-label={`${title} video preview`} /><figcaption><b>{id}</b><span>{title}</span><em>{status}</em></figcaption></figure>)}</div>
+            <div className={styles.videoGrid}>{videoPreviews.map(([id, title, status, poster]) => <figure key={id} className={styles.mediaCard}><button type="button" onClick={() => setExpandedMedia({ title: `${id} ${title}`, src: poster, kind: 'video' })}><video controls preload="metadata" poster={poster} aria-label={`${title} video preview`} /></button><figcaption><b>{id}</b><span>{title}</span><em>{status}</em></figcaption></figure>)}</div>
+            <div className={styles.noticeBox}><b>Video chat lane</b><span>Realtime video chat is staged as an approval-gated capability. Eden can prepare the architecture and provider packet now; live session creation requires verified credentials and explicit approval.</span></div>
           </section>
         ) : null}
 
@@ -352,9 +455,9 @@ export default function EdenChatEditor() {
 
         {activeModule === 'integrations' ? (
           <section className={styles.modulePanel}>
-            <header><div><p>Connected systems</p><h2>Gmail + Calendar</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
-            <div className={styles.buttonGrid}>{connectedSystems.map(([name, status, account]) => <button key={name} type="button"><b>{name}</b><span>{status}</span><em>{account}</em></button>)}</div>
-            <div className={styles.noticeBox}><b>Connector boundary</b><span>The preview is set to the primary account target. Gmail and Calendar still need app-level OAuth before the public preview can read or mutate those accounts directly.</span></div>
+            <header><div><p>Connected systems</p><h2>Integrations</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
+            <div className={styles.buttonGrid}>{connectedSystems.map(([name, status, tone, detail]) => <button key={name} type="button"><span className={statusClass(tone as StatusTone)}><b>{tone === 'green' ? '✓' : tone === 'red' ? 'x' : '!'}</b>{name}</span><span>{status}</span><em>{detail}</em></button>)}</div>
+            <div className={styles.noticeBox}><b>Connector boundary</b><span>Eden can prepare and route requests across these systems. Public preview write access requires app OAuth, service credentials, or approval-gated backend adapters before mutation.</span></div>
           </section>
         ) : null}
 
@@ -373,6 +476,16 @@ export default function EdenChatEditor() {
           </section>
         ) : null}
       </section>
+
+      {expandedMedia ? (
+        <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label={`${expandedMedia.title} expanded preview`}>
+          <button className={styles.lightboxBackdrop} type="button" onClick={() => setExpandedMedia(null)} aria-label="Close expanded preview" />
+          <figure className={styles.lightboxPanel}>
+            <header><b>{expandedMedia.title}</b><button type="button" onClick={() => setExpandedMedia(null)}>Close</button></header>
+            {expandedMedia.kind === 'image' ? <img src={expandedMedia.src} alt={`${expandedMedia.title} expanded`} /> : <video controls poster={expandedMedia.src} aria-label={`${expandedMedia.title} expanded video preview`} />}
+          </figure>
+        </div>
+      ) : null}
     </main>
   );
 }
