@@ -9,6 +9,7 @@ import {
   sourceImageManifest,
   sourceManifestSummary
 } from '../admin-data';
+import { approvedBasicPortraitBatch, approvedBasicPortraits, driveThumbnailUrl } from './approved-basic-portraits';
 import { GroupCard, ModelCard } from './model-cards';
 
 export const metadata = {
@@ -27,7 +28,7 @@ export default function EdenModelInventoryPage() {
         <div>
           <p>Model Inventory</p>
           <h1>Manifest Roster</h1>
-          <span>Inventory is now rebuilt from the repaired Drive manifest only. Generic image titles stay red until they are matched to exact manifest filenames and Drive file IDs.</span>
+          <span>Approved basic portraits are now loaded from Drive. Production manifest slots stay gated until exact filenames, QA, and approval states are clean.</span>
         </div>
         <div className={styles.actions}>
           <Link className={styles.button} href="/eden-source-images">Dashboard</Link>
@@ -36,11 +37,44 @@ export default function EdenModelInventoryPage() {
       </header>
 
       <section className={styles.summary} aria-label="Model inventory summary">
-        <div className={styles.metric}><b>{summary.total}</b><span>Total manifest models loaded</span></div>
-        <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified source images</span></div>
-        <div className={styles.metric}><b>{missingSources}</b><span>Source images needed</span></div>
-        <div className={styles.metric}><b>{sourceSummary.matched}/{sourceSummary.total}</b><span>Drive filename matches</span></div>
+        <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Approved basic portraits</span></div>
+        <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified production slots</span></div>
+        <div className={styles.metric}><b>{missingSources}</b><span>Production images needed</span></div>
+        <div className={styles.metric}><b>{sourceSummary.candidates}/{sourceSummary.total}</b><span>Candidate manifest matches</span></div>
         <div className={styles.metric}><b>{sourceSummary.needsReview}</b><span>Need approval cleanup</span></div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <p>green</p>
+            <h2>Approved Basic Portrait Roster</h2>
+          </div>
+          <span className={styles.sourceWarning}><b>{approvedBasicPortraitBatch.title}</b><span>These 13 Drive-backed portrait files are approved for the basic model inventory. They do not automatically unblock the separate 12-slot Eden production manifest.</span></span>
+        </div>
+        <div className={styles.manifestEmpty}>
+          <b>Root folder</b>
+          <span>{approvedBasicPortraitBatch.rootFolderId}</span>
+          <b>Basic folder</b>
+          <span>{approvedBasicPortraitBatch.basicFolderId}</span>
+          <b>QA report</b>
+          <span>{approvedBasicPortraitBatch.qaReportFileId}</span>
+          <b>QA standard</b>
+          <span>{approvedBasicPortraitBatch.qaStandard}</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(188px, 1fr))', gap: 16, marginTop: 18 }}>
+          {approvedBasicPortraits.map((portrait) => (
+            <article key={portrait.driveFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
+              <img src={driveThumbnailUrl(portrait.driveFileId)} alt={`${portrait.name} approved basic portrait`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block', background: '#050505' }} />
+              <div style={{ display: 'grid', gap: 8, padding: 12 }}>
+                <span className={`${styles.badge} ${styles.green}`}>approved</span>
+                <b style={{ color: '#fff', fontSize: 16 }}>{portrait.index.toString().padStart(2, '0')} - {portrait.name}</b>
+                <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{portrait.fileName}</span>
+                <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Drive ID: {portrait.driveFileId}</span>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className={styles.section}>
@@ -78,10 +112,10 @@ export default function EdenModelInventoryPage() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div>
-            <p>All manifest models</p>
+            <p>Production manifest model</p>
             <h2>Source-image readiness</h2>
           </div>
-          <span className={styles.sourceWarning}><b>X means action needed.</b><span>Only manifest-backed records are shown here. No placeholder model or old source image is allowed.</span></span>
+          <span className={styles.sourceWarning}><b>X means action needed.</b><span>Only manifest-backed production records are shown here. The approved basic portraits above are inventory references, not production-slot replacements.</span></span>
         </div>
         <div className={styles.modelGrid}>
           {models.map((model) => <ModelCard model={model} key={model.id} />)}
@@ -94,7 +128,7 @@ export default function EdenModelInventoryPage() {
             <p>Drive manifest slots</p>
             <h2>12 required source images</h2>
           </div>
-          <span className={styles.sourceWarning}><b>0 exact matches found.</b><span>TEMP IMAGES has generic ChatGPT filenames, so these stay red until each binary is renamed or mapped.</span></span>
+          <span className={styles.sourceWarning}><b>0 exact matches found.</b><span>Three candidates are yellow; the remaining production slots stay red until exact source binaries are renamed or mapped.</span></span>
         </div>
         <div className={styles.manifestList}>
           {sourceImageManifest.map((record) => (
