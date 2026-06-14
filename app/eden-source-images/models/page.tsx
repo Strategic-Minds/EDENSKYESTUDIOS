@@ -130,7 +130,7 @@ export default function EdenModelInventoryPage() {
             <p>green</p>
             <h2>Male Model Roster</h2>
           </div>
-          <span className={styles.sourceWarning}><b>{approvedMaleRosterBatch.title}</b><span>All {approvedMaleRosterBatch.count} male profiles are operator-approved and now matched to Drive-backed portrait PNGs.</span></span>
+          <span className={styles.sourceWarning}><b>{approvedMaleRosterBatch.title}</b><span>All {approvedMaleRosterBatch.count} male profiles are operator-approved and matched to Drive-backed portrait PNGs. {approvedMaleRosterBatch.qaStandard}</span></span>
         </div>
         <div className={styles.manifestEmpty}>
           <b>Root folder</b>
@@ -156,6 +156,8 @@ export default function EdenModelInventoryPage() {
                 <span className={`${styles.badge} ${styles.green}`}>approved portrait</span>
                 <b style={{ color: '#fff', fontSize: 16 }}>{model.index.toString().padStart(2, '0')} - {model.name}</b>
                 <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>Age {model.age} - {model.archetype}</span>
+                <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>QA {model.qaScore ?? 'Pending'}/100 - {model.qaStatus.replaceAll('-', ' ')}</span>
+                <span style={{ color: 'rgba(255,255,255,0.58)', fontSize: 11, lineHeight: 1.4 }}>{model.qaNotes}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.notes}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.portraitFileName ?? 'Portrait file pending'}</span>
                 <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>Drive ID: {model.portraitFileId ?? 'Missing'}</span>
@@ -171,7 +173,7 @@ export default function EdenModelInventoryPage() {
             <p>green</p>
             <h2>Faceless Account Source Pack</h2>
           </div>
-          <span className={styles.sourceWarning}><b>{approvedFacelessSourceBatch.title}</b><span>{approvedFacelessSourceBatch.sourceStatus}</span></span>
+          <span className={styles.sourceWarning}><b>{approvedFacelessSourceBatch.title}</b><span>{approvedFacelessSourceBatch.sourceStatus} {approvedFacelessSourceBatch.planningStatus}</span></span>
         </div>
         <div className={styles.manifestEmpty}>
           <b>Root folder</b>
@@ -183,10 +185,10 @@ export default function EdenModelInventoryPage() {
           <b>30-day proof loop</b>
           <span>{approvedFacelessSourceBatch.validationThreshold}</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginTop: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginTop: 18 }}>
           {approvedFacelessAccounts.map((account) => (
             <article key={account.sourceFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
-              <div style={{ display: 'grid', placeItems: 'center', minHeight: 160, background: 'linear-gradient(135deg, rgba(255,20,147,0.16), rgba(255,255,255,0.02))', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: 16, textAlign: 'center' }}>
+              <div style={{ display: 'grid', placeItems: 'center', minHeight: 160, background: `linear-gradient(135deg, ${account.brandKit.accentColor}33, rgba(255,255,255,0.02))`, borderBottom: '1px solid rgba(255,255,255,0.1)', padding: 16, textAlign: 'center' }}>
                 <span className={`${styles.badge} ${styles.green}`}>approved concept</span>
               </div>
               <div style={{ display: 'grid', gap: 8, padding: 12 }}>
@@ -195,6 +197,16 @@ export default function EdenModelInventoryPage() {
                 <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>{account.boardTheme} - {account.riskLevel}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{account.platformFit}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{account.monetizationPath}</span>
+                <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 12, lineHeight: 1.5 }}>Brand kit: {account.brandKit.visualStyle}</span>
+                <span style={{ color: 'rgba(255,255,255,0.62)', fontSize: 11, lineHeight: 1.5 }}>Pillars: {account.brandKit.contentPillars.join(' / ')}</span>
+                <span style={{ color: 'rgba(255,255,255,0.62)', fontSize: 11, lineHeight: 1.5 }}>Assets needed: {account.brandKit.assetNeeds.join(' / ')}</span>
+                <div style={{ display: 'grid', gap: 6, paddingTop: 4 }}>
+                  {account.contentCalendar.map((item) => (
+                    <span key={item.day} style={{ color: 'rgba(255,255,255,0.62)', fontSize: 11, lineHeight: 1.45 }}>
+                      Day {item.day}: {item.theme} - {item.format} - {item.hook}
+                    </span>
+                  ))}
+                </div>
                 <span style={{ color: 'rgba(255,255,255,0.52)', fontSize: 11, lineHeight: 1.4 }}>{account.sourceFileName} - {account.sourceFileId}</span>
               </div>
             </article>
