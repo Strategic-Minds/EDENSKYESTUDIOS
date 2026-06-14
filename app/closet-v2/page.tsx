@@ -1,5 +1,6 @@
 import "./closet-v2.css";
-import { ClosetV2Experience } from "./ClosetV2Experience";
+import "./closet-v2-real.css";
+import { ClosetV2RealApp } from "./ClosetV2RealApp";
 
 export const metadata = {
   title: "Eden's Closet V2 | Eden Skye Studios",
@@ -8,5 +9,5 @@ export const metadata = {
 };
 
 export default function ClosetV2Page() {
-  return <ClosetV2Experience />;
+  return <ClosetV2RealApp view="home" />;
 }
