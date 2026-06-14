@@ -26,6 +26,7 @@
 .editorTopbar p,.modulePanel p{margin:0 0 4px;color:#ff1493;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0}
 .editorTopbar h1,.modulePanel h2,.emptyState h2{margin:0;letter-spacing:0;line-height:1}
 .editorTopbar h1{font-size:28px}
+.primaryEmail{display:inline-block;margin-top:7px;color:#bfbfc8;font-size:12px;overflow-wrap:anywhere}
 .topbarActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .editorTopbar a,.topbarActions button{border:1px solid rgba(255,255,255,.14);color:#fff;text-decoration:none;padding:10px 12px;font-size:13px;font-weight:900;background:#050505}
 .moduleDock{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;margin:0 0 18px}
@@ -47,10 +48,19 @@
 .mediaCard figcaption{display:grid;gap:5px;padding:11px}
 .mediaCard b,.listPanel b,.noticeBox b{font-size:13px}
 .buttonGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-content:start}
-.listPanel{display:grid;gap:8px;align-content:start}
+.listPanel,.statusList{display:grid;gap:8px;align-content:start}
 .listPanel div{display:grid;grid-template-columns:150px minmax(0,1fr) 120px;gap:12px;padding:12px;border:1px solid rgba(255,255,255,.08);background:#060606}
+.legendGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.statusRow{display:grid;grid-template-columns:220px minmax(0,1fr);gap:12px;align-items:center;padding:12px;border:1px solid rgba(255,255,255,.08);background:#060606}
+.statusRow em{color:#b9b9c3;font-size:12px;font-style:normal;line-height:1.4;overflow-wrap:anywhere}
+.statusPill{display:inline-grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:center;width:max-content;max-width:100%;padding:7px 9px;border:1px solid rgba(255,255,255,.14);background:#090909;color:#fff;font-size:12px;font-weight:900;line-height:1.2;overflow-wrap:anywhere}
+.statusPill b{display:grid;place-items:center;width:18px;height:18px;border-radius:999px;background:currentColor;color:#000;font-size:12px;line-height:1}
+.statusPill em{grid-column:1 / -1;color:#aaaab4;font-size:12px;font-style:normal;font-weight:500;line-height:1.35}
+.green{border-color:rgba(62,222,127,.45);color:#3ede7f;background:rgba(62,222,127,.08)}
+.yellow{border-color:rgba(255,207,77,.5);color:#ffcf4d;background:rgba(255,207,77,.08)}
+.red{border-color:rgba(255,82,82,.5);color:#ff5252;background:rgba(255,82,82,.08)}
 .noticeBox{display:grid;gap:8px;border:1px solid rgba(255,20,147,.24);background:#080208;padding:14px;align-content:start}
 .noticeBox code{display:block;border:1px solid rgba(255,255,255,.12);background:#000;color:#fff;padding:10px;font-size:13px;overflow-wrap:anywhere}
-@media(max-width:1180px){.moduleDock{grid-template-columns:repeat(3,minmax(150px,1fr))}.buttonGrid,.mediaGrid,.videoGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:820px){.shell{grid-template-columns:1fr}.chat{position:relative;height:46vh;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}.editor{max-height:none;min-height:80vh}.moduleDock{grid-template-columns:repeat(2,minmax(0,1fr))}.emptyState,.modulePanel{min-height:420px}.listPanel div{grid-template-columns:1fr}}
-@media(max-width:560px){.editor{padding:16px}.editorTopbar{height:auto;align-items:flex-start;flex-direction:column}.moduleDock,.buttonGrid,.mediaGrid,.videoGrid{grid-template-columns:1fr}.modulePanel h2{font-size:28px}}
+@media(max-width:1180px){.moduleDock{grid-template-columns:repeat(3,minmax(150px,1fr))}.buttonGrid,.mediaGrid,.videoGrid,.legendGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.chat{position:relative;height:46vh;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}.editor{max-height:none;min-height:80vh}.moduleDock{grid-template-columns:repeat(2,minmax(0,1fr))}.emptyState,.modulePanel{min-height:420px}.listPanel div,.statusRow{grid-template-columns:1fr}}
+@media(max-width:560px){.editor{padding:16px}.editorTopbar{height:auto;align-items:flex-start;flex-direction:column}.moduleDock,.buttonGrid,.mediaGrid,.videoGrid,.legendGrid{grid-template-columns:1fr}.modulePanel h2{font-size:28px}}
