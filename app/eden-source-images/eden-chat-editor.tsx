@@ -22,6 +22,17 @@ type FileSummary = {
   size: number;
 };
 
+type StatusTone = 'green' | 'yellow' | 'red';
+
+type ApprovalItem = {
+  label: string;
+  detail: string;
+  tone: StatusTone;
+  mark: string;
+};
+
+const primaryEmail = 'strategicmindsadvisory@gmail.com';
+
 const drive = {
   imageFactory: '1lu7fo915TDlJPT4U3VZGexcWBJ9dpi2b',
   stockAssets: '1V8MNsOdvLNSd04JQrnyvH1ECnj3nOF8P',
@@ -42,9 +53,9 @@ const visualRefs = {
 const initialModules: ModuleItem[] = [
   { id: 'images', label: 'Images', helper: 'Review visible image slots' },
   { id: 'videos', label: 'Videos', helper: 'Review playable video slots' },
-  { id: 'approval', label: 'Approval', helper: 'Approval inbox and admin gate' },
+  { id: 'approval', label: 'Approval', helper: 'Green, yellow, red gates' },
   { id: 'folders', label: 'Folders', helper: 'Organized Drive lanes' },
-  { id: 'integrations', label: 'Gmail + Calendar', helper: 'Connected system lanes' },
+  { id: 'integrations', label: 'Gmail + Calendar', helper: 'Primary account lanes' },
   { id: 'customize', label: 'Customize', helper: 'Drag and reorder UI sections' },
   { id: 'manifest', label: 'Manifest', helper: '12 expected assets' },
   { id: 'leaks', label: 'Leak Tests', helper: 'Sandbox-only checks' }
@@ -66,14 +77,15 @@ const videoPreviews = [
 ];
 
 const folders = [
-  ['Source Image Approval Inbox', 'pending creation approval', drive.approvalControl],
-  ['Identity Lock', '3 images', drive.temp],
-  ['Portfolio Portraits', '2 images', drive.temp],
-  ['Website Heroes', '2 images', drive.temp],
-  ['Closet Sources', '2 images', drive.stockAssets],
-  ['Video Drafts', '0 videos', drive.imageFactory],
-  ['Quarantine', '0 held', drive.quarantine]
-];
+  ['Admin Approval Control Plane', 'active temporary approval lane', drive.approvalControl, 'green'],
+  ['SOURCE_IMAGE_APPROVAL_INBOX', 'approved, blocked by missing Drive service secrets', drive.approvalControl, 'red'],
+  ['Identity Lock', '3 images expected', drive.temp, 'yellow'],
+  ['Portfolio Portraits', '2 images expected', drive.temp, 'yellow'],
+  ['Website Heroes', '2 images expected', drive.temp, 'yellow'],
+  ['Closet Sources', '2 images expected', drive.stockAssets, 'yellow'],
+  ['Video Drafts', '0 videos installed', drive.imageFactory, 'yellow'],
+  ['Quarantine', '0 held', drive.quarantine, 'green']
+] as const;
 
 const imageQueue = [
   ['eden-skye-001', 'Identity lock front portrait', 'pending_binary'],
@@ -99,10 +111,25 @@ const manifestFiles = [
 ];
 
 const connectedSystems = [
-  ['Gmail', 'Connected in agent session', 'info@epoxywillchangeyourlife.com'],
-  ['Google Calendar', 'Connected in agent session', 'info@epoxywillchangeyourlife.com'],
-  ['Google Drive', 'Connected in agent session', 'strategicmindsadvisory@gmail.com'],
-  ['ChatGPT passthrough', 'Not embeddable directly', 'Use AI Gateway OpenAI route']
+  ['Gmail', 'Primary account target', primaryEmail],
+  ['Google Calendar', 'Primary account target', primaryEmail],
+  ['Google Drive', 'Connected primary workspace', primaryEmail],
+  ['ChatGPT passthrough', 'Use AI Gateway OpenAI route', primaryEmail]
+];
+
+const statusLegend: ApprovalItem[] = [
+  { label: 'Green', detail: 'Verified, ready, or safely available in the preview.', tone: 'green', mark: '✓' },
+  { label: 'Yellow', detail: 'Needs review, binary matching, QA scoring, or operator approval.', tone: 'yellow', mark: '!' },
+  { label: 'Red', detail: 'Blocked, missing credentials, or not allowed for live mutation.', tone: 'red', mark: 'x' }
+];
+
+const approvalQueue: ApprovalItem[] = [
+  { label: 'Primary account', detail: primaryEmail, tone: 'green', mark: '✓' },
+  { label: 'Control plane API', detail: 'Preview endpoint is wired for admin state and leak rules.', tone: 'green', mark: '✓' },
+  { label: 'AI Gateway chat', detail: 'Diagnostics added. Responses API is tried before chat completions.', tone: 'yellow', mark: '!' },
+  { label: '12 source image binaries', detail: 'Still need filename, QA score, Drive file ID, and approval status matching.', tone: 'yellow', mark: '!' },
+  { label: 'SOURCE_IMAGE_APPROVAL_INBOX', detail: 'Approval received, but Drive creation is blocked until GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are configured.', tone: 'red', mark: 'x' },
+  { label: 'Public publishing', detail: 'Still approval-gated. No live publish, Shopify, HeyGen, payment, or production writes from preview.', tone: 'red', mark: 'x' }
 ];
 
 const leakTests = [
@@ -119,11 +146,15 @@ function fileListToSummaries(files: FileList | null): FileSummary[] {
   return Array.from(files).map((file) => ({ name: file.name, type: file.type || 'unknown', size: file.size }));
 }
 
+function statusClass(tone: StatusTone) {
+  return `${styles.statusPill} ${styles[tone]}`;
+}
+
 export default function EdenChatEditor() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'system',
-      content: 'Chat is wired to the Eden AI Gateway route. Ask for image batches, approvals, uploads, Gmail, Calendar, or folder actions.'
+      content: `Chat is wired to the Eden AI Gateway route. Primary account: ${primaryEmail}. Ask for image batches, approvals, uploads, Gmail, Calendar, or folder actions.`
     }
   ]);
   const [input, setInput] = useState('');
@@ -173,11 +204,12 @@ export default function EdenChatEditor() {
         body: JSON.stringify({ messages: nextMessages, attachments })
       });
       const result = await response.json();
+      const diagnostic = result.diagnostic ? `\n\nDiagnostic: ${result.diagnostic}` : '';
       setMessages((current) => [
         ...current,
         {
           role: 'assistant',
-          content: result.content || result.error || 'The AI route responded without content.'
+          content: `${result.content || result.error || 'The AI route responded without content.'}${diagnostic}`
         }
       ]);
     } catch (error) {
@@ -246,8 +278,10 @@ export default function EdenChatEditor() {
           <div>
             <p>Eden source control</p>
             <h1>{activeModuleLabel || 'Clean review editor'}</h1>
+            <span className={styles.primaryEmail}>{primaryEmail}</span>
           </div>
           <div className={styles.topbarActions}>
+            <a href="/api/eden/source-images/chat?selfTest=1">Gateway Test</a>
             <a href="/api/eden/source-images/control-plane">API</a>
             <button type="button" onClick={() => setActiveModule('customize')}>Customize</button>
           </div>
@@ -294,8 +328,10 @@ export default function EdenChatEditor() {
 
         {activeModule === 'approval' ? (
           <section className={styles.modulePanel}>
-            <header><div><p>Admin control</p><h2>Approval Inbox</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
-            <div className={styles.noticeBox}><b>Folder requested</b><span>SOURCE_IMAGE_APPROVAL_INBOX is staged under the admin approval control plane. Live Drive creation needs the approval phrase shown below.</span><code>APPROVE DRIVE FOLDER CREATE</code></div>
+            <header><div><p>Admin control</p><h2>Approval Status</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
+            <div className={styles.legendGrid}>{statusLegend.map((item) => <div key={item.label} className={statusClass(item.tone)}><b>{item.mark}</b><span>{item.label}</span><em>{item.detail}</em></div>)}</div>
+            <div className={styles.statusList}>{approvalQueue.map((item) => <div key={item.label} className={styles.statusRow}><span className={statusClass(item.tone)}><b>{item.mark}</b>{item.label}</span><em>{item.detail}</em></div>)}</div>
+            <div className={styles.noticeBox}><b>Drive folder create approval received</b><span>The requested SOURCE_IMAGE_APPROVAL_INBOX can be created only after the Drive executor has GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY configured. Until then, use the existing Admin Approval Control Plane folder.</span><code>APPROVE DRIVE FOLDER CREATE</code></div>
             <div className={styles.buttonGrid}>{manifestFiles.map(([label, id]) => <a key={id} href={`https://drive.google.com/file/d/${id}/view`}><b>{label}</b><span>{id}</span></a>)}</div>
           </section>
         ) : null}
@@ -303,7 +339,7 @@ export default function EdenChatEditor() {
         {activeModule === 'folders' ? (
           <section className={styles.modulePanel}>
             <header><div><p>Drive storage</p><h2>Folders</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
-            <div className={styles.buttonGrid}>{folders.map(([name, count, id]) => <a key={name} href={`https://drive.google.com/drive/folders/${id}`}><b>{name}</b><span>{count}</span></a>)}</div>
+            <div className={styles.buttonGrid}>{folders.map(([name, count, id, tone]) => <a key={name} href={`https://drive.google.com/drive/folders/${id}`}><span className={statusClass(tone as StatusTone)}><b>{tone === 'green' ? '✓' : tone === 'yellow' ? '!' : 'x'}</b>{name}</span><span>{count}</span></a>)}</div>
           </section>
         ) : null}
 
@@ -318,7 +354,7 @@ export default function EdenChatEditor() {
           <section className={styles.modulePanel}>
             <header><div><p>Connected systems</p><h2>Gmail + Calendar</h2></div><button type="button" onClick={() => setActiveModule(null)}>Close</button></header>
             <div className={styles.buttonGrid}>{connectedSystems.map(([name, status, account]) => <button key={name} type="button"><b>{name}</b><span>{status}</span><em>{account}</em></button>)}</div>
-            <div className={styles.noticeBox}><b>Connector boundary</b><span>The agent session can use Gmail and Calendar. The public preview app needs its own OAuth/server integration before it can read or mutate those accounts directly.</span></div>
+            <div className={styles.noticeBox}><b>Connector boundary</b><span>The preview is set to the primary account target. Gmail and Calendar still need app-level OAuth before the public preview can read or mutate those accounts directly.</span></div>
           </section>
         ) : null}
 
