@@ -1,0 +1,33 @@
+{
+  "system": "Eden Skye Shopify public copy guard",
+  "branch": "eden/shopify-theme-launch-20260612",
+  "public_forbidden_terms": [
+    "GPT pipeline",
+    "Xyla automation",
+    "approval gate",
+    "draft mutation",
+    "protected mutation",
+    "source pending",
+    "approval studio",
+    "manifest-driven",
+    "admin workflow"
+  ],
+  "allowed_private_surfaces": ["/pages/eden-admin", "config/*.json", "docs/*"],
+  "required_public_terms": [
+    "Digital Modeling & Content Creator Agency",
+    "Beauty. Influence. Impact.",
+    "Premium digital models",
+    "Private media drops",
+    "Black Card access",
+    "Eden's Closet",
+    "Member-only galleries",
+    "Model portfolios",
+    "Faceless creator media"
+  ],
+  "route_rules": [
+    "Every homepage model card links to /pages/model-*.",
+    "Every collection model card links to /pages/model-*.",
+    "Every model page contains a /pages/payment CTA.",
+    "Hidden admin must not appear in public navigation."
+  ]
+}
