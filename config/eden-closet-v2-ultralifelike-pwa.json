@@ -1,0 +1,66 @@
+{
+  "system": "EDEN_CLOSET_V2_ULTRALIFELIKE_PWA",
+  "branch": "eden/closet-ultralifelike-pwa-v2-20260614",
+  "status": "preview_ready_draft_gate",
+  "publicRoute": "/closet-v2",
+  "shopifyAfterPaymentTarget": "/success?next=/closet-v2",
+  "memberEntitlement": "black_card_member",
+  "supabaseAuthRequired": true,
+  "livePaymentActivation": false,
+  "protectedActions": [
+    "production_deploy",
+    "live_payment_activation",
+    "shopify_live_product_mutation",
+    "supabase_production_schema_mutation",
+    "public_social_posting",
+    "customer_email_send"
+  ],
+  "approvedSourceImages": [
+    {
+      "slot": "hero_neon_closet",
+      "uploadedFile": "user_files/03-ChatGPT-Image-Jun-11-2026-01_49_09-AM.png",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-neon-closet-hero.png?v=1781428271",
+      "shopifyMediaId": "gid://shopify/MediaImage/31274708041782",
+      "usage": ["pwa_home", "environment_selector"]
+    },
+    {
+      "slot": "model_lounge_primary",
+      "uploadedFile": "user_files/01-ChatGPT-Image-Jun-11-2026-07_49_04-PM-18-.png",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-model-lounge-01.png?v=1781428263",
+      "shopifyMediaId": "gid://shopify/MediaImage/31274707681334",
+      "usage": ["ai_video_chat", "voice_chat", "style_card"]
+    },
+    {
+      "slot": "model_lounge_secondary",
+      "uploadedFile": "user_files/02-ChatGPT-Image-Jun-11-2026-07_49_01-PM-10-.png",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-model-lounge-02.png?v=1781428279",
+      "shopifyMediaId": "gid://shopify/MediaImage/31274708434998",
+      "usage": ["wardrobe_selector", "member_gallery", "chat_panel"]
+    },
+    {
+      "slot": "full_body_viewer",
+      "uploadedFile": "user_files/04-ChatGPT-Image-Jun-11-2026-07_48_58-PM-3-.png",
+      "shopifyCdnUrl": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-v2-approved-full-body-viewer.png?v=1781428288",
+      "shopifyMediaId": "gid://shopify/MediaImage/31274708729910",
+      "usage": ["full_body_viewer", "outfit_selector", "avatar_preview"]
+    }
+  ],
+  "experienceModules": [
+    "pwa_home",
+    "full_body_viewer",
+    "wardrobe_selector",
+    "identity_styling",
+    "environment_selector",
+    "ai_text_chat_ui",
+    "ai_voice_chat_ui",
+    "ai_video_chat_ui",
+    "shopify_payment_return",
+    "black_card_entitlement_gate"
+  ],
+  "avatarEngineTarget": {
+    "phase": "adapter_ready",
+    "recommendedStack": ["Next.js App Router", "WebGL", "Three.js or Babylon.js", "VRM/GLB avatar assets", "HeyGen/video avatar bridge", "realtime voice model bridge"],
+    "currentBuild": "image-backed ultra-lifelike PWA prototype with 3D-ready controls and gated AI surfaces",
+    "missingForTrue3D": ["approved GLB/VRM model", "rigged motion clips", "voice/video provider keys", "production entitlement middleware"]
+  }
+}
