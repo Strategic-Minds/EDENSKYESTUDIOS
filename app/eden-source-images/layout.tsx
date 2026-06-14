@@ -7,6 +7,7 @@ export default function EdenSourceImagesLayout({ children }: { children: ReactNo
         <a href="/eden-source-images" style={brandStyle}>EDEN <span style={{ color: '#ff1493' }}>ADMIN</span></a>
         <div style={navLinksStyle}>
           <a href="/eden-source-images" style={navLinkStyle}>Dashboard</a>
+          <a href="/eden-source-images/automation" style={navLinkStyle}>Automation</a>
           <a href="/eden-source-images/library" style={navLinkStyle}>Library</a>
           <a href="/eden-source-images/models" style={navLinkStyle}>Inventory</a>
           <a href="/eden-source-images/image-stack" style={navLinkStyle}>Images</a>
