@@ -1,0 +1,64 @@
+:global(html){scroll-behavior:smooth}
+:global(body){margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif}
+.shell{min-height:100vh;display:grid;grid-template-columns:340px minmax(0,1fr);background:#000;color:#fff}
+.sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:14px;border-right:1px solid rgba(255,255,255,.1);background:#000;padding:18px;box-sizing:border-box;overflow:auto}
+.brandMark{display:grid;width:44px;height:44px;place-items:center;background:#ff1493;color:#fff;font-size:14px;font-weight:900}
+.sidebar p,.topbar p,.modalPanel p{margin:0 0 6px;color:#ff4fb3;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0}
+.sidebar h1,.topbar h2,.emptyState h3,.modalPanel h3{margin:0;line-height:1;letter-spacing:0}
+.sidebar h1{font-size:28px}
+.sidebar span,.topbar span,.dropZone span,.folderList span,.cardBody span,.cardBody em,.emptyState p,.statusPanel span,.legend span,.modalPanel span,.modalPanel footer a{color:#b8b8c2;font-size:12px;line-height:1.35;font-style:normal;overflow-wrap:anywhere}
+.statusPanel,.legend{display:grid;gap:7px;border:1px solid rgba(255,255,255,.1);background:#050505;padding:11px}
+.statusPanel b{font-size:13px;color:#fff}
+.legend{grid-template-columns:1fr;gap:8px}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{display:block;width:10px;height:10px;border-radius:999px}
+.greenDot{background:#2ee66b}.yellowDot{background:#ffd84d}.redDot{background:#ff4b4b}
+.dropZone{display:grid;gap:8px;align-content:center;min-height:150px;border:1px dashed rgba(255,20,147,.55);background:#080208;padding:18px;cursor:pointer;text-align:left}
+.dropZone input{position:absolute;inline-size:1px;block-size:1px;opacity:0;pointer-events:none}
+.dropZone b{font-size:18px;color:#fff}
+.folderList{display:grid;gap:8px}
+.folderList button,.batchBar button,.topbar button,.topbar a,.topbar select,.cardActions button{border:1px solid rgba(255,255,255,.14);background:#070707;color:#fff;font:inherit;font-size:13px;font-weight:900;cursor:pointer;text-decoration:none}
+.folderList button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;min-height:48px;padding:10px;text-align:left}
+.folderList button:hover,.batchBar button:hover,.topbar button:hover,.topbar a:hover,.cardActions button:hover,.driveLink:hover,.modalPanel header button:hover{border-color:#ff1493}
+.activeFolder{border-color:#ff1493!important;background:rgba(255,20,147,.12)!important}
+.workspace{min-width:0;min-height:100vh;padding:22px 24px 34px;box-sizing:border-box;overflow:auto;background:#000}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.topbar h2{font-size:34px}
+.topbar nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.topbar a,.topbar button,.topbar select{min-height:40px;padding:0 12px;background:#050505}
+.batchBar{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:10px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.92);backdrop-filter:blur(8px)}
+.batchBar button{min-height:38px;padding:0 12px}
+.batchBar button:disabled{opacity:.45;cursor:not-allowed}
+.emptyState{min-height:calc(100vh - 170px);display:grid;place-items:center;align-content:center;gap:10px;border:1px solid rgba(255,255,255,.08);background:#030303;text-align:center;padding:30px}
+.emptyState span{display:inline-grid;place-items:center;min-height:28px;padding:0 10px;border:1px solid rgba(255,20,147,.55);color:#ff1493;font-size:12px;font-weight:900;text-transform:uppercase}
+.emptyState h3{max-width:560px;color:#d7d7dc;font-size:28px;font-weight:800}
+.emptyState p{max-width:520px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;align-content:start}
+.denseList{display:grid;grid-template-columns:1fr;gap:8px;align-content:start}
+.card{display:grid;border:1px solid rgba(255,255,255,.1);background:#060606;min-width:0;overflow:hidden}
+.selected{border-color:#ff1493;box-shadow:0 0 0 3px rgba(255,20,147,.13)}
+.imageButton{display:block;width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:#000;padding:0;cursor:zoom-in;overflow:hidden}
+.imageButton img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#000}
+.cardBody{display:grid;gap:9px;padding:11px;min-width:0}
+.cardBody label{display:flex;gap:8px;align-items:flex-start;min-width:0}
+.cardBody b{font-size:13px;line-height:1.25;overflow-wrap:anywhere}
+.badgeRow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.statusBadge{display:inline-grid;min-height:24px;place-items:center;padding:0 8px;border:1px solid rgba(255,255,255,.14);font-size:11px!important;font-weight:900;text-transform:uppercase;color:#000!important}
+.green{background:#2ee66b}.yellow{background:#ffd84d}.red{background:#ff4b4b;color:#fff!important}
+.qaSlider{display:grid!important;gap:6px}
+.qaSlider input{width:100%;accent-color:#ff1493}
+.cardActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.cardActions button{min-height:34px;padding:0 6px;font-size:12px}
+.driveLink{display:inline-grid;min-height:34px;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);background:#030303;color:#fff;font-size:12px;font-weight:900;text-decoration:none}
+.denseList .card{grid-template-columns:120px minmax(0,1fr)}
+.denseList .imageButton{border-bottom:0;border-right:1px solid rgba(255,255,255,.08)}
+.denseList .imageButton img{aspect-ratio:1;min-height:120px}
+.modalBackdrop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(0,0,0,.86);padding:22px;box-sizing:border-box}
+.modalPanel{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:12px;width:min(1100px,100%);max-height:calc(100vh - 44px);border:1px solid rgba(255,255,255,.16);background:#050505;padding:14px;box-sizing:border-box}
+.modalPanel header,.modalPanel footer{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.modalPanel h3{font-size:24px;color:#fff}
+.modalPanel header button{min-height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.14);background:#000;color:#fff;font-weight:900;cursor:pointer}
+.modalPanel img{display:block;max-width:100%;max-height:70vh;object-fit:contain;background:#000;margin:auto}
+.modalPanel footer a{color:#fff;font-weight:900;text-decoration:none}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}.topbar{flex-direction:column}.workspace{min-height:70vh}.denseList .card{grid-template-columns:1fr}.denseList .imageButton{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}}
+@media(max-width:560px){.workspace,.sidebar{padding:16px}.grid{grid-template-columns:1fr}.cardActions{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar h2{font-size:28px}.modalBackdrop{padding:10px}.modalPanel h3{font-size:20px}}
