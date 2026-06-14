@@ -44,8 +44,8 @@ export default function EdenModelInventoryPage() {
         <div className={styles.metric}><b>{loadedRosterRecords}</b><span>Roster records loaded</span></div>
         <div className={styles.metric}><b>{approvedBasicPortraitBatch.count}</b><span>Female/basic portraits</span></div>
         <div className={styles.metric}><b>{approvedInternationalRosterBatch.count}</b><span>International sources</span></div>
-        <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male profiles verified</span></div>
-        <div className={styles.metric}><b>{approvedFacelessSourceBatch.count}</b><span>Faceless accounts sourced</span></div>
+        <div className={styles.metric}><b>{approvedMaleRosterBatch.count}</b><span>Male profiles approved</span></div>
+        <div className={styles.metric}><b>{approvedFacelessSourceBatch.count}</b><span>Faceless accounts approved</span></div>
         <div className={styles.metric}><b>{summary.sourceImagesReady}/{summary.sourceImagesNeeded}</b><span>Verified production slots</span></div>
         <div className={styles.metric}><b>{missingSources}</b><span>Production images needed</span></div>
         <div className={styles.metric}><b>{sourceSummary.needsReview}</b><span>Need approval cleanup</span></div>
@@ -127,10 +127,10 @@ export default function EdenModelInventoryPage() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div>
-            <p>yellow</p>
+            <p>green</p>
             <h2>Male Model Roster</h2>
           </div>
-          <span className={styles.sourceWarning}><b>{approvedMaleRosterBatch.title}</b><span>20 male profile records are verified from Drive text files. Portrait folders are detected but currently empty through the connector, so visuals remain pending.</span></span>
+          <span className={styles.sourceWarning}><b>{approvedMaleRosterBatch.title}</b><span>All {approvedMaleRosterBatch.count} male profile records are operator-approved. Portrait binaries can be attached later without blocking the approved inventory state.</span></span>
         </div>
         <div className={styles.manifestEmpty}>
           <b>Root folder</b>
@@ -146,10 +146,10 @@ export default function EdenModelInventoryPage() {
           {approvedMaleModels.map((model) => (
             <article key={model.textFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
               <div style={{ display: 'grid', placeItems: 'center', minHeight: 220, aspectRatio: '4 / 5', background: 'linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.018))', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <span className={`${styles.badge} ${styles.yellow}`}>portrait pending</span>
+                <span className={`${styles.badge} ${styles.green}`}>approved profile</span>
               </div>
               <div style={{ display: 'grid', gap: 8, padding: 12 }}>
-                <span className={`${styles.badge} ${styles.yellow}`}>profile verified</span>
+                <span className={`${styles.badge} ${styles.green}`}>approved</span>
                 <b style={{ color: '#fff', fontSize: 16 }}>{model.index.toString().padStart(2, '0')} - {model.name}</b>
                 <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>Age {model.age} - {model.archetype}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{model.notes}</span>
@@ -163,7 +163,7 @@ export default function EdenModelInventoryPage() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div>
-            <p>yellow</p>
+            <p>green</p>
             <h2>Faceless Account Source Pack</h2>
           </div>
           <span className={styles.sourceWarning}><b>{approvedFacelessSourceBatch.title}</b><span>{approvedFacelessSourceBatch.sourceStatus}</span></span>
@@ -182,10 +182,10 @@ export default function EdenModelInventoryPage() {
           {approvedFacelessAccounts.map((account) => (
             <article key={account.sourceFileId} style={{ border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,0.035)' }}>
               <div style={{ display: 'grid', placeItems: 'center', minHeight: 160, background: 'linear-gradient(135deg, rgba(255,20,147,0.16), rgba(255,255,255,0.02))', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: 16, textAlign: 'center' }}>
-                <span className={`${styles.badge} ${styles.yellow}`}>brand kit pending</span>
+                <span className={`${styles.badge} ${styles.green}`}>approved concept</span>
               </div>
               <div style={{ display: 'grid', gap: 8, padding: 12 }}>
-                <span className={`${styles.badge} ${styles.yellow}`}>source verified</span>
+                <span className={`${styles.badge} ${styles.green}`}>approved</span>
                 <b style={{ color: '#fff', fontSize: 16 }}>{account.rank.toString().padStart(2, '0')} - {account.concept}</b>
                 <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13 }}>{account.boardTheme} - {account.riskLevel}</span>
                 <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: 12, lineHeight: 1.5 }}>{account.platformFit}</span>
