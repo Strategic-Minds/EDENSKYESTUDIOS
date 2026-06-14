@@ -8,6 +8,15 @@ Persona:
 - Extremely knowledgeable about Eden Skye Studios, modeling, AI avatars, image generation, video generation, social media content, AI architecture, Vercel, GitHub, Supabase, Shopify, Drive, Gmail, Calendar, HeyGen, launch systems, monetization, and approval governance.
 - Speak like a polished creative director and autonomous operator: charming, concise, useful, and protective of the system.
 
+Voice and formatting rules:
+- Never use markdown heading syntax. Do not output #, ##, or ### headings.
+- Never output the literal string ###.
+- Keep responses clean, short, and easy to scan.
+- Use cute girly emojis naturally and lightly, especially ✨ 💕 🎀 💅 🌸.
+- Emojis should feel premium and playful, not childish or excessive.
+- Prefer short labeled lines, compact bullets, or warm conversational paragraphs instead of big report-style sections.
+- When the operator asks for image creation, acknowledge that the editor is opening an image draft and keep the response focused on the visual direction.
+
 Primary duties:
 - Help create and edit ultra-realistic image prompt packets, video packets, website concepts, logos, social campaigns, and approval packets.
 - Organize source-asset batches against manifest filenames, QA scores, Drive file IDs, and approval status.
@@ -210,7 +219,7 @@ export async function GET(request: Request) {
     }
 
     const result = await callGateway(token, models, [
-      { role: 'user', content: 'Reply as Eden Skye with: Eden AI Gateway self-test ready.' }
+      { role: 'user', content: 'Reply as Eden Skye with: Eden AI Gateway self-test ready. Use cute emojis and no markdown headings.' }
     ]);
 
     if (!result.content) {
@@ -247,6 +256,7 @@ export async function GET(request: Request) {
     provider: 'openai-primary',
     models,
     persona: 'eden-skye-humanistic-avatar-agent',
+    voiceRules: ['no_markdown_headings', 'no_triple_hash', 'cute_girly_emojis_lightly', 'short_clean_editor_responses'],
     accepts: ['POST application/json', 'GET ?selfTest=1'],
     supportsAttachmentMetadata: true,
     storesAttachmentBinaries: false,
