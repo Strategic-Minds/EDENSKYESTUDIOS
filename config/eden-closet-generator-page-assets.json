@@ -1,0 +1,18 @@
+{
+  "system": "EDEN_CLOSET_GENERATOR_PAGE_ASSETS",
+  "rule": "Each image is a standalone full-page UI design target. Do not combine them into a collage. Do not use them as model assets. Rebuild each route as real Next.js UI.",
+  "recommendedFramework": "Next.js App Router on Vercel with Supabase auth and Shopify payment handoff",
+  "pages": [
+    {"route": "/closet-v2", "title": "Home", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-01-home.png?v=1781432400"},
+    {"route": "/closet-v2/models", "title": "Select Model", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-02-select-model.png?v=1781432410"},
+    {"route": "/closet-v2/models/alexis-voss", "title": "Model Profile", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-03-model-profile.png?v=1781432421"},
+    {"route": "/closet-v2/closet", "title": "Virtual Closet", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-04-virtual-closet.png?v=1781432392"},
+    {"route": "/closet-v2/environments", "title": "Environments", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-05-environments.png?v=1781432429"},
+    {"route": "/closet-v2/viewer", "title": "Full Body 360 Viewer", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-06-360-viewer.png?v=1781432446"},
+    {"route": "/closet-v2/chat", "title": "AI Chat", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-07-ai-chat.png?v=1781432454"},
+    {"route": "/closet-v2/video", "title": "AI Video Chat", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-08-ai-video-chat.png?v=1781432464"},
+    {"route": "/closet-v2/dashboard", "title": "Dashboard", "image": "https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-closet-ai-designed-09-dashboard.png?v=1781432471"}
+  ],
+  "doNotUseAs": ["collage", "background collage", "model source asset", "final embedded screenshot UI"],
+  "useAs": ["route design reference", "visual QA target", "layout specification", "style specification"]
+}
