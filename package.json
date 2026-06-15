@@ -1,1 +1,21 @@
-{"scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"next lint","typecheck":"tsc --noEmit"},"dependencies":{"@supabase/supabase-js":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{"@types/node":"latest","@types/react":"latest","typescript":"latest"}}
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test:eden-workflow": "node scripts/eden-workflow-smoke-test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "typescript": "latest"
+  }
+}
