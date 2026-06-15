@@ -14,6 +14,20 @@ const DAILY_SEQUENCE = [
 ]
 
 export async function GET(request: Request) {
+  const authorization = getCronAuthorizationState(request)
+
+  if (!authorization.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        system: "eden-skye-generator-tick",
+        liveMutationLocked: true,
+        error: authorization.error
+      },
+      { status: authorization.status }
+    )
+  }
+
   const url = new URL(request.url)
   const workflowId = url.searchParams.get("workflowId")
 
@@ -30,6 +44,32 @@ export async function GET(request: Request) {
     ok: true,
     system: "eden-skye-generator-tick",
     liveMutationLocked: true,
+    dryRunForced: true,
+    cronAuthorization: authorization.mode,
     receipts
   })
+}
+
+function getCronAuthorizationState(request: Request):
+  | { allowed: true; mode: "authorized_cron" | "preview_manual_validation" }
+  | { allowed: false; status: 401 | 503; error: string } {
+  const cronSecret = process.env.CRON_SECRET?.trim()
+  const authHeader = request.headers.get("authorization")
+  const isProduction = process.env.VERCEL_ENV === "production"
+
+  if (cronSecret) {
+    if (authHeader === `Bearer ${cronSecret}`) {
+      return { allowed: true, mode: "authorized_cron" }
+    }
+
+    if (isProduction) {
+      return { allowed: false, status: 401, error: "Unauthorized cron request." }
+    }
+  }
+
+  if (isProduction) {
+    return { allowed: false, status: 503, error: "CRON_SECRET is required for production cron execution." }
+  }
+
+  return { allowed: true, mode: "preview_manual_validation" }
 }
