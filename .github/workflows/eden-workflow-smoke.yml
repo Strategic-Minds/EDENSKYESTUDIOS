@@ -1,0 +1,31 @@
+name: Eden Workflow Smoke
+
+on:
+  pull_request:
+    paths:
+      - "src/lib/eden-workflow.ts"
+      - "app/api/workflows/eden-skye-autonomous-generator/route.ts"
+      - "app/api/cron/eden-skye-generator-tick/route.ts"
+      - "scripts/eden-workflow-smoke-test.mjs"
+      - "package.json"
+      - ".github/workflows/eden-workflow-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Eden workflow smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run smoke test
+        run: npm run test:eden-workflow
