@@ -47,21 +47,53 @@ export const EDEN_WORKFLOWS: WorkflowDefinition[] = [
   { id: "investor_report_draft", title: "Investor Report Draft", purpose: "Create evidence-backed investor/mentor update draft.", riskClass: "draft_write", outputs: ["investor_report_draft", "receipt"] }
 ]
 
-const LOCKED_ACTIONS = new Set([
-  "production_deploy",
-  "live_shopify_mutation",
-  "live_payment_activation",
-  "public_social_publishing",
-  "production_database_mutation",
-  "drive_rename_copy_promotion",
-  "production_manifest_mutation",
-  "paid_generation_burst",
-  "destructive_delete",
-  "secret_exposure"
-])
+type LockedActionRule = {
+  id: string
+  phrases: string[]
+}
+
+const LOCKED_ACTION_RULES: LockedActionRule[] = [
+  { id: "production_deploy", phrases: ["production deploy", "deploy production", "prod deploy", "promote production", "production promotion", "ship live", "go live"] },
+  { id: "live_shopify_mutation", phrases: ["live shopify", "shopify mutation", "publish product", "update product", "create product", "set inventory", "discount live"] },
+  { id: "live_payment_activation", phrases: ["live payment", "activate payment", "create payment link", "finalize invoice", "charge customer", "stripe live"] },
+  { id: "public_social_publishing", phrases: ["public social", "publish social", "post social", "go public", "publish instagram", "publish tiktok", "publish youtube"] },
+  { id: "production_database_mutation", phrases: ["production database", "prod database", "database mutation", "apply migration", "execute sql", "write database"] },
+  { id: "drive_rename_copy_promotion", phrases: ["drive rename", "drive copy", "drive promotion", "promote drive", "rename file", "copy file"] },
+  { id: "production_manifest_mutation", phrases: ["production manifest", "manifest mutation", "update manifest", "promote manifest", "green status"] },
+  { id: "paid_generation_burst", phrases: ["paid generation", "generation burst", "spend credits", "paid run", "buy credits"] },
+  { id: "destructive_delete", phrases: ["destructive delete", "delete production", "hard delete", "drop table", "remove live"] },
+  { id: "secret_exposure", phrases: ["secret exposure", "expose secret", "return secret", "print secret", "show api key", "show token", "leak secret"] }
+]
+
+const LOCKED_ACTION_IDS = new Set(LOCKED_ACTION_RULES.map((rule) => rule.id))
 
 export function getWorkflowDefinition(workflowId: string) {
   return EDEN_WORKFLOWS.find((workflow) => workflow.id === workflowId)
+}
+
+export function findLockedActionMatches(payload: unknown): string[] {
+  const candidates = collectStringCandidates(payload)
+  const matches = new Set<string>()
+
+  for (const candidate of candidates) {
+    const normalized = normalizeActionText(candidate)
+
+    for (const rule of LOCKED_ACTION_RULES) {
+      if (LOCKED_ACTION_IDS.has(normalized.replace(/ /g, "_"))) {
+        matches.add(normalized.replace(/ /g, "_"))
+      }
+
+      if (rule.id === candidate || rule.id === normalized.replace(/ /g, "_")) {
+        matches.add(rule.id)
+      }
+
+      if (rule.phrases.some((phrase) => normalized.includes(normalizeActionText(phrase)))) {
+        matches.add(rule.id)
+      }
+    }
+  }
+
+  return Array.from(matches).sort()
 }
 
 export function runEdenWorkflow(input: {
@@ -71,13 +103,11 @@ export function runEdenWorkflow(input: {
   payload?: Record<string, unknown>
 }): WorkflowReceipt {
   const workflow = getWorkflowDefinition(input.workflowId)
-  const timestamp = new Date().toISOString()
-  const runId = `${input.workflowId}-${timestamp.replace(/[:.]/g, "-")}`
 
   if (!workflow) {
     return createReceipt({
       workflow: { id: input.workflowId, title: "Unknown workflow", purpose: "Unknown workflow", riskClass: "read_only", outputs: [] },
-      input,
+      input: { ...input, dryRun: true },
       status: "blocked",
       outputs: {},
       evidence: [],
@@ -86,16 +116,16 @@ export function runEdenWorkflow(input: {
     })
   }
 
-  const requestedActions = Array.isArray(input.payload?.actions) ? (input.payload.actions as string[]) : []
-  const blockedActions = requestedActions.filter((action) => LOCKED_ACTIONS.has(action))
+  const safeInput = { ...input, dryRun: true }
+  const blockedActions = findLockedActionMatches(safeInput.payload ?? {})
 
   if (blockedActions.length > 0 || workflow.riskClass === "approval_required" || workflow.riskClass === "forbidden_without_explicit_operator_override") {
     return createReceipt({
       workflow,
-      input,
+      input: safeInput,
       status: "blocked",
       outputs: { blockedActions },
-      evidence: [`Gate evaluated for ${workflow.id}`],
+      evidence: [`Gate evaluated for ${workflow.id}`, "Locked-action aliases and nested payload strings were scanned"],
       blockers: blockedActions.length ? blockedActions : [`Workflow ${workflow.id} requires approval.`],
       nextAction: "Request explicit operator approval before attempting this action."
     })
@@ -103,18 +133,19 @@ export function runEdenWorkflow(input: {
 
   return createReceipt({
     workflow,
-    input,
+    input: safeInput,
     status: "passed",
     outputs: {
       workflowTitle: workflow.title,
       plannedOutputs: workflow.outputs,
-      dryRun: input.dryRun ?? true,
+      dryRun: true,
       note: "Sandbox/preview-safe workflow scaffold receipt completed."
     },
     evidence: [
       `Workflow registry contains ${workflow.id}`,
       `Risk class ${workflow.riskClass} allowed without live mutation`,
-      "No live mutation performed"
+      "No live mutation performed",
+      "Dry-run mode forced by preview workflow runner"
     ],
     blockers: [],
     nextAction: "Persist receipt, hand to validator, and continue next scheduled workflow."
@@ -150,7 +181,7 @@ function createReceipt({
     status,
     inputs: {
       trigger: input.trigger,
-      dryRun: input.dryRun ?? true,
+      dryRun: true,
       payload: input.payload ?? {}
     },
     outputs,
@@ -161,4 +192,32 @@ function createReceipt({
     approval_reference: null,
     next_action: nextAction
   }
+}
+
+function collectStringCandidates(value: unknown): string[] {
+  if (typeof value === "string") {
+    return [value]
+  }
+
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => collectStringCandidates(item))
+  }
+
+  if (value && typeof value === "object") {
+    return Object.entries(value as Record<string, unknown>).flatMap(([key, nestedValue]) => [
+      key,
+      ...collectStringCandidates(nestedValue)
+    ])
+  }
+
+  return []
+}
+
+function normalizeActionText(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
 }
