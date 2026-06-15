@@ -8,6 +8,7 @@ export async function GET() {
     system: "eden-skye-autonomous-generator-validation-loop",
     roleModel: "one_operating_agent_one_independent_validator",
     liveMutationLocked: true,
+    dryRunForced: true,
     workflows: EDEN_WORKFLOWS
   })
 }
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
   const receipt = runEdenWorkflow({
     workflowId: body.workflowId ?? "source_truth_reconciliation",
     trigger: body.trigger ?? "manual",
-    dryRun: body.dryRun ?? true,
+    dryRun: true,
     payload: body.payload ?? {}
   })
 
