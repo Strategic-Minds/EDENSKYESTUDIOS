@@ -1,6 +1,18 @@
 name: Recursive Autonomy Validation
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/recursive-autonomy-validation.yml"
+      - "scripts/validate-recursive-completion-routes.mjs"
+      - "src/lib/recursive-completion.ts"
+      - "app/api/recursive-completion/readiness/route.ts"
+      - "app/api/cron/recursive-completion-dry-run/route.ts"
+      - "AUTO_SYSTEM_MANIFEST.json"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
     inputs:
       base_url:
