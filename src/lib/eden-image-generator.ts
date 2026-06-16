@@ -338,7 +338,7 @@ async function generateReferenceEdit(
     formData.set('output_format', 'png')
     formData.set('n', '1')
 
-    const referenceImages = await fetchReferenceImageBlobs(prompt.sourceImageIds.slice(0, 2))
+    const referenceImages = await fetchReferenceImageBlobs(prompt.sourceImageIds.slice(0, referenceImageCount(prompt)))
     for (const image of referenceImages) {
       formData.append('image[]', image.blob, image.fileName)
     }
@@ -357,6 +357,13 @@ async function generateReferenceEdit(
   } catch (error) {
     return blocked(prompt, `Reference-image generation failed: ${describePersistenceError(error)}`)
   }
+}
+
+function referenceImageCount(prompt: EdenImagePrompt) {
+  const requestedCount = Number(process.env.EDEN_IMAGE_REFERENCE_COUNT ?? '')
+  if (Number.isFinite(requestedCount) && requestedCount > 0) return Math.min(Math.floor(requestedCount), prompt.sourceImageIds.length)
+  if (prompt.assetType === 'identity_lock') return Math.min(2, prompt.sourceImageIds.length)
+  return 1
 }
 
 async function generateTextImage(
