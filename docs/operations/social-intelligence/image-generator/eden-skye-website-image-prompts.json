@@ -1,0 +1,98 @@
+{
+  "version": "2026-06-16.1",
+  "status": "implemented_for_draft_generation_pipeline",
+  "persona": "Eden Skye",
+  "source_images": [
+    {
+      "file_name": "01-eden-labeled-eden-skye.png",
+      "drive_file_id": "1lmOJBPF0G2wotinP7Q9iDiVqorZI8FQs",
+      "source_type": "labeled_source_portrait",
+      "approval_status": "approved_for_draft_generation"
+    },
+    {
+      "file_name": "01-eden-basic-eden-skye.png",
+      "drive_file_id": "1ndzEOsotXMhwU_XeSb--4ajZtg0nuZg7",
+      "source_type": "basic_source_portrait",
+      "approval_status": "approved_for_draft_generation"
+    }
+  ],
+  "output_policy": {
+    "default_status": "draft_ready_pending_review",
+    "public_use_allowed_by_default": false,
+    "approval_gate": "image_review_required"
+  },
+  "prompts": [
+    {
+      "id": "eden-web-hero-001",
+      "asset_type": "website_hero",
+      "placement": "homepage hero desktop",
+      "format": "16:9",
+      "objective": "Premium first-viewport brand signal for Eden Skye Studios.",
+      "prompt": "Create a cinematic luxury website hero image for Eden Skye Studios using Eden Skye as the identity anchor: original adult synthetic digital model, black studio environment, neon orchid rim light, champagne metallic accents, glossy reflections, premium fashion editorial pose, confident but warm expression, high-end AI avatar modeling agency atmosphere, no text, no logos, website-safe composition with clean negative space on the left for headline copy.",
+      "negative_prompt": "No celebrity likeness, no private-person imitation, no minors, no explicit content, no nudity, no readable text, no fake UI, no platform logos, no distorted hands, no extra faces, no low-quality stock-photo look."
+    },
+    {
+      "id": "eden-web-hero-mobile-001",
+      "asset_type": "website_hero",
+      "placement": "homepage hero mobile crop",
+      "format": "9:16",
+      "objective": "Mobile-first hero image for the Eden Skye homepage.",
+      "prompt": "Create a vertical cinematic Eden Skye Studios mobile hero image with Eden Skye centered as an original adult synthetic luxury creator, black studio, neon orchid rim lighting, champagne glow, editorial beauty and fashion styling, clean top and bottom space for mobile UI, high contrast, premium campaign energy, no text and no logos.",
+      "negative_prompt": "No celebrity likeness, no private-person imitation, no minors, no explicit content, no readable text, no platform logos, no cheap stock posing, no warped anatomy, no extra limbs."
+    },
+    {
+      "id": "eden-identity-lock-001",
+      "asset_type": "identity_lock",
+      "placement": "identity lock reference",
+      "format": "4:5",
+      "objective": "Identity-consistent reference image for future website and social assets.",
+      "prompt": "Create an identity-lock portrait for Eden Skye as an original adult synthetic AI creator and luxury digital model: face-forward editorial portrait, consistent facial identity, black and graphite glass background, neon orchid edge light, champagne highlights, premium beauty campaign styling, calm confident gaze, no text, no logos, no props competing with the face.",
+      "negative_prompt": "No celebrity likeness, no private-person imitation, no childlike features, no explicit content, no readable text, no logo marks, no face morphing, no duplicate faces, no distorted eyes."
+    },
+    {
+      "id": "eden-studio-control-room-001",
+      "asset_type": "lifestyle",
+      "placement": "AI content studio section",
+      "format": "16:9",
+      "objective": "Show Eden Skye Studios as a premium AI content control room.",
+      "prompt": "Create a luxury AI content studio scene with Eden Skye as an original adult synthetic creator standing near a sleek content control console, abstract glowing dashboards without readable text, black glass surfaces, neon orchid and champagne lighting, high-end campaign production mood, editorial composition, no visible brand logos.",
+      "negative_prompt": "No readable text, no real software logos, no celebrity likeness, no private-person imitation, no explicit content, no minors, no messy clutter, no cheap stock office lighting."
+    },
+    {
+      "id": "eden-luxury-closet-001",
+      "asset_type": "lifestyle",
+      "placement": "Eden closet / wardrobe section",
+      "format": "3:2",
+      "objective": "Website section image for fashion, wardrobe, and premium creator styling.",
+      "prompt": "Create a premium luxury closet scene for Eden Skye Studios with Eden Skye as an original adult synthetic model in brand-safe fashion styling, black wardrobe rails, champagne metal hardware, neon orchid accent lighting, elegant editorial styling, upscale textures, no text, no logos, website-ready composition.",
+      "negative_prompt": "No explicit wardrobe, no nudity, no minors, no celebrity likeness, no private-person imitation, no readable labels, no brand logos, no distorted clothing."
+    },
+    {
+      "id": "eden-campaign-card-001",
+      "asset_type": "portfolio_portrait",
+      "placement": "model campaign card",
+      "format": "4:5",
+      "objective": "Campaign card image for the Models and Services sections.",
+      "prompt": "Create a premium model campaign card for Eden Skye Studios with Eden Skye as an original adult synthetic fashion model, waist-up editorial pose, black studio, neon orchid rim light, champagne highlights, polished luxury beauty campaign look, clean background, no text, no logos.",
+      "negative_prompt": "No celebrity likeness, no private-person imitation, no minors, no explicit content, no readable text, no extra faces, no distorted hands, no plastic skin."
+    },
+    {
+      "id": "eden-black-card-001",
+      "asset_type": "background_context",
+      "placement": "black card / membership visual",
+      "format": "16:9",
+      "objective": "Premium membership section visual without exposing payment or live offer details.",
+      "prompt": "Create a dark luxury membership visual for Eden Skye Studios: elegant black card-inspired object on glossy black surface, champagne edge light, neon orchid glow, Eden Skye presence implied through silhouette/reflection only, premium invitation mood, no readable text, no logos, no payment network marks.",
+      "negative_prompt": "No readable text, no payment logos, no credit card numbers, no explicit content, no celebrity likeness, no fake legal claims, no clutter."
+    },
+    {
+      "id": "eden-og-image-001",
+      "asset_type": "website_hero",
+      "placement": "Open Graph / social share image",
+      "format": "16:9",
+      "objective": "Share-preview image for Eden Skye Studios pages.",
+      "prompt": "Create a clean Open Graph image for Eden Skye Studios featuring Eden Skye as an original adult synthetic luxury creator in a black studio with neon orchid rim light and champagne accents. Strong central subject, crisp silhouette, premium campaign feel, no text, no logos, safe for social preview cropping.",
+      "negative_prompt": "No text, no logos, no celebrity likeness, no private-person imitation, no minors, no explicit content, no distorted face, no clutter."
+    }
+  ]
+}
