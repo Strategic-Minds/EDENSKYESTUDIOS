@@ -1,6 +1,6 @@
 # Eden Skye Image Generator Environment Contract
 
-Status: implementation-ready draft generation path
+Status: active draft generation path
 Last updated: 2026-06-16
 
 ## Runtime purpose
@@ -22,25 +22,31 @@ Default governance:
 
 ## Required Vercel environment variables
 
-Set these before enabling draft generation:
+Direct OpenAI mode:
 
 ```bash
+EDEN_IMAGE_PROVIDER=openai
 EDEN_IMAGE_AUTOGENERATION_ENABLED=true
 OPENAI_API_KEY=...
+EDEN_IMAGE_MODEL=gpt-image-2
+EDEN_IMAGE_QUALITY=high
 ```
 
-If using Vercel AI Gateway or another OpenAI-compatible gateway, use:
+Vercel AI Gateway mode, if the gateway supports image edits:
 
 ```bash
+EDEN_IMAGE_PROVIDER=ai_gateway
+EDEN_IMAGE_AUTOGENERATION_ENABLED=true
 AI_GATEWAY_API_KEY=...
 AI_GATEWAY_BASE_URL=https://your-gateway.example/v1
+EDEN_IMAGE_MODEL=gpt-image-2
+EDEN_IMAGE_QUALITY=high
 ```
 
-Optional model and quality controls:
+Reference-image mode is on by default. To disable it and fall back to text-to-image only:
 
 ```bash
-EDEN_IMAGE_MODEL=gpt-image-1
-EDEN_IMAGE_QUALITY=medium
+EDEN_IMAGE_REFERENCE_MODE=off
 ```
 
 Production admin/manual route protection:
@@ -73,6 +79,14 @@ A matching `media_assets` row is inserted with:
 - `usage_scope`: `private_test`
 - `source_tool`: `eden-skye-website-image-generator`
 
+If the UI shows `Storage warning: Bucket not found`, either create the configured Supabase bucket or set:
+
+```bash
+EDEN_IMAGE_SAVE_MEDIA_ASSETS=false
+```
+
+Generation can still work without storage persistence, but generated images only remain visible in the current UI response.
+
 ## Routes
 
 Manual/admin route:
@@ -90,7 +104,7 @@ Request body:
 or:
 
 ```json
-{ "mode": "generate", "limit": 8 }
+{ "mode": "generate", "limit": 1 }
 ```
 
 Production authorization header:
@@ -99,17 +113,23 @@ Production authorization header:
 Authorization: Bearer <EDEN_IMAGE_GENERATOR_ADMIN_TOKEN>
 ```
 
+In-app decision route:
+
+```text
+POST /api/media/eden-image-generator/decision
+```
+
 Cron route:
 
 ```text
 GET /api/cron/eden-image-generator
 ```
 
-Cron default is validation-only. To allow cron generation, set:
+Cron default is validation-only. If cron generation is enabled, it defaults to one image unless `EDEN_IMAGE_CRON_LIMIT` is set:
 
 ```bash
 EDEN_IMAGE_CRON_MODE=generate
-EDEN_IMAGE_CRON_LIMIT=8
+EDEN_IMAGE_CRON_LIMIT=1
 ```
 
 ## Admin UI
@@ -127,8 +147,11 @@ It shows:
 - The website image prompt queue.
 - Generated draft images returned by the pipeline.
 - Storage path and media asset ID when persistence succeeds.
-- Blocker messages when env gates are incomplete.
+- Storage warnings when persistence fails.
+- In-app approve, revise, and reject decisions.
 
 ## Current implementation note
 
-The current generator sends the approved Eden Skye source image IDs as identity metadata in the image prompt package. It does not yet fetch the source image bytes and send them as multipart image-edit references. If stricter face/identity anchoring is required, the next implementation pass should add a reference-image edit mode using the approved Drive images as actual input image files.
+The current generator uses the approved Eden Skye source images as actual reference-image inputs for all person-based prompts. The membership/still-life visual intentionally uses text-to-image because it should not show Eden Skye directly.
+
+The first quality target is identity consistency. After identity is stable, tune prompt variety one image at a time with `Generate 1 draft` before scaling to the full queue.
