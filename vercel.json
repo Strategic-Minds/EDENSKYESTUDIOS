@@ -13,6 +13,10 @@
     {
       "path": "/api/cron/eden-skye-generator-tick",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/recursive-completion-dry-run",
+      "schedule": "30 * * * *"
     }
   ]
 }

@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.0.0",
+  "status": "draft_governed_manifest",
+  "last_updated": "2026-06-16",
+  "purpose": "Machine-readable operating manifest for recursive Eden Skye Studios completion, validation, draft generation, and governed self-healing.",
+  "authority": {
+    "drive_canon_priority": 1,
+    "auto_builder_orchestration_priority": 2,
+    "eden_repo_implementation_priority": 3,
+    "parent_enterprise_command_folder": {
+      "name": "V2 MASTER AUTO BUILDER",
+      "drive_folder_id": "13uLhv0NRhmdCdJCCLrroLzyRRttoXtpr",
+      "url": "https://drive.google.com/drive/folders/13uLhv0NRhmdCdJCCLrroLzyRRttoXtpr"
+    },
+    "eden_os_drive_canon": {
+      "name": "EDEN_SKYE_STUDIOS_OS",
+      "drive_folder_id": "1oCEjD6kUm9FiYDh1w-dNE9PPiggj65MQ",
+      "url": "https://drive.google.com/drive/folders/1oCEjD6kUm9FiYDh1w-dNE9PPiggj65MQ"
+    },
+    "eden_repo": "Strategic-Minds/EDENSKYESTUDIOS",
+    "auto_builder_repo": "Strategic-Minds/AUTO_BUILDER"
+  },
+  "autonomy_policy": {
+    "operating_mode": "governed_recursive_autonomy",
+    "default_behavior": "detect_generate_validate_receipt_queue",
+    "allowed_without_human_approval": [
+      "read_only_drive_and_repo_audit",
+      "canon_drift_detection",
+      "missing_doc_detection",
+      "draft_document_generation",
+      "draft_prompt_generation",
+      "draft_content_calendar_generation",
+      "draft_image_queue_generation",
+      "non_authority_index_updates",
+      "validation_receipt_creation",
+      "blocker_record_creation",
+      "github_issue_creation_for_tracked_gaps",
+      "draft_pull_request_creation_for_docs_or_preview_safe_changes"
+    ],
+    "protected_actions_requiring_explicit_approval": [
+      "production_deploy",
+      "shopify_mutation",
+      "public_publishing",
+      "payment_pricing_subscription_discount_or_checkout_change",
+      "live_heygen_avatar_or_video_chat_action",
+      "supabase_production_migration_or_service_role_write",
+      "drive_parent_sharing_delete_or_destructive_move",
+      "destructive_github_write_merge_force_push_delete_or_production_triggering_workflow",
+      "secret_or_permission_change",
+      "paid_generation_burst"
+    ],
+    "approval_phrases": {
+      "production_deploy": "APPROVE PRODUCTION DEPLOY",
+      "eden_runtime_write": "APPROVE EDEN RUNTIME WRITE",
+      "eden_runtime_execute": "APPROVE EDEN RUNTIME EXECUTE",
+      "github_workflow_run": "APPROVE GITHUB WORKFLOW RUN"
+    }
+  },
+  "required_enterprise_documents": [
+    {
+      "key": "master_canon_index",
+      "repo_path": "docs/canon/MASTER_CANON_INDEX.md",
+      "drive_file_id": "1kPBzw6nLZQcht3EkhBiNunH8eT-rfLlb",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "business_operating_plan",
+      "repo_path": "docs/canon/BUSINESS_OPERATING_PLAN.md",
+      "drive_file_id": "1uyxi83QhKvAFozAKMEYK6jC7iGAuw7oY",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "business_growth_strategy",
+      "repo_path": "docs/canon/BUSINESS_GROWTH_STRATEGY.md",
+      "drive_file_id": "1dyoAzNZsiasFkEI4Z1ApYZsfjMSYzeq2",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "financial_system_plan",
+      "repo_path": "docs/canon/FINANCIAL_SYSTEM_PLAN.md",
+      "drive_file_id": "1zJeqxBqAlcZCn-MaqHuSj2KDrfciCK8n",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "automation_autonomy_roadmap",
+      "repo_path": "docs/canon/AUTOMATION_AUTONOMY_ROADMAP.md",
+      "drive_file_id": "1vCSqflqS0bUEvmJWiR8SopKa0nHdnIkr",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "discovery_validation_plan",
+      "repo_path": "docs/canon/DISCOVERY_VALIDATION_PLAN.md",
+      "drive_file_id": "1WumO4-osyvlQtXr6cT4ROXm6qiwtbni-",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "operations_24_7_runbook",
+      "repo_path": "docs/canon/OPERATIONS_24_7_RUNBOOK.md",
+      "drive_file_id": "1csO0lIJPmmu9iE_qM9dx0yB2rakaHOmx",
+      "required_state": "present_current_aligned"
+    },
+    {
+      "key": "cross_system_documentation_sync_policy",
+      "repo_path": "docs/canon/CROSS_SYSTEM_DOCUMENTATION_SYNC_POLICY.md",
+      "drive_file_id": "1D3x4umKyhUw-jW6ygM0AYK1nny2Vm1PY",
+      "required_state": "present_current_aligned"
+    }
+  ],
+  "required_system_elements": [
+    {
+      "key": "product_builder_docs",
+      "expected_surfaces": ["docs/", "docs/canon/", "Drive business/strategy folders"],
+      "auto_action_if_missing": "generate_draft_product_builder_index"
+    },
+    {
+      "key": "generator_specs",
+      "expected_surfaces": ["docs/autonomy/", "app/api/workflows/", "app/api/cron/"],
+      "auto_action_if_missing": "generate_draft_generator_spec"
+    },
+    {
+      "key": "image_assets_prompts_source_materials",
+      "expected_surfaces": ["Drive 07_IMAGE_VIDEO_FACTORY", "Drive 08_STOCK_IMAGE_MODEL_ASSETS", "docs/source-images/"],
+      "auto_action_if_missing": "generate_draft_image_prompt_manifest"
+    },
+    {
+      "key": "workflow_definitions_and_receipts",
+      "expected_surfaces": ["vercel.json", "docs/workflows/", "docs/release/", "Drive validation reports"],
+      "auto_action_if_missing": "create_workflow_receipt_gap_record"
+    },
+    {
+      "key": "cron_schedule_coverage",
+      "expected_surfaces": ["vercel.json", "app/api/cron/", "docs/canon/OPERATIONS_24_7_RUNBOOK.md"],
+      "auto_action_if_missing": "create_cron_gap_issue_or_draft"
+    },
+    {
+      "key": "vercel_readiness_preview_validation",
+      "expected_surfaces": ["/api/readiness", "Vercel preview receipts", "docs/release/"],
+      "auto_action_if_missing": "create_vercel_validation_receipt_request"
+    }
+  ],
+  "recursive_run_lanes": [
+    {
+      "lane": "hourly_readiness",
+      "cadence_target": "hourly",
+      "actions": ["read_readiness_routes", "check_cron_receipts", "write_receipt", "raise_blocker_if_failed"],
+      "protected": false
+    },
+    {
+      "lane": "daily_canon_drift",
+      "cadence_target": "daily",
+      "actions": ["read_drive_canon", "read_repo_canon", "compare_required_docs", "auto_generate_draft_missing_docs", "write_drift_receipt"],
+      "protected": false
+    },
+    {
+      "lane": "daily_generator_queue",
+      "cadence_target": "daily",
+      "actions": ["read_model_and_prompt_sources", "generate_draft_prompt_queue", "generate_draft_content_queue", "route_for_approval", "write_receipt"],
+      "protected": false
+    },
+    {
+      "lane": "weekly_business_discovery",
+      "cadence_target": "weekly",
+      "actions": ["read_business_and_financial_docs", "read_verified_kpis_if_available", "generate_draft_discovery_report", "write_receipt"],
+      "protected": false
+    },
+    {
+      "lane": "monthly_deep_governance_audit",
+      "cadence_target": "monthly",
+      "actions": ["full_drive_repo_audit", "permission_risk_readback", "provider_receipt_check", "readiness_score_update", "write_audit_report"],
+      "protected": false
+    }
+  ],
+  "receipt_schema": {
+    "required_fields": [
+      "receipt_id",
+      "timestamp_utc",
+      "lane",
+      "actor",
+      "scope",
+      "inputs_read",
+      "actions_attempted",
+      "actions_completed",
+      "protected_actions_blocked",
+      "artifacts_created",
+      "validation_result",
+      "blockers",
+      "next_actions"
+    ],
+    "storage_targets": ["Drive audit reports", "repo docs or PR body", "GitHub issue when tracked remediation is needed"]
+  },
+  "readiness_gate": {
+    "may_claim_full_autonomous_24_7": false,
+    "conditions_required_before_true": [
+      "drive_permissions_hardened_and_verified",
+      "required_docs_present_current_aligned",
+      "manifest_validated_against_drive_and_repo",
+      "repo_build_and_tests_pass_with_lockfile",
+      "vercel_preview_and_cron_receipts_exist",
+      "alerting_and_escalation_receipts_exist",
+      "image_content_pipeline_has_draft_qa_quarantine_approval_receipts",
+      "provider_bridges_have_read_write_execute_boundaries_and_rollback_receipts",
+      "protected_live_actions_remain_approval_gated"
+    ]
+  }
+}
