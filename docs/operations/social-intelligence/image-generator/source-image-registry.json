@@ -1,0 +1,42 @@
+{
+  "registry_name": "EDENSKYESTUDIOS Source Image Registry",
+  "version": "2026-06-16.1",
+  "source_manifest_file_id": "1Fyax7kefLjakP6HnkzSTW_BqRBq-kw1m",
+  "source_folder_id": "1KiQ9FMtJw4abWV4iK68i2poWwo3wsqKq",
+  "rules": {
+    "approved_status": "approved_labeled_source_portrait",
+    "blocked_statuses": ["generated_labeled_source_portrait_pending_operator_final_approval", "pending", "unknown", "rejected"],
+    "public_use_requires_rights_review": true,
+    "public_use_requires_operator_approval": true
+  },
+  "summary": {
+    "total_labeled_source_portraits": 13,
+    "approved_for_draft_generation": 12,
+    "blocked_pending_final_approval": 1,
+    "public_use_allowed_by_default": false
+  },
+  "blocked_models": [
+    {
+      "model_name": "Eden Skye",
+      "drive_file_id": "1lmOJBPF0G2wotinP7Q9iDiVqorZI8FQs",
+      "status": "generated_labeled_source_portrait_pending_operator_final_approval",
+      "generation_allowed": false,
+      "public_use_allowed": false,
+      "block_reason": "Pending operator final approval"
+    }
+  ],
+  "approved_models": [
+    {"model_name": "Luna Moretti", "drive_file_id": "1Sj7qZ4AyC5Z6raTn-jBbAyXrZmdbfM6s"},
+    {"model_name": "Sienna Cole", "drive_file_id": "1b96XaveaFbpMefJU0LqLynnXdPMZD0wh"},
+    {"model_name": "Natalia Vega", "drive_file_id": "1O4kmyxPV0ZUoHaYStT3z6LDGZ8ihcxHP"},
+    {"model_name": "Zoey Parker", "drive_file_id": "1o3rQz5HyQv1K3VVYrLGMialuI6fKYKN0"},
+    {"model_name": "Aria Reyes", "drive_file_id": "1PV3iAHFG_60im7kJS5rasZ5Uipu6osxR"},
+    {"model_name": "Camila Santos", "drive_file_id": "1EsvhPgD5FGUZgfhsd62v-t3LputeNqEf"},
+    {"model_name": "Hailey James", "drive_file_id": "14q5jM50Opev8dd2sLO6J1G17RmbnDz-K"},
+    {"model_name": "Isabella Ruiz", "drive_file_id": "1diQ9exuuGZzzFHJ12V9BlcZmm688zdzd"},
+    {"model_name": "Viviana Osa", "drive_file_id": "1ybdrAJ-7mSIJnDMeauKz5La9WfLZ__uU"},
+    {"model_name": "Kayla Brooks", "drive_file_id": "1b541ukh6qk6xeSqWT1cd0pCfnpvGFpiI"},
+    {"model_name": "Raven Hart", "drive_file_id": "1PHvFtFP2HupO_nFqVsv5XTXP6SJkx6-I"},
+    {"model_name": "Alexa Monroe", "drive_file_id": "1B-VCCO_z5c78bq1GKSfqi7jhrnqCx17d"}
+  ]
+}
