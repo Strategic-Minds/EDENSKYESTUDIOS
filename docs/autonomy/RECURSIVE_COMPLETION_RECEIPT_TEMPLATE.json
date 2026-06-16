@@ -1,0 +1,26 @@
+{
+  "receipt_id": "recursive-YYYYMMDDTHHMMSSZ-lane-name",
+  "timestamp_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "lane": "hourly_readiness|daily_canon_drift|daily_generator_queue|weekly_business_discovery|monthly_deep_governance_audit",
+  "actor": "Drive Governance Agent",
+  "scope": {
+    "drive_folders": [],
+    "repositories": [],
+    "branches": [],
+    "routes": [],
+    "providers": []
+  },
+  "inputs_read": [],
+  "actions_attempted": [],
+  "actions_completed": [],
+  "protected_actions_blocked": [],
+  "artifacts_created": [],
+  "validation_result": {
+    "status": "blocked",
+    "evidence": [],
+    "notes": ""
+  },
+  "blockers": [],
+  "next_actions": [],
+  "canonical_storage": []
+}
