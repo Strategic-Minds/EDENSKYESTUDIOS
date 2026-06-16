@@ -46,11 +46,34 @@ export async function logEdenReceipt(input: EdenReceiptInput) {
     if (error) throw error;
     return { source: 'supabase' as const, data };
   } catch (error) {
-    console.error('Eden receipt failed', error);
+    const message = describeReceiptError(error);
+    console.error('Eden receipt failed', message);
     return {
       source: 'failed' as const,
       data: receipt,
-      error: error instanceof Error ? error.message : 'Unknown receipt logging error'
+      error: message
     };
   }
+}
+
+function describeReceiptError(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (error && typeof error === 'object') {
+    const maybeMessage = 'message' in error ? error.message : undefined;
+    const maybeCode = 'code' in error ? error.code : undefined;
+    const maybeDetails = 'details' in error ? error.details : undefined;
+    const maybeHint = 'hint' in error ? error.hint : undefined;
+
+    return JSON.stringify({
+      message: maybeMessage,
+      code: maybeCode,
+      details: maybeDetails,
+      hint: maybeHint
+    });
+  }
+
+  return String(error);
 }
