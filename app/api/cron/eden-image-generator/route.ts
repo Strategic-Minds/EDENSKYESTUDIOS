@@ -22,7 +22,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const requestedMode = url.searchParams.get('mode')
   const mode = requestedMode === 'generate' || process.env.EDEN_IMAGE_CRON_MODE === 'generate' ? 'generate' : 'validate'
-  const limit = Number(url.searchParams.get('limit') ?? process.env.EDEN_IMAGE_CRON_LIMIT ?? '') || undefined
+  const configuredLimit = Number(url.searchParams.get('limit') ?? process.env.EDEN_IMAGE_CRON_LIMIT ?? '') || undefined
+  const limit = mode === 'generate' ? configuredLimit ?? 1 : configuredLimit
   const result = await runEdenImagePipeline({ mode, limit, trigger: 'cron' })
 
   return NextResponse.json({
