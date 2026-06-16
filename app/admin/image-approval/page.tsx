@@ -24,14 +24,14 @@ const sourceImages = [
 ]
 
 const promptQueue = [
-  { id: 'eden-web-hero-001', placement: 'Homepage hero desktop', format: '16:9', assetType: 'website_hero', objective: 'Premium first-viewport brand signal for Eden Skye Studios.' },
-  { id: 'eden-web-hero-mobile-001', placement: 'Homepage hero mobile crop', format: '9:16', assetType: 'website_hero', objective: 'Mobile-first hero image for the Eden Skye homepage.' },
-  { id: 'eden-identity-lock-001', placement: 'Identity lock reference', format: '4:5', assetType: 'identity_lock', objective: 'Identity-consistent reference image for future website and social assets.' },
-  { id: 'eden-studio-control-room-001', placement: 'AI content studio section', format: '16:9', assetType: 'lifestyle', objective: 'Show Eden Skye Studios as a premium AI content control room.' },
-  { id: 'eden-luxury-closet-001', placement: 'Eden closet / wardrobe section', format: '3:2', assetType: 'lifestyle', objective: 'Website section image for fashion, wardrobe, and premium creator styling.' },
-  { id: 'eden-campaign-card-001', placement: 'Model campaign card', format: '4:5', assetType: 'portfolio_portrait', objective: 'Campaign card image for the Models and Services sections.' },
+  { id: 'eden-web-hero-001', placement: 'Homepage hero desktop', format: '16:9', assetType: 'website_hero', objective: 'Photoreal premium first-viewport brand signal for Eden Skye Studios.' },
+  { id: 'eden-web-hero-mobile-001', placement: 'Homepage hero mobile crop', format: '9:16', assetType: 'website_hero', objective: 'Photoreal mobile-first hero image for the Eden Skye homepage.' },
+  { id: 'eden-identity-lock-001', placement: 'Identity lock reference', format: '4:5', assetType: 'identity_lock', objective: 'Photoreal identity-consistent reference image for future website and social assets.' },
+  { id: 'eden-studio-control-room-001', placement: 'AI content studio section', format: '16:9', assetType: 'lifestyle', objective: 'Photoreal premium AI content control room image.' },
+  { id: 'eden-luxury-closet-001', placement: 'Eden closet / wardrobe section', format: '3:2', assetType: 'lifestyle', objective: 'Photoreal website section image for fashion, wardrobe, and premium creator styling.' },
+  { id: 'eden-campaign-card-001', placement: 'Model campaign card', format: '4:5', assetType: 'portfolio_portrait', objective: 'Photoreal campaign card image for the Models and Services sections.' },
   { id: 'eden-black-card-001', placement: 'Black card / membership visual', format: '16:9', assetType: 'background_context', objective: 'Premium membership section visual without exposing payment or live offer details.' },
-  { id: 'eden-og-image-001', placement: 'Open Graph / social share image', format: '16:9', assetType: 'website_hero', objective: 'Share-preview image for Eden Skye Studios pages.' }
+  { id: 'eden-og-image-001', placement: 'Open Graph / social share image', format: '16:9', assetType: 'website_hero', objective: 'Photoreal share-preview image for Eden Skye Studios pages.' }
 ]
 
 const reviewSets = [
@@ -64,6 +64,7 @@ type GeneratedImage = {
   mediaAssetId?: string
   persistenceStatus?: 'stored' | 'skipped' | 'failed'
   persistenceError?: string
+  generationMethod?: 'reference_edit' | 'text_generation'
   blockedReason?: string
 }
 
@@ -75,6 +76,7 @@ type PipelineResponse = {
     enabled: boolean
     apiKeyConfigured: boolean
     providerBaseUrlConfigured?: boolean
+    referenceImageMode?: boolean
     persistenceEnabled?: boolean
     storageBucketConfigured?: boolean
     blockers: string[]
@@ -85,6 +87,14 @@ type PipelineResponse = {
   error?: string
 }
 
+type Decision = 'approve' | 'revise' | 'reject'
+
+type DecisionState = {
+  decision: Decision
+  status: 'saved' | 'failed'
+  message: string
+}
+
 function thumbnail(fileId: string, size = 900) {
   return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`
 }
@@ -93,34 +103,21 @@ function driveView(fileId: string) {
   return `https://drive.google.com/file/d/${fileId}/view`
 }
 
-function approvalMailto(action: 'approve' | 'revise', title: string) {
-  const subject = encodeURIComponent(`Eden Skye image ${action}: ${title}`)
-  const body = encodeURIComponent([
-    `Decision: ${action}`,
-    `Image: ${title}`,
-    'Scope: Eden Skye branded website image generator',
-    'Notes:'
-  ].join('\n'))
-
-  return `mailto:strategicmindsadvisory@gmail.com?subject=${subject}&body=${body}`
-}
-
 export default function ImageApprovalPage() {
   const [pipeline, setPipeline] = useState<PipelineResponse | null>(null)
-  const [busy, setBusy] = useState<'validate' | 'generate' | null>(null)
+  const [busy, setBusy] = useState<'validate' | 'generate-one' | 'generate-all' | null>(null)
   const [operatorToken, setOperatorToken] = useState('')
+  const [decisions, setDecisions] = useState<Record<string, DecisionState>>({})
 
-  async function runPipeline(mode: 'validate' | 'generate') {
-    setBusy(mode)
+  async function runPipeline(mode: 'validate' | 'generate', limit?: number) {
+    const busyState = mode === 'validate' ? 'validate' : limit === 1 ? 'generate-one' : 'generate-all'
+    setBusy(busyState)
     try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-      const token = operatorToken.trim()
-      if (token) headers.Authorization = `Bearer ${token}`
-
+      const headers = buildHeaders()
       const response = await fetch('/api/media/eden-image-generator', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ mode })
+        body: JSON.stringify({ mode, limit })
       })
       const payload = await response.json()
       setPipeline(payload)
@@ -129,6 +126,42 @@ export default function ImageApprovalPage() {
     } finally {
       setBusy(null)
     }
+  }
+
+  async function submitDecision(input: { promptId: string; placement: string; decision: Decision; mediaAssetId?: string }) {
+    const label = input.decision === 'approve' ? 'Approved for next review step' : input.decision === 'revise' ? 'Revision requested' : 'Rejected'
+    setDecisions((current) => ({ ...current, [input.promptId]: { decision: input.decision, status: 'saved', message: `${label} locally...` } }))
+
+    try {
+      const response = await fetch('/api/media/eden-image-generator/decision', {
+        method: 'POST',
+        headers: buildHeaders(),
+        body: JSON.stringify(input)
+      })
+      const payload = await response.json()
+
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error ?? 'Decision was not saved.')
+      }
+
+      setDecisions((current) => ({ ...current, [input.promptId]: { decision: input.decision, status: 'saved', message: label } }))
+    } catch (error) {
+      setDecisions((current) => ({
+        ...current,
+        [input.promptId]: {
+          decision: input.decision,
+          status: 'failed',
+          message: error instanceof Error ? error.message : 'Decision failed.'
+        }
+      }))
+    }
+  }
+
+  function buildHeaders() {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    const token = operatorToken.trim()
+    if (token) headers.Authorization = `Bearer ${token}`
+    return headers
   }
 
   const generatedByPrompt = new Map((pipeline?.generated ?? []).map((image) => [image.promptId, image]))
@@ -145,7 +178,7 @@ export default function ImageApprovalPage() {
         </div>
         <div className="statusPanel">
           <span>Generator mode</span>
-          <strong>Draft pipeline</strong>
+          <strong>Reference-photo drafts</strong>
           <small>No live publish, paid scale run, or public asset use without final approval.</small>
         </div>
       </header>
@@ -153,8 +186,8 @@ export default function ImageApprovalPage() {
       <section className="controlBar" aria-label="Image generator controls">
         <div>
           <p className="eyebrow">Pipeline Controls</p>
-          <h2>Validate or generate draft website images</h2>
-          <p>Generation requires <code>EDEN_IMAGE_AUTOGENERATION_ENABLED=true</code> plus an OpenAI or AI Gateway key. Use the admin token only when production auth is enabled.</p>
+          <h2>Validate or generate photoreal draft images</h2>
+          <p>Use <code>Generate 1 draft</code> first. The upgraded pipeline uses the approved Eden Skye portraits as reference images.</p>
         </div>
         <div className="controlActions">
           <label>
@@ -163,12 +196,13 @@ export default function ImageApprovalPage() {
               type="password"
               value={operatorToken}
               onChange={(event) => setOperatorToken(event.target.value)}
-              placeholder="Optional in preview"
+              placeholder="Required in production"
               autoComplete="off"
             />
           </label>
           <button type="button" onClick={() => runPipeline('validate')} disabled={busy !== null}>{busy === 'validate' ? 'Validating...' : 'Validate queue'}</button>
-          <button type="button" className="primaryButton" onClick={() => runPipeline('generate')} disabled={busy !== null}>{busy === 'generate' ? 'Generating...' : 'Generate drafts'}</button>
+          <button type="button" className="primaryButton" onClick={() => runPipeline('generate', 1)} disabled={busy !== null}>{busy === 'generate-one' ? 'Generating...' : 'Generate 1 draft'}</button>
+          <button type="button" onClick={() => runPipeline('generate')} disabled={busy !== null}>{busy === 'generate-all' ? 'Generating...' : 'Generate all drafts'}</button>
         </div>
       </section>
 
@@ -179,7 +213,7 @@ export default function ImageApprovalPage() {
           {pipeline.error ? <p>{pipeline.error}</p> : null}
           {pipeline.readiness && (
             <span>
-              Enabled: {String(pipeline.readiness.enabled)} | API key: {String(pipeline.readiness.apiKeyConfigured)} | Storage: {String(pipeline.readiness.persistenceEnabled && pipeline.readiness.storageBucketConfigured)}
+              Enabled: {String(pipeline.readiness.enabled)} | API key: {String(pipeline.readiness.apiKeyConfigured)} | Reference images: {String(pipeline.readiness.referenceImageMode)} | Storage: {String(pipeline.readiness.persistenceEnabled && pipeline.readiness.storageBucketConfigured)}
             </span>
           )}
           {pipeline.readiness?.blockers?.length ? <p>{pipeline.readiness.blockers.join(' | ')}</p> : null}
@@ -188,42 +222,47 @@ export default function ImageApprovalPage() {
       )}
 
       <section className="imageGrid" aria-label="Eden Skye approved source images">
-        {sourceImages.map((image) => (
-          <article className="imageCard" key={image.driveFileId}>
-            <a className="imageFrame" href={driveView(image.driveFileId)} target="_blank" rel="noreferrer">
-              <img src={thumbnail(image.driveFileId)} alt={image.title} />
-            </a>
-            <div className="cardBody">
-              <div className="cardTopline">
-                <span className="pill">{image.status}</span>
-                <span className="sourceType">{image.sourceType}</span>
+        {sourceImages.map((image) => {
+          const decision = decisions[image.driveFileId]
+          return (
+            <article className="imageCard" key={image.driveFileId}>
+              <a className="imageFrame" href={driveView(image.driveFileId)} target="_blank" rel="noreferrer">
+                <img src={thumbnail(image.driveFileId)} alt={image.title} />
+              </a>
+              <div className="cardBody">
+                <div className="cardTopline">
+                  <span className="pill">{image.status}</span>
+                  <span className="sourceType">{image.sourceType}</span>
+                </div>
+                <h2>{image.title}</h2>
+                <p className="fileName">{image.fileName}</p>
+                <p>{image.usage}</p>
+                <dl>
+                  <div><dt>Drive ID</dt><dd>{image.driveFileId}</dd></div>
+                  <div><dt>Generator state</dt><dd>{image.generatorState}</dd></div>
+                </dl>
+                {decision ? <p className={decision.status === 'failed' ? 'blockedReason' : 'decisionMessage'}>{decision.message}</p> : null}
+                <div className="actions">
+                  <button type="button" className="primary" onClick={() => submitDecision({ promptId: image.driveFileId, placement: image.title, decision: 'approve' })}>Approve</button>
+                  <button type="button" className="secondary" onClick={() => submitDecision({ promptId: image.driveFileId, placement: image.title, decision: 'revise' })}>Request revision</button>
+                  <a className="link" href={driveView(image.driveFileId)} target="_blank" rel="noreferrer">Open in Drive</a>
+                </div>
               </div>
-              <h2>{image.title}</h2>
-              <p className="fileName">{image.fileName}</p>
-              <p>{image.usage}</p>
-              <dl>
-                <div><dt>Drive ID</dt><dd>{image.driveFileId}</dd></div>
-                <div><dt>Generator state</dt><dd>{image.generatorState}</dd></div>
-              </dl>
-              <div className="actions">
-                <a className="primary" href={approvalMailto('approve', image.title)}>Approve</a>
-                <a className="secondary" href={approvalMailto('revise', image.title)}>Request revision</a>
-                <a className="link" href={driveView(image.driveFileId)} target="_blank" rel="noreferrer">Open in Drive</a>
-              </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          )
+        })}
       </section>
 
       <section className="promptSection" aria-label="Website generated image approval queue">
         <div className="sectionHeader">
           <p className="eyebrow">Website Image Queue</p>
           <h2>Draft outputs for approval</h2>
-          <p>Each card is a concrete website image prompt. Once generated, the draft image appears here for approve/revise/block review.</p>
+          <p>Each card is a website image prompt. Approve, revise, or reject inside this UI. Approval does not publish the image.</p>
         </div>
         <div className="promptGrid">
           {promptQueue.map((prompt) => {
             const generated = generatedByPrompt.get(prompt.id)
+            const decision = decisions[prompt.id]
             return (
               <article className="promptCard" key={prompt.id}>
                 <div className="generatedFrame">
@@ -243,13 +282,16 @@ export default function ImageApprovalPage() {
                   <h3>{prompt.placement}</h3>
                   <p className="fileName">{prompt.id} | {prompt.format}</p>
                   <p>{prompt.objective}</p>
+                  {generated?.generationMethod ? <p className="fileName">Method: {generated.generationMethod}</p> : null}
                   {generated?.storagePath ? <p className="fileName">Stored: {generated.storageBucket}/{generated.storagePath}</p> : null}
                   {generated?.mediaAssetId ? <p className="fileName">Media asset: {generated.mediaAssetId}</p> : null}
-                  {generated?.persistenceError ? <p className="blockedReason">Storage issue: {generated.persistenceError}</p> : null}
+                  {generated?.persistenceError ? <p className="storageWarning">Storage warning: {generated.persistenceError}</p> : null}
                   {generated?.blockedReason ? <p className="blockedReason">{generated.blockedReason}</p> : null}
+                  {decision ? <p className={decision.status === 'failed' ? 'blockedReason' : 'decisionMessage'}>{decision.message}</p> : null}
                   <div className="actions">
-                    <a className="primary" href={approvalMailto('approve', prompt.placement)}>Approve</a>
-                    <a className="secondary" href={approvalMailto('revise', prompt.placement)}>Request revision</a>
+                    <button type="button" className="primary" disabled={!generated?.imageBase64} onClick={() => submitDecision({ promptId: prompt.id, placement: prompt.placement, decision: 'approve', mediaAssetId: generated?.mediaAssetId })}>Approve</button>
+                    <button type="button" className="secondary" onClick={() => submitDecision({ promptId: prompt.id, placement: prompt.placement, decision: 'revise', mediaAssetId: generated?.mediaAssetId })}>Request revision</button>
+                    <button type="button" className="secondary" onClick={() => submitDecision({ promptId: prompt.id, placement: prompt.placement, decision: 'reject', mediaAssetId: generated?.mediaAssetId })}>Reject</button>
                   </div>
                 </div>
               </article>
@@ -278,7 +320,7 @@ export default function ImageApprovalPage() {
       </section>
 
       <style>{`
-        *{box-sizing:border-box}body{margin:0;background:#050507;color:#f7efe5;font-family:Inter,Arial,sans-serif}.approvalPage{min-height:100vh;background:linear-gradient(180deg,#050507,#0b070d 48%,#050507);color:#f7efe5}.hero,.controlBar{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:end;width:min(1180px,calc(100% - 40px));margin:0 auto;padding:72px 0 34px;border-bottom:1px solid rgba(255,255,255,.14)}.controlBar{align-items:center;padding:28px 0}.eyebrow{margin:0 0 10px;color:#ff3ba7;text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:.14em}.hero h1{margin:0;font-size:56px;line-height:.95;text-transform:uppercase;letter-spacing:0;font-weight:1000}.controlBar h2,.sectionHeader h2{margin:0 0 10px;font-size:36px;text-transform:uppercase}.hero p,.sectionHeader p,.cardBody p,.referenceCard p,.controlBar p{color:#d8cfd8;line-height:1.55}.statusPanel,.pipelineStatus{border:1px solid rgba(255,59,167,.34);background:rgba(255,255,255,.04);border-radius:8px;padding:20px;box-shadow:0 18px 60px rgba(255,0,122,.08)}.statusPanel span,.statusPanel small,.pipelineStatus span{display:block;color:#b9aeba}.statusPanel strong{display:block;margin:6px 0 8px;font-size:24px}.controlActions{display:grid;gap:10px;justify-items:stretch}.controlActions label{display:grid;gap:6px;color:#b9aeba;font-size:12px;text-transform:uppercase;font-weight:900}.controlActions input{width:100%;min-height:42px;border:1px solid rgba(255,255,255,.22);border-radius:6px;background:#08060a;color:#fff;padding:0 12px}.controlActions button{border:1px solid rgba(255,59,167,.55);background:transparent;color:#fff;border-radius:6px;min-height:44px;padding:0 16px;font-weight:900;cursor:pointer}.controlActions button:disabled{opacity:.58;cursor:wait}.controlActions .primaryButton{background:#ff007a;border-color:#ff007a}.pipelineStatus{width:min(1180px,calc(100% - 40px));margin:20px auto 0}.pipelineStatus strong{display:block;margin-bottom:8px}.imageGrid,.promptGrid{width:min(1180px,calc(100% - 40px));margin:34px auto 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.imageCard,.referenceCard,.promptCard{overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:#0e0b12}.imageFrame,.generatedFrame{display:block;background:#08060a;aspect-ratio:4/5;overflow:hidden}.imageFrame img,.generatedFrame img{width:100%;height:100%;object-fit:cover;display:block}.placeholderFrame{height:100%;display:flex;align-items:center;justify-content:center;color:#b9aeba;text-transform:uppercase;font-weight:900;letter-spacing:.08em;background:linear-gradient(135deg,#09060b,#17101a)}.cardBody{padding:20px}.cardTopline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill,.sourceType{display:inline-flex;border-radius:999px;padding:7px 10px;font-size:11px;text-transform:uppercase;font-weight:900}.pill{background:#ff007a;color:#fff}.sourceType{border:1px solid rgba(255,255,255,.22);color:#d7b56d}.cardBody h2,.cardBody h3{margin:16px 0 6px;font-size:28px;line-height:1.05}.fileName{margin-top:0;color:#b9aeba!important;font-family:monospace;font-size:13px;overflow-wrap:anywhere}dl{display:grid;gap:8px;margin:18px 0;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.03)}dl div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px}dt{color:#b9aeba;font-size:12px;text-transform:uppercase;font-weight:900}dd{margin:0;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:6px;padding:0 14px;text-decoration:none;font-weight:900}.primary{background:#ff007a;color:#fff}.secondary{border:1px solid rgba(255,59,167,.55);color:#fff}.link{color:#d7b56d}.blockedReason{color:#ff9ecb!important}.promptSection,.referenceSection{width:min(1180px,calc(100% - 40px));margin:58px auto 0;padding:34px 0 70px;border-top:1px solid rgba(255,255,255,.14)}.promptGrid{width:100%;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:22px}.promptCard .generatedFrame{aspect-ratio:1/1}.promptCard .cardBody h3{font-size:19px}.referenceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}.referenceCard img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#08060a}.referenceCard h3{margin:16px 16px 8px;font-size:18px}.referenceCard p{margin:0 16px 18px;font-size:14px}code{color:#d7b56d}@media(max-width:980px){.promptGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.hero,.controlBar,.imageGrid,.referenceGrid,.promptGrid{grid-template-columns:1fr}.hero{padding-top:42px}.hero h1{font-size:40px}}
+        *{box-sizing:border-box}body{margin:0;background:#050507;color:#f7efe5;font-family:Inter,Arial,sans-serif}.approvalPage{min-height:100vh;background:linear-gradient(180deg,#050507,#0b070d 48%,#050507);color:#f7efe5}.hero,.controlBar{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:end;width:min(1180px,calc(100% - 40px));margin:0 auto;padding:72px 0 34px;border-bottom:1px solid rgba(255,255,255,.14)}.controlBar{align-items:center;padding:28px 0}.eyebrow{margin:0 0 10px;color:#ff3ba7;text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:.14em}.hero h1{margin:0;font-size:56px;line-height:.95;text-transform:uppercase;letter-spacing:0;font-weight:1000}.controlBar h2,.sectionHeader h2{margin:0 0 10px;font-size:36px;text-transform:uppercase}.hero p,.sectionHeader p,.cardBody p,.referenceCard p,.controlBar p{color:#d8cfd8;line-height:1.55}.statusPanel,.pipelineStatus{border:1px solid rgba(255,59,167,.34);background:rgba(255,255,255,.04);border-radius:8px;padding:20px;box-shadow:0 18px 60px rgba(255,0,122,.08)}.statusPanel span,.statusPanel small,.pipelineStatus span{display:block;color:#b9aeba}.statusPanel strong{display:block;margin:6px 0 8px;font-size:24px}.controlActions{display:grid;gap:10px;justify-items:stretch}.controlActions label{display:grid;gap:6px;color:#b9aeba;font-size:12px;text-transform:uppercase;font-weight:900}.controlActions input{width:100%;min-height:42px;border:1px solid rgba(255,255,255,.22);border-radius:6px;background:#08060a;color:#fff;padding:0 12px}.controlActions button{border:1px solid rgba(255,59,167,.55);background:transparent;color:#fff;border-radius:6px;min-height:44px;padding:0 16px;font-weight:900;cursor:pointer}.controlActions button:disabled{opacity:.58;cursor:wait}.controlActions .primaryButton{background:#ff007a;border-color:#ff007a}.pipelineStatus{width:min(1180px,calc(100% - 40px));margin:20px auto 0}.pipelineStatus strong{display:block;margin-bottom:8px}.imageGrid,.promptGrid{width:min(1180px,calc(100% - 40px));margin:34px auto 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.imageCard,.referenceCard,.promptCard{overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:#0e0b12}.imageFrame,.generatedFrame{display:block;background:#08060a;aspect-ratio:4/5;overflow:hidden}.imageFrame img,.generatedFrame img{width:100%;height:100%;object-fit:cover;display:block}.placeholderFrame{height:100%;display:flex;align-items:center;justify-content:center;color:#b9aeba;text-transform:uppercase;font-weight:900;letter-spacing:.08em;background:linear-gradient(135deg,#09060b,#17101a)}.cardBody{padding:20px}.cardTopline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill,.sourceType{display:inline-flex;border-radius:999px;padding:7px 10px;font-size:11px;text-transform:uppercase;font-weight:900}.pill{background:#ff007a;color:#fff}.sourceType{border:1px solid rgba(255,255,255,.22);color:#d7b56d}.cardBody h2,.cardBody h3{margin:16px 0 6px;font-size:28px;line-height:1.05}.fileName{margin-top:0;color:#b9aeba!important;font-family:monospace;font-size:13px;overflow-wrap:anywhere}dl{display:grid;gap:8px;margin:18px 0;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.03)}dl div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px}dt{color:#b9aeba;font-size:12px;text-transform:uppercase;font-weight:900}dd{margin:0;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:6px;padding:0 14px;text-decoration:none;font-weight:900;font:inherit;cursor:pointer}.actions button:disabled{opacity:.45;cursor:not-allowed}.primary{background:#ff007a;color:#fff;border:1px solid #ff007a}.secondary{border:1px solid rgba(255,59,167,.55);color:#fff;background:transparent}.link{color:#d7b56d}.blockedReason{color:#ff9ecb!important}.storageWarning{color:#d7b56d!important}.decisionMessage{color:#7cf4c8!important;font-weight:900}.promptSection,.referenceSection{width:min(1180px,calc(100% - 40px));margin:58px auto 0;padding:34px 0 70px;border-top:1px solid rgba(255,255,255,.14)}.promptGrid{width:100%;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:22px}.promptCard .generatedFrame{aspect-ratio:1/1}.promptCard .cardBody h3{font-size:19px}.referenceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}.referenceCard img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#08060a}.referenceCard h3{margin:16px 16px 8px;font-size:18px}.referenceCard p{margin:0 16px 18px;font-size:14px}code{color:#d7b56d}@media(max-width:980px){.promptGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.hero,.controlBar,.imageGrid,.referenceGrid,.promptGrid{grid-template-columns:1fr}.hero{padding-top:42px}.hero h1{font-size:40px}}
       `}</style>
     </main>
   )
