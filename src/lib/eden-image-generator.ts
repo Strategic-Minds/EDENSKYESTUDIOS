@@ -169,9 +169,13 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
 export async function runEdenImagePipeline(input: {
   mode: EdenImageGenerationMode
   limit?: number
+  promptId?: string
   trigger: 'manual' | 'cron' | 'system'
 }) {
-  const prompts = EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, input.limit ?? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
+  const promptSet = input.promptId
+    ? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.filter((prompt) => prompt.id === input.promptId)
+    : EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, input.limit ?? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
+  const prompts = promptSet.length > 0 ? promptSet : EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, 1)
   const readiness = getImageGeneratorReadiness(input.mode)
   const generated: EdenGeneratedImage[] = []
 
@@ -216,10 +220,11 @@ export async function runEdenImagePipeline(input: {
     action: input.mode === 'generate' ? 'generate_draft_website_images' : 'validate_image_generation_queue',
     status: input.mode === 'generate' && generated.some((item) => item.status === 'generated') ? 'created' : 'dry_run',
     riskLevel: input.mode === 'generate' ? 'yellow' : 'green',
-    target: 'eden_skye_website_images',
+    target: input.promptId ?? 'eden_skye_website_images',
     details: {
       mode: input.mode,
       trigger: input.trigger,
+      promptId: input.promptId ?? null,
       promptCount: prompts.length,
       generatedCount: generated.filter((item) => item.status === 'generated').length,
       blockedCount: generated.filter((item) => item.status === 'blocked').length,
@@ -446,6 +451,8 @@ async function persistGeneratedImage(prompt: EdenImagePrompt, generated: EdenGen
 
   try {
     const supabase = createSupabaseServerClient()
+    await ensureStorageBucket(supabase, bucket)
+
     const createdAt = new Date().toISOString()
     const slug = createdAt.replace(/[:.]/g, '-').replace('T', '-').replace('Z', '')
     const storagePath = `generated/eden-skye/website/${prompt.id}-${slug}.png`
@@ -495,6 +502,20 @@ async function persistGeneratedImage(prompt: EdenImagePrompt, generated: EdenGen
       persistenceError: describePersistenceError(error)
     }
   }
+}
+
+async function ensureStorageBucket(supabase: ReturnType<typeof createSupabaseServerClient>, bucket: string) {
+  const { data: buckets, error: listError } = await supabase.storage.listBuckets()
+  if (listError) throw listError
+  if (buckets?.some((item) => item.name === bucket)) return
+
+  const { error: createError } = await supabase.storage.createBucket(bucket, {
+    public: false,
+    fileSizeLimit: 10485760,
+    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp']
+  })
+
+  if (createError) throw createError
 }
 
 function blocked(prompt: EdenImagePrompt, blockedReason: string): EdenGeneratedImage {
