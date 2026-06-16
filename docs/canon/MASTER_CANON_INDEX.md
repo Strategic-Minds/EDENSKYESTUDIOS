@@ -33,6 +33,12 @@ This repo mirror aligns Eden Skye Studios, AUTO_BUILDER, and the Eden OS Drive c
 | 24/7 Operations Runbook | `docs/canon/OPERATIONS_24_7_RUNBOOK.md` | https://drive.google.com/file/d/1csO0lIJPmmu9iE_qM9dx0yB2rakaHOmx/view |
 | Cross-System Documentation Sync Policy | `docs/canon/CROSS_SYSTEM_DOCUMENTATION_SYNC_POLICY.md` | https://drive.google.com/file/d/1D3x4umKyhUw-jW6ygM0AYK1nny2Vm1PY/view |
 
+## Operations Mirrors
+
+| Package | Repo path | Drive canon location |
+|---|---|---|
+| Social Intelligence Persona OS | `docs/operations/social-intelligence/` | `EDEN_SKYE_STUDIOS_OS` folders `01_SOURCE_TRUTH_MEMORY`, `03_MODEL_BIBLES_ROSTERS`, `14_ADMIN_APPROVAL_CONTROL_PLANE`, `17_TAXONOMIES_INDEXES`, `23_VALIDATION_REPORTS`, and `24_RELEASE_GATES_LOCKED` |
+
 ## Source-Truth Rule
 
 When Drive, repo docs, and runtime evidence disagree, agents must label the conflict, prefer current-session instruction and active governance, verify with live evidence where available, then update the canon index and sync policy.
