@@ -28,17 +28,19 @@ Update docs when any of these change:
 ## Mirror Rules
 
 1. `docs/canon/` is the repo mirror location for cross-system planning docs.
-2. Drive remains the human-facing canon for business and strategy work products.
-3. Repos remain the source-controlled canon for agent-operable docs.
-4. If Drive and repo versions differ, compare update dates and source evidence.
-5. If uncertain, preserve both and create a drift report rather than overwriting.
-6. Do not delete or move Drive files destructively without explicit approval.
-7. Do not rewrite authority files unless current-session instruction authorizes the exact change.
+2. `docs/operations/social-intelligence/` is the repo mirror location for Social Intelligence Persona OS operating logic and machine-readable routing files.
+3. Drive remains the human-facing canon for business, strategy, roster, approval, validation, KPI, and release-gate work products.
+4. Repos remain the source-controlled canon for agent-operable docs.
+5. If Drive and repo versions differ, compare update dates and source evidence.
+6. If uncertain, preserve both and create a drift report rather than overwriting.
+7. Do not delete or move Drive files destructively without explicit approval.
+8. Do not rewrite authority files unless current-session instruction authorizes the exact change.
 
 ## Drift Scan Checklist
 
 - Required canon docs exist in Drive.
 - Required canon docs exist in both repos.
+- Social Intelligence Persona OS mirrors exist under `docs/operations/social-intelligence/` when persona routing, opportunity scoring, intake, readiness, or reporting behavior changes.
 - README/source-truth docs reference current Drive and repo ownership.
 - Changelogs record material changes.
 - Approval gates match across Drive, EDENSKYESTUDIOS, and AUTO_BUILDER.
@@ -47,6 +49,6 @@ Update docs when any of these change:
 
 ## Auto-Fix Rules
 
-Agents may auto-fix missing `docs/canon/` mirrors, missing non-authority Drive Markdown docs, broken internal doc references, stub docs, changelog entries for their own actions, master index entries, and drift reports.
+Agents may auto-fix missing `docs/canon/` mirrors, missing `docs/operations/social-intelligence/` mirrors, missing non-authority Drive Markdown docs, broken internal doc references, stub docs, changelog entries for their own actions, master index entries, and drift reports.
 
 Agents must queue or request approval for authority-file changes not explicitly requested, Drive parent/share/delete/destructive moves, production-affecting changes, destructive GitHub changes, Shopify, Stripe/payment, Supabase production, and public publishing changes.
