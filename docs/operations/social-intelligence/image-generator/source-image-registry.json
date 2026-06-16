@@ -1,31 +1,46 @@
 {
   "registry_name": "EDENSKYESTUDIOS Source Image Registry",
-  "version": "2026-06-16.1",
+  "version": "2026-06-16.2",
   "source_manifest_file_id": "1Fyax7kefLjakP6HnkzSTW_BqRBq-kw1m",
   "source_folder_id": "1KiQ9FMtJw4abWV4iK68i2poWwo3wsqKq",
   "rules": {
     "approved_status": "approved_labeled_source_portrait",
-    "blocked_statuses": ["generated_labeled_source_portrait_pending_operator_final_approval", "pending", "unknown", "rejected"],
+    "blocked_statuses": ["pending", "unknown", "rejected"],
     "public_use_requires_rights_review": true,
-    "public_use_requires_operator_approval": true
+    "public_use_requires_operator_approval": true,
+    "approval_note": "Jeremy approved Eden Skye source images for draft branded website-image generator use on 2026-06-16. Public/live use remains approval-gated per admin control plane."
   },
   "summary": {
     "total_labeled_source_portraits": 13,
-    "approved_for_draft_generation": 12,
-    "blocked_pending_final_approval": 1,
+    "approved_for_draft_generation": 13,
+    "blocked_pending_final_approval": 0,
+    "eden_skye_source_images_approved_for_draft_generation": 2,
     "public_use_allowed_by_default": false
   },
-  "blocked_models": [
+  "blocked_models": [],
+  "approved_models": [
     {
       "model_name": "Eden Skye",
       "drive_file_id": "1lmOJBPF0G2wotinP7Q9iDiVqorZI8FQs",
-      "status": "generated_labeled_source_portrait_pending_operator_final_approval",
-      "generation_allowed": false,
+      "source_type": "labeled_source_portrait",
+      "file_name": "01-eden-labeled-eden-skye.png",
+      "status": "approved_labeled_source_portrait_for_draft_generation",
+      "generation_allowed": true,
       "public_use_allowed": false,
-      "block_reason": "Pending operator final approval"
-    }
-  ],
-  "approved_models": [
+      "approval_source": "operator_approved_in_chat_2026_06_16",
+      "notes": "Use for identity-lock and branded website draft packets. Public website use still requires final asset review."
+    },
+    {
+      "model_name": "Eden Skye",
+      "drive_file_id": "1ndzEOsotXMhwU_XeSb--4ajZtg0nuZg7",
+      "source_type": "basic_source_portrait",
+      "file_name": "01-eden-basic-eden-skye.png",
+      "status": "approved_basic_source_portrait_for_draft_generation",
+      "generation_allowed": true,
+      "public_use_allowed": false,
+      "approval_source": "operator_approved_in_chat_2026_06_16",
+      "notes": "Secondary Eden Skye source image for website branded image variations and review packets."
+    },
     {"model_name": "Luna Moretti", "drive_file_id": "1Sj7qZ4AyC5Z6raTn-jBbAyXrZmdbfM6s"},
     {"model_name": "Sienna Cole", "drive_file_id": "1b96XaveaFbpMefJU0LqLynnXdPMZD0wh"},
     {"model_name": "Natalia Vega", "drive_file_id": "1O4kmyxPV0ZUoHaYStT3z6LDGZ8ihcxHP"},
