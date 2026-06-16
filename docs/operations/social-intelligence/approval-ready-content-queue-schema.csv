@@ -1,0 +1,2 @@
+queue_id,status,persona_id,platform,account_label,handle_or_placeholder,content_format,hook,asset_reference,caption_or_script,cta,kpi_target,risk_level,approval_required,approval_status,approver,scheduled_time_placeholder,rollback_plan,receipt_path,notes
+example-001,draft_ready,eden_skye,tiktok,Eden Skye TikTok,@eden_skye_placeholder,short_video,"Hook placeholder","asset placeholder","Script placeholder","CTA placeholder","watch_time|shares",medium,true,not_requested,,,"Do not publish; remove from queue or mark paused","receipt placeholder","Example row only"
