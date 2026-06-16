@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "status": "active_machine_readable_control_matrix",
+  "default_execution_ceiling": "draft_only",
+  "rules": [
+    {
+      "action": "trend_research",
+      "category": "research",
+      "allowed_autonomously": true,
+      "approval_required": false,
+      "minimum_readiness": "R1",
+      "blocked_if": []
+    },
+    {
+      "action": "opportunity_scoring",
+      "category": "analysis",
+      "allowed_autonomously": true,
+      "approval_required": false,
+      "minimum_readiness": "R1",
+      "blocked_if": []
+    },
+    {
+      "action": "persona_routing",
+      "category": "planning",
+      "allowed_autonomously": true,
+      "approval_required": false,
+      "minimum_readiness": "R2",
+      "blocked_if": ["persona_unresolved"]
+    },
+    {
+      "action": "content_draft",
+      "category": "drafting",
+      "allowed_autonomously": true,
+      "approval_required": false,
+      "minimum_readiness": "R2",
+      "blocked_if": ["persona_unresolved", "platform_unresolved"]
+    },
+    {
+      "action": "approval_packet",
+      "category": "approval_preparation",
+      "allowed_autonomously": true,
+      "approval_required": false,
+      "minimum_readiness": "R3",
+      "blocked_if": ["missing_action_scope", "missing_destination", "missing_rollback_plan"]
+    },
+    {
+      "action": "schedule_post",
+      "category": "execution",
+      "allowed_autonomously": false,
+      "approval_required": true,
+      "minimum_readiness": "R3",
+      "blocked_if": ["placeholder_handle", "placeholder_account_id", "approval_missing", "receipt_path_missing"]
+    },
+    {
+      "action": "public_post",
+      "category": "execution",
+      "allowed_autonomously": false,
+      "approval_required": true,
+      "minimum_readiness": "R3",
+      "blocked_if": ["placeholder_handle", "placeholder_account_id", "approval_missing", "receipt_path_missing"]
+    },
+    {
+      "action": "public_reply",
+      "category": "execution",
+      "allowed_autonomously": false,
+      "approval_required": true,
+      "minimum_readiness": "R3",
+      "blocked_if": ["placeholder_handle", "placeholder_account_id", "approval_missing", "identity_risk"]
+    },
+    {
+      "action": "direct_message",
+      "category": "execution",
+      "allowed_autonomously": false,
+      "approval_required": true,
+      "minimum_readiness": "R3",
+      "blocked_if": ["placeholder_handle", "placeholder_account_id", "approval_missing", "customer_or_lead_context"]
+    },
+    {
+      "action": "paid_promotion",
+      "category": "paid_execution",
+      "allowed_autonomously": false,
+      "approval_required": true,
+      "minimum_readiness": "R3",
+      "blocked_if": ["budget_missing", "spend_cap_missing", "approval_missing", "tracking_missing"]
+    },
+    {
+      "action": "live_avatar_activation",
+      "category": "avatar_execution",
+      "allowed_autonomously": false,
+      "approval_required": true,
+      "minimum_readiness": "R3",
+      "blocked_if": ["persona_approval_missing", "script_approval_missing", "disclosure_missing", "video_qa_missing"]
+    }
+  ],
+  "readiness_states": {
+    "R0": "unsupported",
+    "R1": "research_ready",
+    "R2": "draft_ready",
+    "R3": "approval_ready",
+    "R4": "execution_ready_after_explicit_approval"
+  }
+}
