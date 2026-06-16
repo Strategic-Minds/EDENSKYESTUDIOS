@@ -1,0 +1,17 @@
+{
+  "gate_name": "EDENSKYESTUDIOS Image Output QA Gate",
+  "version": "2026-06-16.1",
+  "default_result": "hold_for_review",
+  "checks": [
+    {"id": "source_status", "question": "Is the source image approved for generation?", "required": true, "fail_result": "blocked"},
+    {"id": "rights_status", "question": "Are rights, age, identity, and likeness constraints clear?", "required": true, "fail_result": "blocked"},
+    {"id": "identity_consistency", "question": "Does the output preserve the selected synthetic model identity without drifting into celebrity or private-person imitation?", "required": true, "fail_result": "revise"},
+    {"id": "brand_fit", "question": "Does the output match the cinematic luxury Eden Skye Studios brand language?", "required": true, "fail_result": "revise"},
+    {"id": "wardrobe_safety", "question": "Is wardrobe adult, brand-safe, non-explicit, and platform-safe?", "required": true, "fail_result": "blocked"},
+    {"id": "text_artifacts", "question": "Does the image avoid fake, unreadable, or unapproved text?", "required": true, "fail_result": "revise"},
+    {"id": "platform_format", "question": "Does the image fit the requested platform format without important cropping or overlap?", "required": true, "fail_result": "revise"},
+    {"id": "public_use_approval", "question": "Has a human approved this image for public/live use?", "required_for_public_use": true, "fail_result": "hold_for_review"}
+  ],
+  "allowed_autonomous_final_states": ["draft_ready_pending_review", "blocked", "revise"],
+  "disallowed_autonomous_final_states": ["approved_for_public_use", "published", "ad_active", "avatar_active"]
+}
