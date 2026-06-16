@@ -1,0 +1,64 @@
+name: Recursive Autonomy Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Vercel base URL to validate"
+        required: false
+        default: "https://edenskyestudios.vercel.app"
+      lane:
+        description: "Recursive completion lane to validate"
+        required: false
+        default: "hourly_readiness"
+  schedule:
+    - cron: "45 */6 * * *"
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24"
+  VALIDATION_BASE_URL: ${{ github.event.inputs.base_url || 'https://edenskyestudios.vercel.app' }}
+  VALIDATION_LANE: ${{ github.event.inputs.lane || 'hourly_readiness' }}
+  CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+jobs:
+  recursive-autonomy-validation:
+    name: Validate recursive autonomy readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Generate package lock receipt candidate
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Install dependencies from generated lock
+        run: npm ci --ignore-scripts
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Validate recursive route receipts
+        run: node scripts/validate-recursive-completion-routes.mjs
+
+      - name: Upload validation receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recursive-autonomy-validation-${{ github.run_id }}
+          path: |
+            package-lock.json
+            .autonomy-receipts/recursive-route-validation.json
+          if-no-files-found: warn
