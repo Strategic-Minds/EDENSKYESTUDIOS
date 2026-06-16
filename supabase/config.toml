@@ -1,0 +1,5 @@
+# Supabase CLI project configuration
+# Repository-only context repair for Supabase branch-action validation.
+# Generated after branch-action rerun still failed to resolve local migration history.
+
+project_id = "prhppuuwcnmfdhwsagug"
