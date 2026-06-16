@@ -27,6 +27,7 @@ export type RecursiveCompletionReceipt = {
   blockers: string[]
   next_actions: string[]
   canonical_storage: string[]
+  accepted_risks_observed: string[]
 }
 
 export function getRecursiveCompletionReadiness() {
@@ -39,6 +40,7 @@ export function getRecursiveCompletionReadiness() {
     productionReady: false,
     mayClaimFullAutonomous247: manifest.readiness_gate.may_claim_full_autonomous_24_7,
     authority: manifest.authority,
+    acceptedRisks: manifest.accepted_risks,
     allowedWithoutHumanApproval: manifest.autonomy_policy.allowed_without_human_approval,
     protectedActionsRequiringApproval: manifest.autonomy_policy.protected_actions_requiring_explicit_approval,
     lanes: manifest.recursive_run_lanes.map((lane) => ({
@@ -50,11 +52,15 @@ export function getRecursiveCompletionReadiness() {
     readinessGateConditions: manifest.readiness_gate.conditions_required_before_true,
     receiptSchemaRequiredFields: manifest.receipt_schema.required_fields,
     blockers: [
-      "Drive permission hardening receipt is still required.",
       "Live Vercel cron/readiness receipts are still required.",
       "Repo lockfile/build/typecheck/test receipts are still required.",
+      "Persistent receipt writer receipts are still required.",
+      "Failure escalation receipts are still required.",
       "Provider bridge boundary and rollback receipts are still required.",
       "Image/content QA, quarantine, and approval receipts are still required."
+    ],
+    acceptedRiskDisclosures: [
+      "Drive anyone-with-link writer access is owner-accepted and must be disclosed in receipts instead of treated as an unresolved blocker."
     ]
   }
 }
@@ -97,7 +103,7 @@ function buildDryRunReceipt(lane: RecursiveLane, trigger: "manual" | "cron" | "s
         manifest.authority.eden_os_drive_canon.drive_folder_id
       ],
       repositories: [manifest.authority.eden_repo, manifest.authority.auto_builder_repo],
-      branches: ["auto-builder/recursive-completion-engine-20260616"],
+      branches: ["main"],
       routes: ["/api/recursive-completion/readiness", "/api/cron/recursive-completion-dry-run"],
       providers: ["Google Drive", "GitHub", "Vercel"]
     },
@@ -112,16 +118,20 @@ function buildDryRunReceipt(lane: RecursiveLane, trigger: "manual" | "cron" | "s
         `Lane ${lane.lane} loaded from recursive manifest.`,
         `Trigger ${trigger} forced dry-run mode.`,
         "No live mutation performed.",
-        "Protected actions were listed as blocked, not executed."
+        "Protected actions were listed as blocked, not executed.",
+        "Owner-accepted Drive writer-link policy was disclosed."
       ],
       notes: "Dry-run activation receipt only. Durable Drive receipt storage is the next wiring step."
     },
-    blockers: manifest.readiness_gate.conditions_required_before_true,
+    blockers: manifest.readiness_gate.conditions_required_before_true.filter(
+      (condition) => condition !== "drive_writer_link_policy_owner_accepted_and_disclosed"
+    ),
     next_actions: [
       "Persist this receipt to Drive audit or validation storage.",
       "Wire approved scheduler/agent runner to call this route.",
       "Close missing readiness-gate conditions with receipts before enabling higher autonomy."
     ],
-    canonical_storage: []
+    canonical_storage: [],
+    accepted_risks_observed: manifest.accepted_risks.map((risk) => risk.key)
   }
 }
