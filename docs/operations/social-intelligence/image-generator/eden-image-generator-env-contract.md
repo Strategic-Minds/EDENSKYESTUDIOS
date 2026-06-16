@@ -29,7 +29,7 @@ EDEN_IMAGE_PROVIDER=openai
 EDEN_IMAGE_AUTOGENERATION_ENABLED=true
 OPENAI_API_KEY=...
 EDEN_IMAGE_MODEL=gpt-image-2
-EDEN_IMAGE_QUALITY=high
+EDEN_IMAGE_QUALITY=medium
 ```
 
 Vercel AI Gateway mode, if the gateway supports image edits:
@@ -40,10 +40,18 @@ EDEN_IMAGE_AUTOGENERATION_ENABLED=true
 AI_GATEWAY_API_KEY=...
 AI_GATEWAY_BASE_URL=https://your-gateway.example/v1
 EDEN_IMAGE_MODEL=gpt-image-2
-EDEN_IMAGE_QUALITY=high
+EDEN_IMAGE_QUALITY=medium
 ```
 
-Reference-image mode is on by default. To disable it and fall back to text-to-image only:
+Reference-image mode is on by default. Normal hero, lifestyle, campaign, and Open Graph generations use one Eden Skye reference image for faster review. Identity-lock prompts use two references by default.
+
+To force a specific reference count:
+
+```bash
+EDEN_IMAGE_REFERENCE_COUNT=1
+```
+
+To disable reference images and fall back to text-to-image only:
 
 ```bash
 EDEN_IMAGE_REFERENCE_MODE=off
@@ -65,7 +73,7 @@ NEXT_PUBLIC_SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
-When persistence is enabled, generated PNG drafts are uploaded to Supabase Storage under:
+When persistence is enabled, the app attempts to create the configured Supabase Storage bucket if it is missing and the service role key allows bucket creation. Generated PNG drafts are uploaded under:
 
 ```text
 generated/eden-skye/website/<prompt-id>-<timestamp>.png
@@ -79,13 +87,15 @@ A matching `media_assets` row is inserted with:
 - `usage_scope`: `private_test`
 - `source_tool`: `eden-skye-website-image-generator`
 
-If the UI shows `Storage warning: Bucket not found`, either create the configured Supabase bucket or set:
+For fastest review iterations, set:
 
 ```bash
 EDEN_IMAGE_SAVE_MEDIA_ASSETS=false
+EDEN_IMAGE_QUALITY=medium
+EDEN_IMAGE_REFERENCE_COUNT=1
 ```
 
-Generation can still work without storage persistence, but generated images only remain visible in the current UI response.
+Then switch storage and high quality back on for final approved assets.
 
 ## Routes
 
@@ -101,10 +111,10 @@ Request body:
 { "mode": "validate" }
 ```
 
-or:
+or targeted generation:
 
 ```json
-{ "mode": "generate", "limit": 1 }
+{ "mode": "generate", "promptId": "eden-web-hero-mobile-001" }
 ```
 
 Production authorization header:
@@ -149,9 +159,8 @@ It shows:
 - Storage path and media asset ID when persistence succeeds.
 - Storage warnings when persistence fails.
 - In-app approve, revise, and reject decisions.
+- Targeted per-prompt generation and regeneration.
 
 ## Current implementation note
 
-The current generator uses the approved Eden Skye source images as actual reference-image inputs for all person-based prompts. The membership/still-life visual intentionally uses text-to-image because it should not show Eden Skye directly.
-
-The first quality target is identity consistency. After identity is stable, tune prompt variety one image at a time with `Generate 1 draft` before scaling to the full queue.
+The current generator uses the approved Eden Skye source images as actual reference-image inputs for person-based prompts. Normal prompts default to one reference image for speed; identity-lock prompts default to two references for consistency. The membership/still-life visual intentionally uses text-to-image because it should not show Eden Skye directly.
