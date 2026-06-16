@@ -33,7 +33,15 @@ export async function logEdenReceipt(input: EdenReceiptInput) {
 
   try {
     const supabase = createSupabaseServerClient();
-    const { data, error } = await supabase.from('tool_receipts').insert(receipt).select('*').single();
+    const { data, error } = await supabase
+      .from('tool_receipts')
+      .insert({
+        connector: receipt.connector,
+        action: receipt.action,
+        receipt_json: receipt
+      })
+      .select('*')
+      .single();
 
     if (error) throw error;
     return { source: 'supabase' as const, data };
