@@ -105,22 +105,30 @@ function driveView(fileId: string) {
 
 export default function ImageApprovalPage() {
   const [pipeline, setPipeline] = useState<PipelineResponse | null>(null)
-  const [busy, setBusy] = useState<'validate' | 'generate-one' | 'generate-all' | null>(null)
+  const [generatedImages, setGeneratedImages] = useState<Record<string, GeneratedImage>>({})
+  const [busy, setBusy] = useState<'validate' | 'generate-one' | 'generate-all' | `generate-${string}` | null>(null)
   const [operatorToken, setOperatorToken] = useState('')
   const [decisions, setDecisions] = useState<Record<string, DecisionState>>({})
 
-  async function runPipeline(mode: 'validate' | 'generate', limit?: number) {
-    const busyState = mode === 'validate' ? 'validate' : limit === 1 ? 'generate-one' : 'generate-all'
+  async function runPipeline(mode: 'validate' | 'generate', input?: { limit?: number; promptId?: string }) {
+    const busyState = mode === 'validate' ? 'validate' : input?.promptId ? `generate-${input.promptId}` as const : input?.limit === 1 ? 'generate-one' : 'generate-all'
     setBusy(busyState)
     try {
       const headers = buildHeaders()
       const response = await fetch('/api/media/eden-image-generator', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ mode, limit })
+        body: JSON.stringify({ mode, limit: input?.limit, promptId: input?.promptId })
       })
-      const payload = await response.json()
+      const payload = await response.json() as PipelineResponse
       setPipeline(payload)
+      if (payload.generated?.length) {
+        setGeneratedImages((current) => {
+          const next = { ...current }
+          for (const image of payload.generated ?? []) next[image.promptId] = image
+          return next
+        })
+      }
     } catch (error) {
       setPipeline({ ok: false, mode, nextAction: error instanceof Error ? error.message : 'Pipeline request failed.' })
     } finally {
@@ -164,7 +172,8 @@ export default function ImageApprovalPage() {
     return headers
   }
 
-  const generatedByPrompt = new Map((pipeline?.generated ?? []).map((image) => [image.promptId, image]))
+  const nextPrompt = promptQueue.find((prompt) => decisions[prompt.id]?.decision !== 'approve') ?? promptQueue[0]
+  const generatedByPrompt = new Map(Object.entries(generatedImages))
 
   return (
     <main className="approvalPage">
@@ -177,17 +186,17 @@ export default function ImageApprovalPage() {
           </p>
         </div>
         <div className="statusPanel">
-          <span>Generator mode</span>
-          <strong>Reference-photo drafts</strong>
-          <small>No live publish, paid scale run, or public asset use without final approval.</small>
+          <span>Next prompt</span>
+          <strong>{nextPrompt.placement}</strong>
+          <small>{nextPrompt.id} stays review-only until final public approval.</small>
         </div>
       </header>
 
       <section className="controlBar" aria-label="Image generator controls">
         <div>
           <p className="eyebrow">Pipeline Controls</p>
-          <h2>Validate or generate photoreal draft images</h2>
-          <p>Use <code>Generate 1 draft</code> first. The upgraded pipeline uses the approved Eden Skye portraits as reference images.</p>
+          <h2>Generate one approved-lane image at a time</h2>
+          <p>Next one-up target: <code>{nextPrompt.id}</code>. The generator will not restart at the first prompt after approval.</p>
         </div>
         <div className="controlActions">
           <label>
@@ -201,7 +210,7 @@ export default function ImageApprovalPage() {
             />
           </label>
           <button type="button" onClick={() => runPipeline('validate')} disabled={busy !== null}>{busy === 'validate' ? 'Validating...' : 'Validate queue'}</button>
-          <button type="button" className="primaryButton" onClick={() => runPipeline('generate', 1)} disabled={busy !== null}>{busy === 'generate-one' ? 'Generating...' : 'Generate 1 draft'}</button>
+          <button type="button" className="primaryButton" onClick={() => runPipeline('generate', { promptId: nextPrompt.id })} disabled={busy !== null}>{busy === `generate-${nextPrompt.id}` ? 'Generating...' : `Generate next: ${nextPrompt.placement}`}</button>
           <button type="button" onClick={() => runPipeline('generate')} disabled={busy !== null}>{busy === 'generate-all' ? 'Generating...' : 'Generate all drafts'}</button>
         </div>
       </section>
@@ -257,12 +266,13 @@ export default function ImageApprovalPage() {
         <div className="sectionHeader">
           <p className="eyebrow">Website Image Queue</p>
           <h2>Draft outputs for approval</h2>
-          <p>Each card is a website image prompt. Approve, revise, or reject inside this UI. Approval does not publish the image.</p>
+          <p>Each card is a website image prompt. Approve, revise, reject, or regenerate a specific prompt without leaving this UI.</p>
         </div>
         <div className="promptGrid">
           {promptQueue.map((prompt) => {
             const generated = generatedByPrompt.get(prompt.id)
             const decision = decisions[prompt.id]
+            const isPromptBusy = busy === `generate-${prompt.id}`
             return (
               <article className="promptCard" key={prompt.id}>
                 <div className="generatedFrame">
@@ -276,7 +286,7 @@ export default function ImageApprovalPage() {
                 </div>
                 <div className="cardBody">
                   <div className="cardTopline">
-                    <span className="pill">{generated?.status ?? 'queued'}</span>
+                    <span className="pill">{decision?.decision ?? generated?.status ?? 'queued'}</span>
                     <span className="sourceType">{prompt.assetType}</span>
                   </div>
                   <h3>{prompt.placement}</h3>
@@ -292,6 +302,7 @@ export default function ImageApprovalPage() {
                     <button type="button" className="primary" disabled={!generated?.imageBase64} onClick={() => submitDecision({ promptId: prompt.id, placement: prompt.placement, decision: 'approve', mediaAssetId: generated?.mediaAssetId })}>Approve</button>
                     <button type="button" className="secondary" onClick={() => submitDecision({ promptId: prompt.id, placement: prompt.placement, decision: 'revise', mediaAssetId: generated?.mediaAssetId })}>Request revision</button>
                     <button type="button" className="secondary" onClick={() => submitDecision({ promptId: prompt.id, placement: prompt.placement, decision: 'reject', mediaAssetId: generated?.mediaAssetId })}>Reject</button>
+                    <button type="button" className="secondary" disabled={busy !== null} onClick={() => runPipeline('generate', { promptId: prompt.id })}>{isPromptBusy ? 'Generating...' : 'Regenerate this'}</button>
                   </div>
                 </div>
               </article>
