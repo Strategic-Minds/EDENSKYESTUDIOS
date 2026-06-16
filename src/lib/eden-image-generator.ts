@@ -1,4 +1,5 @@
 import { logEdenReceipt } from '@/lib/eden/receipts'
+import { createSupabaseServerClient, hasSupabaseServerConfig, usesServiceRole } from '@/lib/supabase-server'
 
 export type EdenImagePrompt = {
   id: string
@@ -32,6 +33,11 @@ export type EdenGeneratedImage = {
   imageBase64?: string
   mimeType?: string
   revisedPrompt?: string
+  storageBucket?: string
+  storagePath?: string
+  mediaAssetId?: string
+  persistenceStatus?: 'stored' | 'skipped' | 'failed'
+  persistenceError?: string
   blockedReason?: string
 }
 
@@ -176,6 +182,7 @@ export async function runEdenImagePipeline(input: {
         placement: prompt.placement,
         assetType: prompt.assetType,
         sourceImageIds: prompt.sourceImageIds,
+        persistenceStatus: 'skipped',
         blockedReason: readiness.blockers.join('; ')
       })
     }
@@ -215,6 +222,10 @@ export async function runEdenImagePipeline(input: {
       promptCount: prompts.length,
       generatedCount: generated.filter((item) => item.status === 'generated').length,
       blockedCount: generated.filter((item) => item.status === 'blocked').length,
+      storedCount: generated.filter((item) => item.persistenceStatus === 'stored').length,
+      providerBaseUrlConfigured: readiness.providerBaseUrlConfigured,
+      persistenceEnabled: readiness.persistenceEnabled,
+      storageBucketConfigured: readiness.storageBucketConfigured,
       blockers: readiness.blockers
     }
   })
@@ -226,11 +237,17 @@ function getImageGeneratorReadiness(mode: EdenImageGenerationMode) {
   const apiKey = process.env.OPENAI_API_KEY || process.env.AI_GATEWAY_API_KEY
   const enabled = process.env.EDEN_IMAGE_AUTOGENERATION_ENABLED === 'true'
   const model = process.env.EDEN_IMAGE_MODEL || 'gpt-image-1'
+  const baseUrl = getOpenAIBaseUrl()
+  const persistenceEnabled = process.env.EDEN_IMAGE_SAVE_MEDIA_ASSETS === 'true'
+  const storageBucket = process.env.EDEN_IMAGE_SUPABASE_BUCKET?.trim()
   const blockers: string[] = []
 
   if (mode === 'generate') {
     if (!enabled) blockers.push('EDEN_IMAGE_AUTOGENERATION_ENABLED must be true')
     if (!apiKey) blockers.push('OPENAI_API_KEY or AI_GATEWAY_API_KEY is required')
+    if (persistenceEnabled && !hasSupabaseServerConfig()) blockers.push('Supabase env vars are required when EDEN_IMAGE_SAVE_MEDIA_ASSETS is true')
+    if (persistenceEnabled && !usesServiceRole) blockers.push('SUPABASE_SERVICE_ROLE_KEY is required to store generated draft images')
+    if (persistenceEnabled && !storageBucket) blockers.push('EDEN_IMAGE_SUPABASE_BUCKET is required when EDEN_IMAGE_SAVE_MEDIA_ASSETS is true')
   }
 
   return {
@@ -239,6 +256,9 @@ function getImageGeneratorReadiness(mode: EdenImageGenerationMode) {
     model,
     enabled,
     apiKeyConfigured: Boolean(apiKey),
+    providerBaseUrlConfigured: baseUrl !== 'https://api.openai.com/v1',
+    persistenceEnabled,
+    storageBucketConfigured: Boolean(storageBucket),
     blockers
   }
 }
@@ -249,6 +269,10 @@ function imageSizeForFormat(format: EdenImagePrompt['format']) {
   return '1536x1024'
 }
 
+function getOpenAIBaseUrl() {
+  return (process.env.OPENAI_BASE_URL || process.env.AI_GATEWAY_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '')
+}
+
 async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGeneratedImage> {
   const apiKey = process.env.OPENAI_API_KEY || process.env.AI_GATEWAY_API_KEY
   const model = process.env.EDEN_IMAGE_MODEL || 'gpt-image-1'
@@ -257,7 +281,7 @@ async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGenerate
     return blocked(prompt, 'Missing OpenAI API key')
   }
 
-  const response = await fetch('https://api.openai.com/v1/images/generations', {
+  const response = await fetch(`${getOpenAIBaseUrl()}/images/generations`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -268,6 +292,7 @@ async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGenerate
       prompt: buildProviderPrompt(prompt),
       size: imageSizeForFormat(prompt.format),
       quality: process.env.EDEN_IMAGE_QUALITY || 'medium',
+      output_format: 'png',
       n: 1
     })
   })
@@ -286,7 +311,7 @@ async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGenerate
     return blocked(prompt, 'OpenAI response did not include b64_json image data')
   }
 
-  return {
+  const generated: EdenGeneratedImage = {
     promptId: prompt.id,
     status: 'generated',
     placement: prompt.placement,
@@ -294,7 +319,78 @@ async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGenerate
     sourceImageIds: prompt.sourceImageIds,
     imageBase64: image.b64_json,
     mimeType: 'image/png',
-    revisedPrompt: image.revised_prompt
+    revisedPrompt: image.revised_prompt,
+    persistenceStatus: 'skipped'
+  }
+
+  return persistGeneratedImage(prompt, generated)
+}
+
+async function persistGeneratedImage(prompt: EdenImagePrompt, generated: EdenGeneratedImage): Promise<EdenGeneratedImage> {
+  if (process.env.EDEN_IMAGE_SAVE_MEDIA_ASSETS !== 'true') {
+    return generated
+  }
+
+  const bucket = process.env.EDEN_IMAGE_SUPABASE_BUCKET?.trim()
+
+  if (!bucket || !generated.imageBase64 || !hasSupabaseServerConfig() || !usesServiceRole) {
+    return {
+      ...generated,
+      persistenceStatus: 'failed',
+      persistenceError: 'Supabase storage persistence is enabled but storage configuration is incomplete.'
+    }
+  }
+
+  try {
+    const supabase = createSupabaseServerClient()
+    const createdAt = new Date().toISOString()
+    const slug = createdAt.replace(/[:.]/g, '-').replace('T', '-').replace('Z', '')
+    const storagePath = `generated/eden-skye/website/${prompt.id}-${slug}.png`
+    const imageBuffer = Buffer.from(generated.imageBase64, 'base64')
+
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(storagePath, imageBuffer, {
+        contentType: generated.mimeType ?? 'image/png',
+        upsert: false
+      })
+
+    if (uploadError) throw uploadError
+
+    const { data: mediaAsset, error: insertError } = await supabase
+      .from('media_assets')
+      .insert({
+        model_code: 'eden_skye',
+        asset_type: prompt.assetType,
+        asset_role: prompt.placement,
+        file_name: `${prompt.id}.png`,
+        storage_bucket: bucket,
+        storage_path: storagePath,
+        source_tool: 'eden-skye-website-image-generator',
+        prompt: buildProviderPrompt(prompt),
+        status: 'generated',
+        approval_status: 'pending',
+        usage_scope: 'private_test',
+        created_at: createdAt
+      })
+      .select('id')
+      .single()
+
+    if (insertError) throw insertError
+
+    return {
+      ...generated,
+      storageBucket: bucket,
+      storagePath,
+      mediaAssetId: mediaAsset?.id,
+      persistenceStatus: 'stored'
+    }
+  } catch (error) {
+    return {
+      ...generated,
+      persistenceStatus: 'failed',
+      persistenceError: describePersistenceError(error)
+    }
   }
 }
 
@@ -305,6 +401,7 @@ function blocked(prompt: EdenImagePrompt, blockedReason: string): EdenGeneratedI
     placement: prompt.placement,
     assetType: prompt.assetType,
     sourceImageIds: prompt.sourceImageIds,
+    persistenceStatus: 'skipped',
     blockedReason
   }
 }
@@ -321,4 +418,17 @@ function buildProviderPrompt(prompt: EdenImagePrompt) {
     'Governance: draft image only; output requires review before public website use.',
     `Negative prompt: ${prompt.negativePrompt}`
   ].join('\n')
+}
+
+function describePersistenceError(error: unknown) {
+  if (error instanceof Error) return error.message
+
+  if (error && typeof error === 'object') {
+    const maybeMessage = 'message' in error ? error.message : undefined
+    const maybeCode = 'code' in error ? error.code : undefined
+    const maybeDetails = 'details' in error ? error.details : undefined
+    return JSON.stringify({ message: maybeMessage, code: maybeCode, details: maybeDetails })
+  }
+
+  return String(error)
 }
