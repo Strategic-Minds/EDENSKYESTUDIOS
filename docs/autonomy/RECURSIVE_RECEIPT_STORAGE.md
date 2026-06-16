@@ -48,7 +48,8 @@ Every receipt must include:
 - validation result;
 - blockers;
 - next actions;
-- canonical storage location.
+- canonical storage location;
+- accepted risks observed.
 
 ## Governance Notes
 
@@ -56,7 +57,9 @@ This folder was created as a non-destructive Drive organization action.
 
 No Drive files were deleted, moved destructively, shared, or permission-changed during folder creation.
 
-The folder may inherit the known managed Drive writer-link exposure. Drive permission hardening remains a critical blocker before the system can claim enterprise-grade audit integrity.
+The folder inherits the owner-approved Drive writer-link posture. The owner has explicitly required that Drive writing remains anyone-with-link. Recursive runs should disclose this as an accepted risk instead of treating it as a remediation blocker.
+
+Unexpected destructive Drive moves, deletes, or sharing expansion beyond the accepted writer-link posture remain protected and must be blocked or escalated.
 
 ## Current Receipts
 
@@ -69,6 +72,9 @@ https://docs.google.com/document/d/17oDyRWLOFmFnDUKoRVefJ45BeJm5wc4YpmLcIH_245M/
 PR #20 ready-for-review receipt:
 https://docs.google.com/document/d/1iolkf1dL_eNlW6ymkgJOP26V_-kl-oCg3lzB1P0-ciw/edit
 
+Steps 1-10 implementation receipt:
+https://docs.google.com/document/d/18cdICJ44m9MsNelIdFEaQfQ_MBixEUDpsxDCLHFITqQ/edit
+
 ## Next Integration Step
 
-After PR #20 is merged and the preview routes are validated, update the runtime dry-run lane so generated receipts are written or uploaded into this Drive folder automatically when an approved Drive write adapter is available.
+Wire the runtime dry-run lane so generated receipts are written or uploaded into this Drive folder automatically when an approved Drive write adapter is available. If Drive write fails, the runtime should write a GitHub issue or PR comment receipt and return the full receipt payload in the route response.
