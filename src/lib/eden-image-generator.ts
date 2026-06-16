@@ -68,8 +68,8 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'homepage hero desktop',
     format: '16:9',
     objective: 'Photoreal premium first-viewport brand signal for Eden Skye Studios.',
-    prompt: 'Use the approved Eden Skye portrait as the exact face and identity reference. Create a realistic editorial website hero photograph, shot on a full-frame camera with natural skin texture, believable hair detail, accurate eyes, real fabric texture, and soft luxury studio lighting. Eden wears understated black premium styling. Background is a real black and graphite studio with very subtle champagne highlights and only a restrained orchid accent. Keep the face close to the source image, adult, human-realistic, calm, confident, premium, no plastic AI look, no fantasy glow, no illustration style, no text, no logos, leave clean negative space on the left for website copy.',
-    negativePrompt: 'No cartoon, no CGI, no wax skin, no over-smoothed face, no anime, no fantasy neon halo, no celebrity likeness, no private-person imitation, no minors, no explicit content, no nudity, no readable text, no fake UI, no platform logos, no distorted hands, no extra faces, no low-quality stock-photo look.',
+    prompt: 'Create a new realistic editorial website hero photograph of Eden Skye in a different setting from the source portrait. Use the attached portrait only for facial identity. New output: three-quarter body composition, standing in a premium black and graphite studio, tailored black blazer over elegant black styling, hands relaxed at side or lightly touching a studio table, soft cinematic key light, subtle champagne highlights, very restrained orchid accent, clean negative space on the left for website copy. Real camera photograph, natural skin texture, believable hair, real fabric, confident calm expression, no text, no logos.',
+    negativePrompt: 'Do not recreate the source portrait. No beige portrait background, no same front-facing headshot crop, no identical black scoop-neck top, no pearl earrings, no same pose, no same camera angle, no cartoon, no CGI, no wax skin, no over-smoothed face, no fantasy neon halo, no celebrity likeness, no private-person imitation, no minors, no explicit content, no nudity, no readable text, no fake UI, no platform logos, no distorted hands, no extra faces.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
   },
@@ -81,8 +81,8 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'homepage hero mobile crop',
     format: '9:16',
     objective: 'Photoreal mobile-first hero image for the Eden Skye homepage.',
-    prompt: 'Use the approved Eden Skye portrait as the exact face and identity reference. Create a vertical realistic editorial portrait for a mobile website hero, natural skin texture, believable hair, premium black styling, soft studio light, subtle graphite background, restrained champagne and orchid accents. Keep the face identity close to the source image. Leave calm top and bottom spacing for mobile UI. Make it look like a high-end real fashion photograph, not AI art, no text, no logos.',
-    negativePrompt: 'No cartoon, no CGI, no wax skin, no over-smoothed face, no fantasy neon halo, no celebrity likeness, no private-person imitation, no minors, no explicit content, no readable text, no platform logos, no warped anatomy, no extra limbs.',
+    prompt: 'Create a new vertical mobile hero photograph of Eden Skye using the attached portrait only as face identity reference. New output: waist-up editorial composition, turned slightly toward camera, premium black blazer or structured black dress, dark graphite studio background, soft realistic lighting, subtle champagne reflection, tiny orchid accent at edge only, natural skin texture, real hair detail, space above and below for mobile UI. No text, no logos.',
+    negativePrompt: 'Do not recreate the source portrait. No beige portrait background, no same front-facing headshot crop, no identical scoop-neck top, no pearl earrings, no same pose, no cartoon, no CGI, no wax skin, no over-smoothed face, no fantasy neon halo, no celebrity likeness, no private-person imitation, no minors, no explicit content, no readable text, no platform logos, no warped anatomy, no extra limbs.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
   },
@@ -94,7 +94,7 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'identity lock reference',
     format: '4:5',
     objective: 'Photoreal identity-consistent reference image for future website and social assets.',
-    prompt: 'Use the approved Eden Skye portrait as the exact identity reference. Create a face-forward realistic beauty portrait, natural skin pores, real hair strands, accurate eyes, soft makeup, premium black wardrobe, neutral graphite studio backdrop, subtle warm highlights. Preserve the face shape, eye spacing, hair color, expression family, and adult identity from the source image. The output should look like a real high-end portrait photograph, not an avatar render. No text, no logos.',
+    prompt: 'Create a realistic face-forward identity reference portrait for Eden Skye. This one may stay close to the source face identity, but still improve polish: natural skin pores, real hair strands, accurate eyes, soft makeup, premium black wardrobe, neutral graphite studio backdrop, subtle warm highlights. The output should look like a real high-end portrait photograph, not an avatar render. No text, no logos.',
     negativePrompt: 'No cartoon, no CGI, no wax skin, no childlike features, no explicit content, no readable text, no logo marks, no face morphing, no duplicate faces, no distorted eyes, no plastic skin.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
@@ -107,8 +107,8 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'AI content studio section',
     format: '16:9',
     objective: 'Photoreal premium AI content control room image.',
-    prompt: 'Use the approved Eden Skye portrait as the exact face and identity reference. Create a realistic editorial photograph of Eden in a premium AI content studio, standing naturally near a sleek production desk. Screens may show abstract soft light only, no readable UI. Natural skin texture, real hair detail, believable hands, black premium styling, subtle graphite/champagne studio design, restrained orchid accent light. Make it look photographed, not generated, no logos.',
-    negativePrompt: 'No readable text, no real software logos, no cartoon, no CGI, no wax skin, no celebrity likeness, no private-person imitation, no explicit content, no minors, no messy clutter, no cheap stock office lighting.',
+    prompt: 'Create a new realistic editorial photograph of Eden Skye in a premium AI content studio. Use the source portrait only for her face identity. New output: Eden standing naturally beside a sleek production desk, one hand near the desk, abstract soft light on screens with no readable UI, black premium wardrobe different from the source top, dark graphite/champagne studio design, restrained orchid edge light. Real photographed scene, believable hands, natural skin texture, real hair detail, no logos.',
+    negativePrompt: 'Do not recreate the source portrait. No beige portrait background, no same front-facing crop, no identical outfit, no readable text, no real software logos, no cartoon, no CGI, no wax skin, no celebrity likeness, no private-person imitation, no explicit content, no minors, no messy clutter, no cheap stock office lighting.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
   },
@@ -120,8 +120,8 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'Eden closet / wardrobe section',
     format: '3:2',
     objective: 'Photoreal website section image for fashion, wardrobe, and premium creator styling.',
-    prompt: 'Use the approved Eden Skye portrait as the exact identity reference. Create a realistic luxury wardrobe photograph with Eden in tasteful black premium fashion styling, natural pose, believable hands, natural skin texture, real fabric and wardrobe detail, black wardrobe rails, champagne metal hardware, soft studio light, subtle orchid accent. Keep identity close to the source image. No text, no logos.',
-    negativePrompt: 'No cartoon, no CGI, no wax skin, no explicit wardrobe, no nudity, no minors, no celebrity likeness, no private-person imitation, no readable labels, no brand logos, no distorted clothing or hands.',
+    prompt: 'Create a new realistic luxury wardrobe photograph of Eden Skye. Use the source portrait only for face identity. New output: Eden standing in a black luxury wardrobe room, tasteful tailored black fashion look different from the source top, one hand on a wardrobe rail, champagne metal hardware, soft realistic studio light, subtle orchid accent, natural skin texture, real fabric and wardrobe detail. No text, no logos.',
+    negativePrompt: 'Do not recreate the source portrait. No beige portrait background, no same headshot crop, no same outfit, no cartoon, no CGI, no wax skin, no explicit wardrobe, no nudity, no minors, no celebrity likeness, no private-person imitation, no readable labels, no brand logos, no distorted clothing or hands.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
   },
@@ -133,8 +133,8 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'model campaign card',
     format: '4:5',
     objective: 'Photoreal campaign card image for the Models and Services sections.',
-    prompt: 'Use the approved Eden Skye portrait as the exact face and identity reference. Create a realistic waist-up editorial campaign portrait, natural skin pores, realistic hair, premium black styling, soft studio lighting, subtle graphite background, restrained champagne highlight. Keep the source identity, expression family, and adult face. Make it look like a real fashion campaign photograph, not synthetic art, no text, no logos.',
-    negativePrompt: 'No cartoon, no CGI, no wax skin, no celebrity likeness, no private-person imitation, no minors, no explicit content, no readable text, no extra faces, no distorted hands, no plastic skin.',
+    prompt: 'Create a new realistic waist-up editorial campaign portrait of Eden Skye using the source portrait only for face identity. New output: different pose, slightly angled shoulders, premium black blazer or structured fashion top, graphite studio background, soft fashion lighting, natural skin pores, realistic hair, restrained champagne highlight. Make it look like a real fashion campaign photograph, no text, no logos.',
+    negativePrompt: 'Do not recreate the source portrait. No beige portrait background, no same front-facing crop, no identical scoop-neck top, no pearl earrings, no cartoon, no CGI, no wax skin, no celebrity likeness, no private-person imitation, no minors, no explicit content, no readable text, no extra faces, no distorted hands, no plastic skin.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
   },
@@ -159,8 +159,8 @@ export const EDEN_SKYE_WEBSITE_IMAGE_PROMPTS: EdenImagePrompt[] = [
     placement: 'Open Graph / social share image',
     format: '16:9',
     objective: 'Photoreal share-preview image for Eden Skye Studios pages.',
-    prompt: 'Use the approved Eden Skye portrait as the exact face and identity reference. Create a realistic clean Open Graph photograph with Eden in a premium black studio, natural skin texture, real hair detail, subtle graphite background, restrained champagne and orchid accents, strong but believable subject presence, safe for social preview cropping, no text, no logos.',
-    negativePrompt: 'No cartoon, no CGI, no wax skin, no text, no logos, no celebrity likeness, no private-person imitation, no minors, no explicit content, no distorted face, no clutter.',
+    prompt: 'Create a new realistic Open Graph photograph of Eden Skye using the source portrait only for face identity. New output: Eden in a premium black studio, half-body composition, different pose and wardrobe from the source, graphite background, restrained champagne and orchid accents, realistic camera depth, natural skin texture, real hair detail, safe for social preview cropping, no text, no logos.',
+    negativePrompt: 'Do not recreate the source portrait. No beige portrait background, no same headshot crop, no identical outfit, no cartoon, no CGI, no wax skin, no text, no logos, no celebrity likeness, no private-person imitation, no minors, no explicit content, no distorted face, no clutter.',
     approvalGate: 'image_review_required',
     status: 'approved_for_draft_generation'
   }
@@ -513,7 +513,8 @@ function buildProviderPrompt(prompt: EdenImagePrompt) {
   return [
     prompt.prompt,
     '',
-    'Critical visual standard: photorealistic commercial photography only. Preserve the approved source portrait identity when source images are attached. Output must look like a real person photographed in a real studio, not a render, avatar, illustration, synthetic model, or AI glamour shot.',
+    referenceVariationInstruction(prompt),
+    'Critical visual standard: photorealistic commercial photography only. Output must look like a real person photographed in a real studio, not a render, avatar, illustration, synthetic model, or AI glamour shot.',
     `Placement: ${prompt.placement}`,
     `Format: ${prompt.format}`,
     `Objective: ${prompt.objective}`,
@@ -521,6 +522,18 @@ function buildProviderPrompt(prompt: EdenImagePrompt) {
     'Governance: draft image only; output requires review before public website use.',
     `Negative prompt: ${prompt.negativePrompt}`
   ].join('\n')
+}
+
+function referenceVariationInstruction(prompt: EdenImagePrompt) {
+  if (prompt.assetType === 'identity_lock') {
+    return 'Reference handling: for this identity-lock prompt, preserve face identity closely while still producing a polished new portrait.'
+  }
+
+  if (prompt.assetType === 'background_context') {
+    return 'Reference handling: no person is needed for this still-life prompt.'
+  }
+
+  return 'Reference handling: the attached source portrait is NOT the desired output. Use it only to identify Eden Skye face identity. Create a new photograph with different pose, different crop, different wardrobe, different background, and different lighting. Do not copy the source portrait composition, beige background, scoop-neck top, pearl earrings, front-facing headshot crop, or original camera angle.'
 }
 
 function describePersistenceError(error: unknown) {
