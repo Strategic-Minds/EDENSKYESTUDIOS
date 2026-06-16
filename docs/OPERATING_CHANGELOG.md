@@ -4,6 +4,30 @@ This file records material operating-system, bridge, workflow, and documentation
 
 ## 2026-06-16
 
+### Recursive Autonomy Validation Workflow
+
+Added a governed validation workflow for proving recursive completion readiness without weakening production locks.
+
+Created:
+
+- `.github/workflows/recursive-autonomy-validation.yml`
+- `scripts/validate-recursive-completion-routes.mjs`
+- `docs/autonomy/RECURSIVE_VALIDATION_WORKFLOW.md`
+
+Purpose:
+
+- Generate a `package-lock.json` candidate in a registry-capable GitHub Actions environment.
+- Install dependencies from the generated lock and run typecheck/build validation.
+- Validate recursive readiness and cron dry-run routes against a configured Vercel base URL.
+- Use `CRON_SECRET` when available so the production cron route can remain locked while still producing validation receipts.
+- Upload the generated lockfile and `.autonomy-receipts/recursive-route-validation.json` as workflow artifacts.
+
+Notes:
+
+- This workflow does not deploy, publish, mutate Shopify, change payments/pricing, run live avatar/video actions, write Supabase production data, change secrets, perform destructive Drive/GitHub actions, or run paid generation bursts.
+- The workflow can produce evidence for the lockfile/build/route/cron readiness gates, but it does not by itself authorize `may_claim_full_autonomous_24_7`.
+- Full readiness still requires persistent receipt writer proof, provider boundary rollback receipts, image/content QA receipts, live escalation receipts, and protected-action gate receipts.
+
 ### Recursive Completion Engine Draft
 
 Added the first governed recursive completion implementation packet for Eden Skye Studios.
