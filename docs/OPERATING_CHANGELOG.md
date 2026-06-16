@@ -4,6 +4,26 @@ This file records material operating-system, bridge, workflow, and documentation
 
 ## 2026-06-16
 
+### Recursive Autonomy Validation Push Trigger
+
+Updated the recursive autonomy validation workflow so governed pushes to `main` that touch recursive-autonomy, package, or workflow surfaces automatically produce validation evidence.
+
+Updated:
+
+- `.github/workflows/recursive-autonomy-validation.yml`
+- `docs/OPERATING_CHANGELOG.md`
+
+Purpose:
+
+- Ensure the validation workflow can run after normal governed merges even when a manual workflow-dispatch connector is unavailable.
+- Preserve manual dispatch and six-hour schedule triggers.
+- Keep the workflow limited to validation receipts, package-lock candidate generation, install, typecheck, build, and dry-run route checks.
+
+Notes:
+
+- This change does not deploy, publish, mutate Shopify, change payments/pricing, run live avatar/video actions, write Supabase production data, change secrets, perform destructive Drive/GitHub actions, or run paid generation bursts.
+- The workflow still requires successful artifact receipts before any full autonomous 24/7 readiness claim can be made.
+
 ### Recursive Autonomy Validation Workflow
 
 Added a governed validation workflow for proving recursive completion readiness without weakening production locks.
