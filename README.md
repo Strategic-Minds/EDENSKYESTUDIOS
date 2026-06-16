@@ -6,25 +6,46 @@ The public Shopify page is the black/champagne website mockup shown in Drive: `E
 
 Auto Builder is used as the factory and bridge guide, but the sandbox repo is not the source of truth for Eden Skye Studios.
 
+## Drive Canon And Cross-System Stack
+
+Managed Eden OS Drive canon:
+https://drive.google.com/drive/folders/1oCEjD6kUm9FiYDh1w-dNE9PPiggj65MQ
+
+Parent enterprise command folder:
+https://drive.google.com/drive/folders/13uLhv0NRhmdCdJCCLrroLzyRRttoXtpr
+
+Cross-system canon mirrors live under `docs/canon/` in this repo and in `Strategic-Minds/AUTO_BUILDER`:
+
+- `docs/canon/MASTER_CANON_INDEX.md`
+- `docs/canon/BUSINESS_OPERATING_PLAN.md`
+- `docs/canon/BUSINESS_GROWTH_STRATEGY.md`
+- `docs/canon/FINANCIAL_SYSTEM_PLAN.md`
+- `docs/canon/AUTOMATION_AUTONOMY_ROADMAP.md`
+- `docs/canon/DISCOVERY_VALIDATION_PLAN.md`
+- `docs/canon/OPERATIONS_24_7_RUNBOOK.md`
+- `docs/canon/CROSS_SYSTEM_DOCUMENTATION_SYNC_POLICY.md`
+
 ## Start Here
 
 Read these files before making changes:
 
 1. `START_HERE.md` - first-run operating sequence for every agent.
 2. `AGENTS.md` - repo-level execution rules and approval locks.
-3. `docs/PLAN_MODE_BUILD_MODE.md` - mandatory to-do list format for every new task, workflow, system, or idea.
-4. `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md` - corrected split: Shopify page plus Vercel Closet.
-5. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - Auto Builder packet for the corrected architecture.
-6. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Shopify GitHub theme path and Vercel app routing.
-7. `docs/SITE_FINISH_NOW_CHECKLIST.md` - Shopify page, Vercel app, routing, preview, and approval checklist.
-8. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
-9. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
-10. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
-11. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
+3. `docs/canon/MASTER_CANON_INDEX.md` - Drive/repo source-truth map and canon ownership.
+4. `docs/canon/CROSS_SYSTEM_DOCUMENTATION_SYNC_POLICY.md` - rules for keeping Drive and repos aligned.
+5. `docs/PLAN_MODE_BUILD_MODE.md` - mandatory to-do list format for every new task, workflow, system, or idea.
+6. `docs/EDEN_SHOPIFY_CLOSET_SPLIT_ARCHITECTURE.md` - corrected split: Shopify page plus Vercel Closet.
+7. `docs/AUTO_BUILDER_SITE_COMPLETION_PACKET.md` - Auto Builder packet for the corrected architecture.
+8. `docs/SHOPIFY_GIT_LINKING_RUNBOOK.md` - Shopify GitHub theme path and Vercel app routing.
+9. `docs/SITE_FINISH_NOW_CHECKLIST.md` - Shopify page, Vercel app, routing, preview, and approval checklist.
+10. `docs/EDEN_SKYE_STUDIOS_CAPABILITIES.md` - current website, bridge, and connected-system capabilities.
+11. `docs/SYSTEM_OPERATING_CONTRACT.md` - governance, receipts, and documentation-update requirements.
+12. `docs/eden-auto-builder-capability-bridge.md` - bridge registry and Auto Builder alignment.
+13. `docs/OPERATING_CHANGELOG.md` - running record of system changes.
 
 ## Mandatory Operating Rule
 
-Every Eden Skye Studios work session must begin with previous-file analysis before implementation. Future agents should inspect the existing repo docs, relevant source files, and current capability records before proposing or changing anything material.
+Every Eden Skye Studios work session must begin with previous-file analysis before implementation. Future agents should inspect the existing repo docs, relevant source files, current capability records, and cross-system canon docs before proposing or changing anything material.
 
 Every new task, system, workflow, content idea, automation, bridge, route, data model, or operating process must create or update a to-do list with two sections:
 
@@ -159,3 +180,4 @@ The current foundation includes:
 - corrected Shopify/Vercel split architecture
 - Shopify Git linking runbook
 - site finish-now checklist
+- cross-system autonomous-growth canon stack
