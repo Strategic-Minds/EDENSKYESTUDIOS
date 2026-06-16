@@ -14,18 +14,29 @@ Created:
 - `docs/autonomy/RECURSIVE_COMPLETION_ENGINE.md`
 - `docs/autonomy/RECURSIVE_COMPLETION_RECEIPT_SCHEMA.md`
 - `docs/autonomy/RECURSIVE_COMPLETION_RECEIPT_TEMPLATE.json`
+- `src/lib/recursive-completion.ts`
+- `app/api/recursive-completion/readiness/route.ts`
+- `app/api/cron/recursive-completion-dry-run/route.ts`
+
+Updated:
+
+- `vercel.json`
+- `docs/OPERATING_CHANGELOG.md`
 
 Purpose:
 
 - Define the machine-readable manifest for recursive completion.
 - Define safe autonomous lanes for readiness, canon drift, generator queue, business discovery, and monthly governance audit work.
 - Define what the system may do without human approval: read-only audits, draft generation, receipt creation, blocker logging, issue creation, and draft PR creation.
+- Add preview-safe API surfaces for recursive completion readiness and dry-run receipts.
+- Register `/api/cron/recursive-completion-dry-run` as an hourly dry-run cron route at minute 30.
 - Preserve hard approval gates for production deploys, Shopify mutation, public publishing, payments/pricing, live avatar/video action, Supabase production writes, Drive sharing/parent/delete/destructive moves, destructive GitHub actions, secret/permission changes, and paid generation bursts.
 - Provide a repeatable receipt schema and template so future scheduled runs can prove what happened.
 
 Notes:
 
-- This is a draft implementation packet, not a production activation.
+- This is a dry-run activation packet, not production autonomy.
+- The dry-run route forces `liveMutationLocked: true` and `dryRunForced: true`.
 - The readiness gate in `AUTO_SYSTEM_MANIFEST.json` remains false until Drive permissions, runtime receipts, build/test receipts, Vercel cron evidence, provider bridge receipts, image/content QA receipts, and protected-action gates are all proven.
 - Protected live mutations remain locked by approval gates.
 
