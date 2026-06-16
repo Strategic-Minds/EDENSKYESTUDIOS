@@ -11,6 +11,10 @@
       "schedule": "0 10 * * *"
     },
     {
+      "path": "/api/cron/eden-image-generator",
+      "schedule": "*/30 * * * *"
+    },
+    {
       "path": "/api/cron/eden-skye-generator-tick",
       "schedule": "0 * * * *"
     },
