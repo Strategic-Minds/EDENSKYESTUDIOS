@@ -32,7 +32,8 @@ async function handleImageGeneratorRequest(request: Request, trigger: 'manual' |
   const requestedMode = String(body.mode ?? url.searchParams.get('mode') ?? 'validate')
   const mode: EdenImageGenerationMode = requestedMode === 'generate' ? 'generate' : 'validate'
   const limit = Number(body.limit ?? url.searchParams.get('limit') ?? '') || undefined
-  const result = await runEdenImagePipeline({ mode, limit, trigger })
+  const promptId = String(body.promptId ?? url.searchParams.get('promptId') ?? '').trim() || undefined
+  const result = await runEdenImagePipeline({ mode, limit, promptId, trigger })
 
   return NextResponse.json({
     ...result,
