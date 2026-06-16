@@ -1,0 +1,61 @@
+{
+  "system": "EDENSKYESTUDIOS Auto Image Generator",
+  "version": "2026-06-16.1",
+  "mode": "draft_packet_generation_only",
+  "source_of_truth": {
+    "drive_project_folder_id": "1oCEjD6kUm9FiYDh1w-dNE9PPiggj65MQ",
+    "github_repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "source_portrait_folder_id": "1KiQ9FMtJw4abWV4iK68i2poWwo3wsqKq",
+    "brand_pack_folder_id": "1nlgBqx-nHuXyprkTmo6-mMKwvhhcHPS2",
+    "stock_model_assets_folder_id": "1V8MNsOdvLNSd04JQrnyvH1ECnj3nOF8P"
+  },
+  "brand": {
+    "name": "Eden Skye Studios",
+    "positioning": "Premium AI avatar modeling and content studio for ecommerce brands, creators, agencies, and digital product businesses.",
+    "personality": ["cinematic", "luxury", "precise", "conversion-aware", "governed", "ethical"],
+    "colors": {
+      "eden_black": "#050507",
+      "graphite_glass": "#111015",
+      "velvet_charcoal": "#19151c",
+      "neon_orchid": "#ff007a",
+      "hot_bloom": "#ff3ba7",
+      "champagne": "#d7b56d",
+      "warm_ivory": "#f7efe5",
+      "soft_smoke": "#b9aeba"
+    },
+    "imagery": {
+      "model_direction": "Original adult synthetic model/editorial creator imagery; no real celebrity likeness or private-person imitation.",
+      "lighting": "Black studio, neon pink rim light, glossy reflections, champagne metallic accents.",
+      "approved_environments": ["private studio", "luxury closet", "night terrace", "content control room", "premium campaign set"],
+      "avoid": ["generic SaaS gradients", "cheap stock-photo posing", "real platform logo misuse", "unapproved public publishing", "readable fake text artifacts"]
+    }
+  },
+  "safety": {
+    "adult_only": true,
+    "explicit_content_allowed": false,
+    "celebrity_likeness_allowed": false,
+    "private_person_imitation_allowed": false,
+    "public_use_requires_approval": true,
+    "paid_generation_requires_approval": true,
+    "blocked_statuses": ["generated_labeled_source_portrait_pending_operator_final_approval", "pending", "unknown", "rejected"]
+  },
+  "required_prompt_fields": ["asset_type", "model_name", "source_image_id", "persona_context", "platform", "format", "wardrobe_safety", "lighting", "camera_angle", "environment", "negative_prompt", "approval_gate"],
+  "approved_asset_types": {
+    "identity_lock": {"count_per_model": 6, "purpose": "identity consistency"},
+    "portfolio_portrait": {"count_per_model": 12, "purpose": "profile/portfolio"},
+    "lifestyle": {"count_per_model": 10, "purpose": "model world"},
+    "website_hero": {"count_per_model": 4, "purpose": "site pages"},
+    "social_vertical": {"count_per_model": 12, "purpose": "reels/stories"},
+    "social_square": {"count_per_model": 12, "purpose": "posts"},
+    "heygen_headshot": {"count_per_model": 6, "purpose": "avatar prep", "requires_extra_approval": true},
+    "heygen_half_body": {"count_per_model": 6, "purpose": "video prep", "requires_extra_approval": true},
+    "wardrobe_safe": {"count_per_model": 8, "purpose": "Edens Closet"},
+    "background_context": {"count_per_model": 4, "purpose": "scene context"}
+  },
+  "output_policy": {
+    "default_status": "draft_ready_pending_review",
+    "public_status": "approval_required",
+    "receipt_required": true,
+    "qa_gate_required": true
+  }
+}
