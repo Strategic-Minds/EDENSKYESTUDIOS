@@ -64,6 +64,17 @@ EDEN_IMAGE_GENERATOR_ADMIN_TOKEN=choose-a-long-private-token
 CRON_SECRET=choose-a-long-private-cron-secret
 ```
 
+Enterprise generation guardrails:
+
+```bash
+EDEN_IMAGE_MAX_BATCH_SIZE=1
+EDEN_IMAGE_PROVIDER_TIMEOUT_MS=120000
+```
+
+`EDEN_IMAGE_MAX_BATCH_SIZE` defaults to `1`. Even if an operator or cron route requests a larger untargeted batch, generation is capped by this setting. Targeted prompt generation by `promptId` still works one prompt at a time.
+
+`EDEN_IMAGE_PROVIDER_TIMEOUT_MS` defaults to `120000` and is capped at five minutes. This prevents slow provider calls or slow Drive thumbnail fetches from leaving the admin UI waiting forever.
+
 Optional persistence for generated draft images:
 
 ```bash
@@ -93,6 +104,7 @@ For fastest review iterations, set:
 EDEN_IMAGE_SAVE_MEDIA_ASSETS=false
 EDEN_IMAGE_QUALITY=medium
 EDEN_IMAGE_REFERENCE_COUNT=1
+EDEN_IMAGE_MAX_BATCH_SIZE=1
 ```
 
 Then switch storage and high quality back on for final approved assets.
@@ -135,7 +147,7 @@ Cron route:
 GET /api/cron/eden-image-generator
 ```
 
-Cron default is validation-only. If cron generation is enabled, it defaults to one image unless `EDEN_IMAGE_CRON_LIMIT` is set:
+Cron default is validation-only. If cron generation is enabled, it defaults to one image unless `EDEN_IMAGE_CRON_LIMIT` is set, and the backend still enforces `EDEN_IMAGE_MAX_BATCH_SIZE`:
 
 ```bash
 EDEN_IMAGE_CRON_MODE=generate
@@ -164,3 +176,5 @@ It shows:
 ## Current implementation note
 
 The current generator uses the approved Eden Skye source images as actual reference-image inputs for person-based prompts. Normal prompts default to one reference image for speed; identity-lock prompts default to two references for consistency. The membership/still-life visual intentionally uses text-to-image because it should not show Eden Skye directly.
+
+The generation path is now protected by backend batch limits, provider timeouts, operator-token authorization, review-only usage scope, Supabase persistence controls, and receipt logging. Public website use still requires a separate approval step.
