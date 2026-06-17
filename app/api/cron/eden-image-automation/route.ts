@@ -30,6 +30,15 @@ export async function GET(request: Request) {
   }
 
   const steps: AutomationStep[] = []
+  const growthHeartbeat = buildGrowthHeartbeatSnapshot()
+
+  steps.push({
+    name: 'growth_os_heartbeat_validation',
+    ok: growthHeartbeat.ok,
+    status: growthHeartbeat.ok ? 'completed' : 'failed',
+    detail: growthHeartbeat.detail
+  })
+
   const validateResult = await runEdenImagePipeline({
     mode: 'validate',
     limit: 1,
@@ -79,6 +88,8 @@ export async function GET(request: Request) {
     target: 'eden_image_asset_pipeline',
     details: {
       livePublicationLocked: true,
+      publicExecutionAllowed: false,
+      growthHeartbeat,
       cronAuthorization: authorization.mode,
       generationEnabled: process.env.EDEN_IMAGE_WORKFLOW_GENERATE_ENABLED === 'true',
       promotionEnabled: process.env.EDEN_IMAGE_WORKFLOW_PROMOTE_ENABLED !== 'false',
@@ -91,6 +102,8 @@ export async function GET(request: Request) {
     system: 'eden-image-automation-cron',
     livePublicationLocked: true,
     publicWebsiteMutationAllowed: false,
+    publicExecutionAllowed: false,
+    growthHeartbeat,
     cronAuthorization: authorization.mode,
     steps,
     receipt
@@ -166,6 +179,52 @@ async function promoteApprovedDrafts(): Promise<AutomationStep> {
   }
 }
 
+function normalizeQuality(value: string | undefined): NonNullable<EdenImageRuntimeSettings['quality']> {
+  if (value === 'low' || value === 'medium' || value === 'high' || value === 'auto') return value
+  return 'medium'
+}
+
+function buildGrowthHeartbeatSnapshot() {
+  const mode = normalizeSystemMode(process.env.SYSTEM_MODE)
+  const publicExecutionEnabled = process.env.GROWTH_PUBLIC_EXECUTION_ENABLED === 'true'
+  const metricoolHandle = process.env.METRICOOL_EDEN_SKYE_HANDLE?.trim() || null
+  const checks = [
+    {
+      name: 'runtime_mode',
+      ok: mode !== 'off',
+      detail: `SYSTEM_MODE=${mode}`
+    },
+    {
+      name: 'public_execution_gate',
+      ok: !publicExecutionEnabled,
+      detail: 'Public/social/Shopify/payment execution remains locked.'
+    },
+    {
+      name: 'metricool_eden_handle_reconciliation',
+      ok: Boolean(metricoolHandle),
+      detail: metricoolHandle || 'Expected handle to reconcile: thereal_edenskye.'
+    }
+  ]
+
+  return {
+    ok: !publicExecutionEnabled,
+    mode,
+    health: publicExecutionEnabled ? 'blocked' : metricoolHandle ? 'healthy' : 'degraded',
+    detail: publicExecutionEnabled
+      ? 'GROWTH_PUBLIC_EXECUTION_ENABLED must remain false until release gates pass.'
+      : 'Growth OS heartbeat recorded on existing 5-minute image automation cron.',
+    checks
+  }
+}
+
+function normalizeSystemMode(value: string | undefined) {
+  if (value === 'off' || value === 'monitor' || value === 'draft_safe' || value === 'approval_ready' || value === 'live_guarded') {
+    return value
+  }
+
+  return 'draft_safe'
+}
+
 function getCronRuntimeSettings(): EdenImageRuntimeSettings {
   return {
     quality: normalizeQuality(process.env.EDEN_IMAGE_WORKFLOW_QUALITY),
@@ -175,11 +234,6 @@ function getCronRuntimeSettings(): EdenImageRuntimeSettings {
     providerTimeoutMs: normalizeTimeout(process.env.EDEN_IMAGE_WORKFLOW_TIMEOUT_MS),
     saveMediaAssets: process.env.EDEN_IMAGE_WORKFLOW_SAVE_MEDIA_ASSETS !== 'false'
   }
-}
-
-function normalizeQuality(value: string | undefined): NonNullable<EdenImageRuntimeSettings['quality']> {
-  if (value === 'low' || value === 'medium' || value === 'high' || value === 'auto') return value
-  return 'medium'
 }
 
 function normalizeTimeout(value: string | undefined) {
