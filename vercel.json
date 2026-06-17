@@ -25,6 +25,10 @@
     {
       "path": "/api/cron/recursive-completion-dry-run",
       "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/workflows/eden-forensic-repair",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
