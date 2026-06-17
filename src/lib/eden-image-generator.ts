@@ -24,6 +24,24 @@ export type EdenImagePrompt = {
 
 export type EdenImageGenerationMode = 'validate' | 'generate'
 
+export type EdenImageRuntimeSettings = {
+  quality?: 'low' | 'medium' | 'high' | 'auto'
+  referenceMode?: 'on' | 'off'
+  referenceCount?: number
+  maxBatchSize?: number
+  providerTimeoutMs?: number
+  saveMediaAssets?: boolean
+}
+
+type NormalizedRuntimeSettings = {
+  quality: 'low' | 'medium' | 'high' | 'auto'
+  referenceMode: 'on' | 'off'
+  referenceCount?: number
+  maxBatchSize: number
+  providerTimeoutMs: number
+  saveMediaAssets: boolean
+}
+
 export type EdenGeneratedImage = {
   promptId: string
   status: 'generated' | 'blocked'
@@ -171,10 +189,12 @@ export async function runEdenImagePipeline(input: {
   limit?: number
   promptId?: string
   trigger: 'manual' | 'cron' | 'system'
+  settings?: EdenImageRuntimeSettings
 }) {
-  const promptSet = getRequestedPrompts(input)
+  const settings = normalizeRuntimeSettings(input.settings)
+  const promptSet = getRequestedPrompts(input, settings)
   const prompts = promptSet.length > 0 ? promptSet : EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, 1)
-  const readiness = getImageGeneratorReadiness(input.mode)
+  const readiness = getImageGeneratorReadiness(input.mode, settings)
   const generated: EdenGeneratedImage[] = []
 
   if (input.mode === 'generate' && !readiness.canGenerate) {
@@ -191,7 +211,7 @@ export async function runEdenImagePipeline(input: {
     }
   } else if (input.mode === 'generate') {
     for (const prompt of prompts) {
-      generated.push(await generateWithOpenAI(prompt))
+      generated.push(await generateWithOpenAI(prompt, settings))
     }
   }
 
@@ -224,6 +244,7 @@ export async function runEdenImagePipeline(input: {
       trigger: input.trigger,
       promptId: input.promptId ?? null,
       requestedLimit: input.limit ?? null,
+      runtimeSettings: readiness.runtimeSettings,
       maxBatchSize: readiness.maxBatchSize,
       promptCount: prompts.length,
       generatedCount: generated.filter((item) => item.status === 'generated').length,
@@ -242,7 +263,10 @@ export async function runEdenImagePipeline(input: {
   return { ...result, receipt }
 }
 
-function getRequestedPrompts(input: { mode: EdenImageGenerationMode; limit?: number; promptId?: string }) {
+function getRequestedPrompts(
+  input: { mode: EdenImageGenerationMode; limit?: number; promptId?: string },
+  settings: NormalizedRuntimeSettings
+) {
   if (input.promptId) {
     return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.filter((prompt) => prompt.id === input.promptId)
   }
@@ -251,42 +275,85 @@ function getRequestedPrompts(input: { mode: EdenImageGenerationMode; limit?: num
     return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, input.limit ?? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
   }
 
-  const requestedLimit = input.limit ?? getMaxBatchSize()
-  return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, Math.min(requestedLimit, getMaxBatchSize()))
+  const requestedLimit = input.limit ?? settings.maxBatchSize
+  return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, Math.min(requestedLimit, settings.maxBatchSize))
 }
 
-function getImageGeneratorReadiness(mode: EdenImageGenerationMode) {
+function getImageGeneratorReadiness(mode: EdenImageGenerationMode, settings: NormalizedRuntimeSettings) {
   const provider = getImageProvider()
   const enabled = process.env.EDEN_IMAGE_AUTOGENERATION_ENABLED === 'true'
   const model = process.env.EDEN_IMAGE_MODEL || 'gpt-image-2'
-  const persistenceEnabled = process.env.EDEN_IMAGE_SAVE_MEDIA_ASSETS === 'true'
   const storageBucket = process.env.EDEN_IMAGE_SUPABASE_BUCKET?.trim()
-  const referenceImageMode = process.env.EDEN_IMAGE_REFERENCE_MODE !== 'off'
   const blockers: string[] = []
 
   if (mode === 'generate') {
     if (!enabled) blockers.push('EDEN_IMAGE_AUTOGENERATION_ENABLED must be true')
     if (!provider.apiKey) blockers.push('OPENAI_API_KEY or AI_GATEWAY_API_KEY is required')
-    if (persistenceEnabled && !hasSupabaseServerConfig()) blockers.push('Supabase env vars are required when EDEN_IMAGE_SAVE_MEDIA_ASSETS is true')
-    if (persistenceEnabled && !usesServiceRole) blockers.push('SUPABASE_SERVICE_ROLE_KEY is required to store generated draft images')
-    if (persistenceEnabled && !storageBucket) blockers.push('EDEN_IMAGE_SUPABASE_BUCKET is required when EDEN_IMAGE_SAVE_MEDIA_ASSETS is true')
+    if (settings.saveMediaAssets && !hasSupabaseServerConfig()) blockers.push('Supabase env vars are required when save media assets is enabled')
+    if (settings.saveMediaAssets && !usesServiceRole) blockers.push('SUPABASE_SERVICE_ROLE_KEY is required to store generated draft images')
+    if (settings.saveMediaAssets && !storageBucket) blockers.push('EDEN_IMAGE_SUPABASE_BUCKET is required when save media assets is enabled')
   }
 
   return {
     canGenerate: mode === 'generate' && blockers.length === 0,
     provider: provider.name,
     model,
+    quality: settings.quality,
     enabled,
     apiKeyConfigured: Boolean(provider.apiKey),
     providerBaseUrlConfigured: provider.baseUrl !== 'https://api.openai.com/v1',
-    providerTimeoutMs: getProviderTimeoutMs(),
-    maxBatchSize: getMaxBatchSize(),
-    referenceImageMode,
-    referenceImageCount: process.env.EDEN_IMAGE_REFERENCE_COUNT?.trim() || 'normal=1, identity_lock=2',
-    persistenceEnabled,
+    providerTimeoutMs: settings.providerTimeoutMs,
+    maxBatchSize: settings.maxBatchSize,
+    referenceImageMode: settings.referenceMode !== 'off',
+    referenceImageCount: settings.referenceCount ?? 'normal=1, identity_lock=2',
+    persistenceEnabled: settings.saveMediaAssets,
     storageBucketConfigured: Boolean(storageBucket),
+    runtimeSettings: settings,
     blockers
   }
+}
+
+function normalizeRuntimeSettings(input?: EdenImageRuntimeSettings): NormalizedRuntimeSettings {
+  return {
+    quality: normalizeQuality(input?.quality),
+    referenceMode: input?.referenceMode === 'off' ? 'off' : normalizeReferenceMode(),
+    referenceCount: normalizeReferenceCount(input?.referenceCount),
+    maxBatchSize: normalizeMaxBatchSize(input?.maxBatchSize),
+    providerTimeoutMs: normalizeProviderTimeoutMs(input?.providerTimeoutMs),
+    saveMediaAssets: typeof input?.saveMediaAssets === 'boolean' ? input.saveMediaAssets : process.env.EDEN_IMAGE_SAVE_MEDIA_ASSETS === 'true'
+  }
+}
+
+function normalizeQuality(value: unknown): NormalizedRuntimeSettings['quality'] {
+  if (value === 'low' || value === 'medium' || value === 'high' || value === 'auto') return value
+  const envQuality = process.env.EDEN_IMAGE_QUALITY
+  if (envQuality === 'low' || envQuality === 'medium' || envQuality === 'high' || envQuality === 'auto') return envQuality
+  return 'high'
+}
+
+function normalizeReferenceMode() {
+  return process.env.EDEN_IMAGE_REFERENCE_MODE === 'off' ? 'off' : 'on'
+}
+
+function normalizeReferenceCount(value: unknown) {
+  const configured = Number(value ?? process.env.EDEN_IMAGE_REFERENCE_COUNT ?? '')
+  if (Number.isFinite(configured) && configured > 0) return Math.min(Math.floor(configured), EDEN_SKYE_SOURCE_IMAGES.length)
+  return undefined
+}
+
+function normalizeMaxBatchSize(value: unknown) {
+  const configured = Number(value ?? process.env.EDEN_IMAGE_MAX_BATCH_SIZE ?? '')
+  if (Number.isFinite(configured) && configured > 0) {
+    return Math.min(Math.floor(configured), EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
+  }
+
+  return 1
+}
+
+function normalizeProviderTimeoutMs(value: unknown) {
+  const configured = Number(value ?? process.env.EDEN_IMAGE_PROVIDER_TIMEOUT_MS ?? '')
+  if (Number.isFinite(configured) && configured >= 10_000) return Math.min(Math.floor(configured), 300_000)
+  return 120_000
 }
 
 function imageSizeForFormat(format: EdenImagePrompt['format']) {
@@ -324,7 +391,7 @@ function getOpenAIBaseUrl(provider: 'openai' | 'ai_gateway') {
   return (process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '')
 }
 
-async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGeneratedImage> {
+async function generateWithOpenAI(prompt: EdenImagePrompt, settings: NormalizedRuntimeSettings): Promise<EdenGeneratedImage> {
   const provider = getImageProvider()
   const model = process.env.EDEN_IMAGE_MODEL || 'gpt-image-2'
 
@@ -332,31 +399,32 @@ async function generateWithOpenAI(prompt: EdenImagePrompt): Promise<EdenGenerate
     return blocked(prompt, 'Missing image provider API key')
   }
 
-  const useReferences = process.env.EDEN_IMAGE_REFERENCE_MODE !== 'off' && prompt.assetType !== 'background_context'
+  const useReferences = settings.referenceMode !== 'off' && prompt.assetType !== 'background_context'
   const generated = useReferences
-    ? await generateReferenceEdit(prompt, provider, model)
-    : await generateTextImage(prompt, provider, model)
+    ? await generateReferenceEdit(prompt, provider, model, settings)
+    : await generateTextImage(prompt, provider, model, settings)
 
   if (generated.status === 'blocked') return generated
 
-  return persistGeneratedImage(prompt, generated)
+  return persistGeneratedImage(prompt, generated, settings)
 }
 
 async function generateReferenceEdit(
   prompt: EdenImagePrompt,
   provider: { apiKey?: string; baseUrl: string; name: string },
-  model: string
+  model: string,
+  settings: NormalizedRuntimeSettings
 ): Promise<EdenGeneratedImage> {
   try {
     const formData = new FormData()
     formData.set('model', model)
     formData.set('prompt', buildProviderPrompt(prompt))
     formData.set('size', imageSizeForFormat(prompt.format))
-    formData.set('quality', process.env.EDEN_IMAGE_QUALITY || 'high')
+    formData.set('quality', settings.quality)
     formData.set('output_format', 'png')
     formData.set('n', '1')
 
-    const referenceImages = await fetchReferenceImageBlobs(prompt.sourceImageIds.slice(0, referenceImageCount(prompt)))
+    const referenceImages = await fetchReferenceImageBlobs(prompt.sourceImageIds.slice(0, referenceImageCount(prompt, settings)), settings)
     for (const image of referenceImages) {
       formData.append('image[]', image.blob, image.fileName)
     }
@@ -369,7 +437,7 @@ async function generateReferenceEdit(
       method: 'POST',
       headers: { Authorization: `Bearer ${provider.apiKey}` },
       body: formData
-    })
+    }, settings)
 
     return handleImageProviderResponse(response, prompt, 'reference_edit')
   } catch (error) {
@@ -377,9 +445,8 @@ async function generateReferenceEdit(
   }
 }
 
-function referenceImageCount(prompt: EdenImagePrompt) {
-  const requestedCount = Number(process.env.EDEN_IMAGE_REFERENCE_COUNT ?? '')
-  if (Number.isFinite(requestedCount) && requestedCount > 0) return Math.min(Math.floor(requestedCount), prompt.sourceImageIds.length)
+function referenceImageCount(prompt: EdenImagePrompt, settings: NormalizedRuntimeSettings) {
+  if (settings.referenceCount) return Math.min(settings.referenceCount, prompt.sourceImageIds.length)
   if (prompt.assetType === 'identity_lock') return Math.min(2, prompt.sourceImageIds.length)
   return 1
 }
@@ -387,7 +454,8 @@ function referenceImageCount(prompt: EdenImagePrompt) {
 async function generateTextImage(
   prompt: EdenImagePrompt,
   provider: { apiKey?: string; baseUrl: string; name: string },
-  model: string
+  model: string,
+  settings: NormalizedRuntimeSettings
 ): Promise<EdenGeneratedImage> {
   const response = await fetchWithTimeout(`${provider.baseUrl}/images/generations`, {
     method: 'POST',
@@ -399,11 +467,11 @@ async function generateTextImage(
       model,
       prompt: buildProviderPrompt(prompt),
       size: imageSizeForFormat(prompt.format),
-      quality: process.env.EDEN_IMAGE_QUALITY || 'high',
+      quality: settings.quality,
       output_format: 'png',
       n: 1
     })
-  })
+  }, settings)
 
   return handleImageProviderResponse(response, prompt, 'text_generation')
 }
@@ -441,11 +509,11 @@ async function handleImageProviderResponse(
   }
 }
 
-async function fetchReferenceImageBlobs(fileIds: string[]) {
+async function fetchReferenceImageBlobs(fileIds: string[], settings: NormalizedRuntimeSettings) {
   const images: Array<{ blob: Blob; fileName: string }> = []
 
   for (const fileId of fileIds) {
-    const response = await fetchWithTimeout(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1536`)
+    const response = await fetchWithTimeout(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1536`, undefined, settings)
     if (!response.ok) continue
 
     const arrayBuffer = await response.arrayBuffer()
@@ -459,8 +527,12 @@ async function fetchReferenceImageBlobs(fileIds: string[]) {
   return images
 }
 
-async function persistGeneratedImage(prompt: EdenImagePrompt, generated: EdenGeneratedImage): Promise<EdenGeneratedImage> {
-  if (process.env.EDEN_IMAGE_SAVE_MEDIA_ASSETS !== 'true') {
+async function persistGeneratedImage(
+  prompt: EdenImagePrompt,
+  generated: EdenGeneratedImage,
+  settings: NormalizedRuntimeSettings
+): Promise<EdenGeneratedImage> {
+  if (!settings.saveMediaAssets) {
     return generated
   }
 
@@ -582,31 +654,15 @@ function referenceVariationInstruction(prompt: EdenImagePrompt) {
   return 'Reference handling: the attached source portrait is NOT the desired output. Use it only to identify Eden Skye face identity. Create a new photograph with different pose, different crop, different wardrobe, different background, and different lighting. Do not copy the source portrait composition, beige background, scoop-neck top, pearl earrings, front-facing headshot crop, or original camera angle.'
 }
 
-async function fetchWithTimeout(input: string, init?: RequestInit) {
-  const timeoutMs = getProviderTimeoutMs()
+async function fetchWithTimeout(input: string, init: RequestInit | undefined, settings: NormalizedRuntimeSettings) {
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), timeoutMs)
+  const timeout = setTimeout(() => controller.abort(), settings.providerTimeoutMs)
 
   try {
     return await fetch(input, { ...init, signal: controller.signal })
   } finally {
     clearTimeout(timeout)
   }
-}
-
-function getProviderTimeoutMs() {
-  const configured = Number(process.env.EDEN_IMAGE_PROVIDER_TIMEOUT_MS ?? '')
-  if (Number.isFinite(configured) && configured >= 10_000) return Math.min(Math.floor(configured), 300_000)
-  return 120_000
-}
-
-function getMaxBatchSize() {
-  const configured = Number(process.env.EDEN_IMAGE_MAX_BATCH_SIZE ?? '')
-  if (Number.isFinite(configured) && configured > 0) {
-    return Math.min(Math.floor(configured), EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
-  }
-
-  return 1
 }
 
 function describePersistenceError(error: unknown) {
