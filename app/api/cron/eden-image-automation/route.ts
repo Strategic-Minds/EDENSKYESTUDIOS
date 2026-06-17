@@ -179,11 +179,6 @@ async function promoteApprovedDrafts(): Promise<AutomationStep> {
   }
 }
 
-function normalizeQuality(value: string | undefined): NonNullable<EdenImageRuntimeSettings['quality']> {
-  if (value === 'low' || value === 'medium' || value === 'high' || value === 'auto') return value
-  return 'medium'
-}
-
 function buildGrowthHeartbeatSnapshot() {
   const mode = normalizeSystemMode(process.env.SYSTEM_MODE)
   const publicExecutionEnabled = process.env.GROWTH_PUBLIC_EXECUTION_ENABLED === 'true'
@@ -234,6 +229,11 @@ function getCronRuntimeSettings(): EdenImageRuntimeSettings {
     providerTimeoutMs: normalizeTimeout(process.env.EDEN_IMAGE_WORKFLOW_TIMEOUT_MS),
     saveMediaAssets: process.env.EDEN_IMAGE_WORKFLOW_SAVE_MEDIA_ASSETS !== 'false'
   }
+}
+
+function normalizeQuality(value: string | undefined): NonNullable<EdenImageRuntimeSettings['quality']> {
+  if (value === 'low' || value === 'medium' || value === 'high' || value === 'auto') return value
+  return 'medium'
 }
 
 function normalizeTimeout(value: string | undefined) {
