@@ -9,10 +9,9 @@ The Eden Skye image generator creates draft branded website images for review in
 
 ## Approval state
 
-Approved source images for draft generation:
+Active source image for draft generation:
 
 - `01-eden-labeled-eden-skye.png` / Drive ID `1lmOJBPF0G2wotinP7Q9iDiVqorZI8FQs`
-- `01-eden-basic-eden-skye.png` / Drive ID `1ndzEOsotXMhwU_XeSb--4ajZtg0nuZg7`
 
 Default governance:
 
@@ -43,7 +42,7 @@ EDEN_IMAGE_MODEL=gpt-image-2
 EDEN_IMAGE_QUALITY=medium
 ```
 
-Reference-image mode is on by default. Normal hero, lifestyle, campaign, and Open Graph generations use one Eden Skye reference image for faster review. Identity-lock prompts use two references by default.
+Reference-image mode is on by default. Person-based generations use the single active Eden Skye source image.
 
 To force a server default reference count:
 
@@ -109,6 +108,43 @@ EDEN_IMAGE_MAX_BATCH_SIZE=1
 
 Then switch storage and high quality back on for final approved assets.
 
+## Five-minute automation workflow
+
+Vercel runs this route every five minutes:
+
+```text
+GET /api/cron/eden-image-automation
+```
+
+The workflow does three safe steps:
+
+- validates generator readiness
+- optionally generates one stored draft image
+- promotes operator-approved stored drafts from `approved_for_next_review` to `approved_for_website_asset` with `usage_scope=website_candidate`
+
+The workflow does not mutate the public website by itself. It prepares approved assets for the next website integration step.
+
+Five-minute workflow controls:
+
+```bash
+EDEN_IMAGE_WORKFLOW_GENERATE_ENABLED=false
+EDEN_IMAGE_WORKFLOW_PROMOTE_ENABLED=true
+EDEN_IMAGE_WORKFLOW_SAVE_MEDIA_ASSETS=true
+EDEN_IMAGE_WORKFLOW_QUALITY=medium
+EDEN_IMAGE_WORKFLOW_REFERENCE_MODE=on
+EDEN_IMAGE_WORKFLOW_TIMEOUT_MS=120000
+```
+
+Recommended launch mode:
+
+```bash
+EDEN_IMAGE_WORKFLOW_GENERATE_ENABLED=false
+EDEN_IMAGE_WORKFLOW_PROMOTE_ENABLED=true
+EDEN_IMAGE_WORKFLOW_SAVE_MEDIA_ASSETS=true
+```
+
+This lets the cron validate and promote approved stored assets every five minutes without auto-spending image credits. After storage and approval memory are confirmed, set `EDEN_IMAGE_WORKFLOW_GENERATE_ENABLED=true` to allow one stored draft per five-minute tick.
+
 ## Dashboard runtime controls
 
 The admin UI can send protected per-run controls to the image API. These are not secret Vercel env mutations. They only affect the current validation or generation request.
@@ -117,7 +153,7 @@ Supported dashboard controls:
 
 - `quality`: `low`, `medium`, `high`, or `auto`
 - `referenceMode`: `on` or `off`
-- `referenceCount`: `1` or `2`
+- `referenceCount`: `1`
 - `maxBatchSize`: `1` through the configured prompt count
 - `providerTimeoutMs`: `10000` through `300000`
 - `saveMediaAssets`: `true` or `false`
@@ -173,13 +209,13 @@ In-app decision route:
 POST /api/media/eden-image-generator/decision
 ```
 
-Cron route:
+Legacy cron route:
 
 ```text
 GET /api/cron/eden-image-generator
 ```
 
-Cron default is validation-only. If cron generation is enabled, it defaults to one image unless `EDEN_IMAGE_CRON_LIMIT` is set, and the backend still enforces `EDEN_IMAGE_MAX_BATCH_SIZE`:
+Legacy cron default is validation-only. If cron generation is enabled, it defaults to one image unless `EDEN_IMAGE_CRON_LIMIT` is set, and the backend still enforces `EDEN_IMAGE_MAX_BATCH_SIZE`:
 
 ```bash
 EDEN_IMAGE_CRON_MODE=generate
@@ -196,7 +232,7 @@ The review surface is:
 
 It shows:
 
-- Approved Eden Skye source images.
+- The active Eden Skye source image.
 - Reference-only roster contact sheets.
 - The website image prompt queue.
 - Generated draft images returned by the pipeline.
@@ -208,6 +244,6 @@ It shows:
 
 ## Current implementation note
 
-The current generator uses the approved Eden Skye source images as actual reference-image inputs for person-based prompts. Normal prompts default to one reference image for speed; identity-lock prompts default to two references for consistency. The membership/still-life visual intentionally uses text-to-image because it should not show Eden Skye directly.
+The current generator uses the active Eden Skye source image as the actual reference-image input for person-based prompts. The membership/still-life visual intentionally uses text-to-image because it should not show Eden Skye directly.
 
-The generation path is now protected by backend batch limits, dashboard runtime controls, provider timeouts, operator-token authorization, review-only usage scope, Supabase persistence controls, durable approval status updates, and receipt logging. Public website use still requires a separate approval step.
+The generation path is now protected by backend batch limits, dashboard runtime controls, provider timeouts, operator-token authorization, review-only usage scope, Supabase persistence controls, durable approval status updates, five-minute automation workflow promotion, and receipt logging. Public website use still requires a separate website integration step.
