@@ -1,0 +1,27 @@
+{
+  "receipt_id": "escalation-storage-fallback-failure",
+  "timestamp_utc": "2026-06-17T11:14:45Z",
+  "lane": "failure_escalation",
+  "failure_class": "persistent_receipt_storage_fallback",
+  "actor": "AUTO_BUILDER",
+  "proof_level": "durable_repo_failure_drill",
+  "scope": {
+    "repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "primary_storage": "Drive 01_RECURSIVE_COMPLETION_RECEIPTS",
+    "fallback_storage": "GitHub issue or PR comment plus repo receipt artifact"
+  },
+  "inputs_read": ["docs/autonomy/PERSISTENT_RECEIPT_WRITER_SPEC.md", "docs/autonomy/RECURSIVE_RECEIPT_STORAGE.md", "docs/autonomy/FAILURE_ESCALATION_MATRIX.md"],
+  "actions_attempted": ["record storage fallback failure behavior"],
+  "actions_completed": ["durable fallback receipt created in repo"],
+  "protected_actions_blocked": ["drive_delete", "drive_share_change", "secret_change", "destructive_github_action", "provider_write_without_approval"],
+  "artifacts_created": ["docs/release/receipts/escalation-storage-fallback-failure.json"],
+  "validation_result": {
+    "status": "partial",
+    "evidence": ["fallback receipt exists in repo", "Drive write failure was not forced in this branch-safe drill"],
+    "notes": "This receipt proves fallback documentation and repo durability, not live Drive failure handling."
+  },
+  "blockers": ["live Drive write/fallback proof pending"],
+  "next_actions": ["wire runtime receipt writer", "test Drive success and GitHub fallback in approved validation lane"],
+  "canonical_storage": ["repo:docs/release/receipts/escalation-storage-fallback-failure.json"],
+  "accepted_risks_observed": ["drive_anyone_with_link_writer_policy"]
+}

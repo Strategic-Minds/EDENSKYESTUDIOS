@@ -1,0 +1,36 @@
+{
+  "receipt_id": "image-content-qa-quarantine",
+  "timestamp_utc": "2026-06-17T11:14:45Z",
+  "lane": "image_content_qa",
+  "actor": "AUTO_BUILDER",
+  "proof_level": "durable_repo_qa_fixture",
+  "scope": {
+    "repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "policy": "docs/autonomy/IMAGE_CONTENT_AUTOMATION_LOOP.md"
+  },
+  "inputs_read": ["docs/autonomy/IMAGE_CONTENT_AUTOMATION_LOOP.md", "docs/canon/BUSINESS_GROWTH_STRATEGY.md"],
+  "qa_fixture": {
+    "item_id": "eden-qa-fixture-quarantine-001",
+    "status": "quarantined",
+    "intended_channel": "draft_only_internal_review",
+    "source_metadata_present": false,
+    "brand_fit": "needs_review",
+    "factual_risk": "unknown",
+    "rights_source_risk": "missing_source_metadata",
+    "public_publishing_readiness": "blocked",
+    "protected_action_risk": "blocked"
+  },
+  "actions_attempted": ["record quarantine QA fixture receipt"],
+  "actions_completed": ["durable QA quarantine receipt created", "public publishing recorded as blocked"],
+  "protected_actions_blocked": ["public_publishing", "shopify_mutation", "paid_generation_burst", "live_heygen_action", "production_deploy"],
+  "artifacts_created": ["docs/release/receipts/image-content-qa-quarantine.json"],
+  "validation_result": {
+    "status": "partial",
+    "evidence": ["quarantine fixture receipt exists", "unsafe/missing-metadata content would remain blocked"],
+    "notes": "This is a branch-safe quarantine proof fixture, not a live generated asset receipt."
+  },
+  "blockers": ["live generated asset quarantine receipts pending", "approval receipts pending before install/use"],
+  "next_actions": ["run QA on real draft assets when approved", "keep quarantined content out of public and commerce surfaces"],
+  "canonical_storage": ["repo:docs/release/receipts/image-content-qa-quarantine.json"],
+  "accepted_risks_observed": ["drive_anyone_with_link_writer_policy"]
+}

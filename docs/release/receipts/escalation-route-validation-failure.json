@@ -1,0 +1,26 @@
+{
+  "receipt_id": "escalation-route-validation-failure",
+  "timestamp_utc": "2026-06-17T11:14:45Z",
+  "lane": "failure_escalation",
+  "failure_class": "route_validation_failure",
+  "actor": "AUTO_BUILDER",
+  "proof_level": "durable_repo_failure_drill",
+  "scope": {
+    "repository": "Strategic-Minds/EDENSKYESTUDIOS",
+    "routes": ["/api/recursive-completion/readiness", "/api/cron/recursive-completion-dry-run", "/api/cron/recursive-completion-dry-run?lane=hourly_readiness"]
+  },
+  "inputs_read": ["docs/autonomy/FAILURE_ESCALATION_MATRIX.md", "docs/autonomy/RECURSIVE_VALIDATION_WORKFLOW.md"],
+  "actions_attempted": ["record route validation failure escalation behavior"],
+  "actions_completed": ["durable blocker receipt created", "protected live actions recorded as blocked"],
+  "protected_actions_blocked": ["production_deploy", "secret_change", "provider_write", "public_publishing", "shopify_mutation", "payment_change", "supabase_production_write"],
+  "artifacts_created": ["docs/release/receipts/escalation-route-validation-failure.json"],
+  "validation_result": {
+    "status": "partial",
+    "evidence": ["failure escalation receipt exists", "live route failure was not triggered in this branch-safe drill"],
+    "notes": "This is a durable escalation drill receipt. A future failed workflow should append actual run evidence."
+  },
+  "blockers": ["live failing route evidence not present"],
+  "next_actions": ["attach workflow run evidence if route validation fails", "keep autonomy gates false until route validation passes"],
+  "canonical_storage": ["repo:docs/release/receipts/escalation-route-validation-failure.json"],
+  "accepted_risks_observed": ["drive_anyone_with_link_writer_policy"]
+}
