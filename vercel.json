@@ -11,6 +11,10 @@
       "schedule": "0 10 * * *"
     },
     {
+      "path": "/api/cron/growth-heartbeat",
+      "schedule": "*/5 * * * *"
+    },
+    {
       "path": "/api/cron/eden-image-automation",
       "schedule": "*/5 * * * *"
     },
