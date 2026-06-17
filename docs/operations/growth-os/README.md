@@ -1,6 +1,6 @@
 # Eden Growth OS Builder Implementation
 
-Status: implementation scaffold
+Status: builder docs and manifest scaffold
 Drive source package: `EDEN_GROWTH_OS_BUILDER_DOCS_2026_06_16.zip`
 Drive file ID: `153ejo_YiRl00sf6iYKBOpM0aBOEA8KEO`
 
@@ -12,8 +12,9 @@ The target runtime is a 24/7 draft-safe growth system that can discover signals,
 
 ## Current Implementation In This Branch
 
-- Extends the existing five-minute `/api/cron/eden-image-automation` cron route with a Growth OS heartbeat snapshot so the system gets a 5-minute Growth OS trigger without exceeding Vercel cron limits.
+- Adds repo-level Growth OS builder docs.
 - Adds `vercel-agent-validation-manifest.json` for Vercel Agent lane provisioning once the provider adapter is wired.
+- Keeps existing deployable cron and app code unchanged after preview isolation.
 - Keeps the existing `vercel.json` cron count stable.
 - Keeps public execution disabled.
 - Keeps social posting, Shopify mutation, payment changes, customer messages, and live avatar/video activation approval-gated.
