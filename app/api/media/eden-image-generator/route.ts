@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { runEdenImagePipeline, type EdenImageGenerationMode } from '@/src/lib/eden-image-generator'
+import { runEdenImagePipeline, type EdenImageGenerationMode, type EdenImageRuntimeSettings } from '@/src/lib/eden-image-generator'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +33,8 @@ async function handleImageGeneratorRequest(request: Request, trigger: 'manual' |
   const mode: EdenImageGenerationMode = requestedMode === 'generate' ? 'generate' : 'validate'
   const limit = Number(body.limit ?? url.searchParams.get('limit') ?? '') || undefined
   const promptId = String(body.promptId ?? url.searchParams.get('promptId') ?? '').trim() || undefined
-  const result = await runEdenImagePipeline({ mode, limit, promptId, trigger })
+  const settings = normalizeRuntimeSettings(body.settings)
+  const result = await runEdenImagePipeline({ mode, limit, promptId, trigger, settings })
 
   return NextResponse.json({
     ...result,
@@ -47,6 +48,38 @@ async function readBody(request: Request) {
   } catch {
     return {}
   }
+}
+
+function normalizeRuntimeSettings(value: unknown): EdenImageRuntimeSettings | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const input = value as Record<string, unknown>
+  const settings: EdenImageRuntimeSettings = {}
+
+  if (input.quality === 'low' || input.quality === 'medium' || input.quality === 'high' || input.quality === 'auto') {
+    settings.quality = input.quality
+  }
+
+  if (input.referenceMode === 'on' || input.referenceMode === 'off') {
+    settings.referenceMode = input.referenceMode
+  }
+
+  if (typeof input.referenceCount === 'number') {
+    settings.referenceCount = input.referenceCount
+  }
+
+  if (typeof input.maxBatchSize === 'number') {
+    settings.maxBatchSize = input.maxBatchSize
+  }
+
+  if (typeof input.providerTimeoutMs === 'number') {
+    settings.providerTimeoutMs = input.providerTimeoutMs
+  }
+
+  if (typeof input.saveMediaAssets === 'boolean') {
+    settings.saveMediaAssets = input.saveMediaAssets
+  }
+
+  return settings
 }
 
 function getImageGeneratorAuthorizationState(request: Request):
