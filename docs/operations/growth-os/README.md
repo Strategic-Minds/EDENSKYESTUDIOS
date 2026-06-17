@@ -13,7 +13,7 @@ The target runtime is a 24/7 draft-safe growth system that can discover signals,
 ## Current Implementation In This Branch
 
 - Extends the existing five-minute `/api/cron/eden-image-automation` cron route with a Growth OS heartbeat snapshot so the system gets a 5-minute Growth OS trigger without exceeding Vercel cron limits.
-- Adds an internal validation-agent route at `/api/agents/eden-growth-os/validate`.
+- Adds `vercel-agent-validation-manifest.json` for Vercel Agent lane provisioning once the provider adapter is wired.
 - Keeps the existing `vercel.json` cron count stable.
 - Keeps public execution disabled.
 - Keeps social posting, Shopify mutation, payment changes, customer messages, and live avatar/video activation approval-gated.
