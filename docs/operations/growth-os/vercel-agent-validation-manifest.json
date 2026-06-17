@@ -1,0 +1,45 @@
+{
+  "name": "eden-growth-os-validation-agents",
+  "status": "manifest_ready_provider_adapter_pending",
+  "runtime": "vercel_agents",
+  "default_mode": "draft_safe",
+  "public_execution_allowed": false,
+  "blocked_actions": [
+    "public_posting",
+    "public_replies",
+    "customer_messages",
+    "paid_promotion",
+    "shopify_mutation",
+    "payment_changes",
+    "production_database_migration",
+    "destructive_github_actions",
+    "drive_delete",
+    "drive_share_change",
+    "live_avatar_video_publication"
+  ],
+  "allowed_tools": [
+    "supabase_read",
+    "supabase_write_receipts",
+    "vercel_logs_read",
+    "metricool_read",
+    "shopify_read",
+    "github_read",
+    "drive_read",
+    "openai_draft_generation",
+    "ai_gateway_draft_generation"
+  ],
+  "lanes": [
+    { "key": "discovery-validation", "readiness": "R1", "purpose": "Validate trend, keyword, phrase, hashtag, competitor, audience, and performance signals." },
+    { "key": "opportunity-scoring", "readiness": "R2", "purpose": "Score opportunities by trend, competition, velocity, audience match, and conversion value." },
+    { "key": "persona-routing", "readiness": "R2", "purpose": "Verify persona, platform, account label, screen name, and approval state before execution." },
+    { "key": "prompt-registry", "readiness": "R2", "purpose": "Version prompts, pause weak prompts, and connect prompt performance to outcomes." },
+    { "key": "image-asset-qa", "readiness": "R2", "purpose": "Validate realism, source consistency, duplicate risk, storage, and approval status." },
+    { "key": "social-draft-qa", "readiness": "R2", "purpose": "Validate captions, hooks, scripts, hashtag sets, platform fit, and brand safety." },
+    { "key": "kpi-performance", "readiness": "R1", "purpose": "Import Metricool, Shopify, Vercel, and Supabase performance metrics." },
+    { "key": "auto-diagnosis", "readiness": "R2", "purpose": "Find stale jobs, failed providers, missing env vars, storage failures, and queue problems." },
+    { "key": "auto-heal", "readiness": "R2", "purpose": "Safely retry or quarantine low-risk internal failures without public consequences." },
+    { "key": "hardening", "readiness": "R2", "purpose": "Check auth, rate limits, RLS, receipts, route modes, and unsafe configuration." },
+    { "key": "growth-review", "readiness": "R2", "purpose": "Convert outcomes into scale, stop, and test-next decisions." }
+  ],
+  "next_provider_step": "Wire Vercel agent provisioning adapter, then convert this manifest into live Vercel Agent config."
+}
