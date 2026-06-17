@@ -12,7 +12,6 @@ The target runtime is a 24/7 draft-safe growth system that can discover signals,
 
 ## Current Implementation In This Branch
 
-- Adds `/api/cron/growth-heartbeat` as a standalone internal/manual heartbeat validation route.
 - Extends the existing five-minute `/api/cron/eden-image-automation` cron route with a Growth OS heartbeat snapshot so the system gets a 5-minute Growth OS trigger without exceeding Vercel cron limits.
 - Adds an internal validation-agent route at `/api/agents/eden-growth-os/validate`.
 - Keeps the existing `vercel.json` cron count stable.
