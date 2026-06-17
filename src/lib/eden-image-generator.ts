@@ -172,9 +172,7 @@ export async function runEdenImagePipeline(input: {
   promptId?: string
   trigger: 'manual' | 'cron' | 'system'
 }) {
-  const promptSet = input.promptId
-    ? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.filter((prompt) => prompt.id === input.promptId)
-    : EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, input.limit ?? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
+  const promptSet = getRequestedPrompts(input)
   const prompts = promptSet.length > 0 ? promptSet : EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, 1)
   const readiness = getImageGeneratorReadiness(input.mode)
   const generated: EdenGeneratedImage[] = []
@@ -225,12 +223,16 @@ export async function runEdenImagePipeline(input: {
       mode: input.mode,
       trigger: input.trigger,
       promptId: input.promptId ?? null,
+      requestedLimit: input.limit ?? null,
+      maxBatchSize: readiness.maxBatchSize,
       promptCount: prompts.length,
       generatedCount: generated.filter((item) => item.status === 'generated').length,
       blockedCount: generated.filter((item) => item.status === 'blocked').length,
       storedCount: generated.filter((item) => item.persistenceStatus === 'stored').length,
       providerBaseUrlConfigured: readiness.providerBaseUrlConfigured,
+      providerTimeoutMs: readiness.providerTimeoutMs,
       referenceImageMode: readiness.referenceImageMode,
+      referenceImageCount: readiness.referenceImageCount,
       persistenceEnabled: readiness.persistenceEnabled,
       storageBucketConfigured: readiness.storageBucketConfigured,
       blockers: readiness.blockers
@@ -238,6 +240,19 @@ export async function runEdenImagePipeline(input: {
   })
 
   return { ...result, receipt }
+}
+
+function getRequestedPrompts(input: { mode: EdenImageGenerationMode; limit?: number; promptId?: string }) {
+  if (input.promptId) {
+    return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.filter((prompt) => prompt.id === input.promptId)
+  }
+
+  if (input.mode === 'validate') {
+    return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, input.limit ?? EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
+  }
+
+  const requestedLimit = input.limit ?? getMaxBatchSize()
+  return EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.slice(0, Math.min(requestedLimit, getMaxBatchSize()))
 }
 
 function getImageGeneratorReadiness(mode: EdenImageGenerationMode) {
@@ -264,7 +279,10 @@ function getImageGeneratorReadiness(mode: EdenImageGenerationMode) {
     enabled,
     apiKeyConfigured: Boolean(provider.apiKey),
     providerBaseUrlConfigured: provider.baseUrl !== 'https://api.openai.com/v1',
+    providerTimeoutMs: getProviderTimeoutMs(),
+    maxBatchSize: getMaxBatchSize(),
     referenceImageMode,
+    referenceImageCount: process.env.EDEN_IMAGE_REFERENCE_COUNT?.trim() || 'normal=1, identity_lock=2',
     persistenceEnabled,
     storageBucketConfigured: Boolean(storageBucket),
     blockers
@@ -347,7 +365,7 @@ async function generateReferenceEdit(
       return blocked(prompt, 'No reference images could be loaded from Drive thumbnails.')
     }
 
-    const response = await fetch(`${provider.baseUrl}/images/edits`, {
+    const response = await fetchWithTimeout(`${provider.baseUrl}/images/edits`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${provider.apiKey}` },
       body: formData
@@ -371,7 +389,7 @@ async function generateTextImage(
   provider: { apiKey?: string; baseUrl: string; name: string },
   model: string
 ): Promise<EdenGeneratedImage> {
-  const response = await fetch(`${provider.baseUrl}/images/generations`, {
+  const response = await fetchWithTimeout(`${provider.baseUrl}/images/generations`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${provider.apiKey}`,
@@ -427,7 +445,7 @@ async function fetchReferenceImageBlobs(fileIds: string[]) {
   const images: Array<{ blob: Blob; fileName: string }> = []
 
   for (const fileId of fileIds) {
-    const response = await fetch(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1536`)
+    const response = await fetchWithTimeout(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1536`)
     if (!response.ok) continue
 
     const arrayBuffer = await response.arrayBuffer()
@@ -562,6 +580,33 @@ function referenceVariationInstruction(prompt: EdenImagePrompt) {
   }
 
   return 'Reference handling: the attached source portrait is NOT the desired output. Use it only to identify Eden Skye face identity. Create a new photograph with different pose, different crop, different wardrobe, different background, and different lighting. Do not copy the source portrait composition, beige background, scoop-neck top, pearl earrings, front-facing headshot crop, or original camera angle.'
+}
+
+async function fetchWithTimeout(input: string, init?: RequestInit) {
+  const timeoutMs = getProviderTimeoutMs()
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), timeoutMs)
+
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
+function getProviderTimeoutMs() {
+  const configured = Number(process.env.EDEN_IMAGE_PROVIDER_TIMEOUT_MS ?? '')
+  if (Number.isFinite(configured) && configured >= 10_000) return Math.min(Math.floor(configured), 300_000)
+  return 120_000
+}
+
+function getMaxBatchSize() {
+  const configured = Number(process.env.EDEN_IMAGE_MAX_BATCH_SIZE ?? '')
+  if (Number.isFinite(configured) && configured > 0) {
+    return Math.min(Math.floor(configured), EDEN_SKYE_WEBSITE_IMAGE_PROMPTS.length)
+  }
+
+  return 1
 }
 
 function describePersistenceError(error: unknown) {
