@@ -66,12 +66,6 @@ export const EDEN_SKYE_SOURCE_IMAGES = [
     driveFileId: '1lmOJBPF0G2wotinP7Q9iDiVqorZI8FQs',
     sourceType: 'labeled_source_portrait',
     approvalStatus: 'approved_for_draft_generation'
-  },
-  {
-    fileName: '01-eden-basic-eden-skye.png',
-    driveFileId: '1ndzEOsotXMhwU_XeSb--4ajZtg0nuZg7',
-    sourceType: 'basic_source_portrait',
-    approvalStatus: 'approved_for_draft_generation'
   }
 ] as const
 
