@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { logEdenReceipt } from '@/lib/eden/receipts'
 import { createSupabaseServerClient, hasSupabaseServerConfig, usesServiceRole } from '@/lib/supabase-server'
-import { runEdenImagePipeline } from '@/src/lib/eden-image-generator'
+import { runEdenImagePipeline, type EdenImageRuntimeSettings } from '@/src/lib/eden-image-generator'
 
 export const dynamic = 'force-dynamic'
 
@@ -166,10 +166,10 @@ async function promoteApprovedDrafts(): Promise<AutomationStep> {
   }
 }
 
-function getCronRuntimeSettings() {
+function getCronRuntimeSettings(): EdenImageRuntimeSettings {
   return {
     quality: normalizeQuality(process.env.EDEN_IMAGE_WORKFLOW_QUALITY),
-    referenceMode: process.env.EDEN_IMAGE_WORKFLOW_REFERENCE_MODE === 'off' ? 'off' as const : 'on' as const,
+    referenceMode: process.env.EDEN_IMAGE_WORKFLOW_REFERENCE_MODE === 'off' ? 'off' : 'on',
     referenceCount: 1,
     maxBatchSize: 1,
     providerTimeoutMs: normalizeTimeout(process.env.EDEN_IMAGE_WORKFLOW_TIMEOUT_MS),
@@ -177,7 +177,7 @@ function getCronRuntimeSettings() {
   }
 }
 
-function normalizeQuality(value: string | undefined) {
+function normalizeQuality(value: string | undefined): NonNullable<EdenImageRuntimeSettings['quality']> {
   if (value === 'low' || value === 'medium' || value === 'high' || value === 'auto') return value
   return 'medium'
 }
