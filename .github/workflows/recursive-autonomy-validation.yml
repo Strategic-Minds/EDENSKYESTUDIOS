@@ -1,6 +1,20 @@
 name: Recursive Autonomy Validation
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/recursive-autonomy-validation.yml"
+      - "scripts/validate-recursive-completion-routes.mjs"
+      - "src/lib/recursive-completion.ts"
+      - "src/workflows/eden-forensic-repair.ts"
+      - "app/api/recursive-completion/readiness/route.ts"
+      - "app/api/cron/recursive-completion-dry-run/route.ts"
+      - "app/api/workflows/eden-forensic-repair/route.ts"
+      - "app/api/cron/eden-image-automation/route.ts"
+      - "AUTO_SYSTEM_MANIFEST.json"
+      - "package.json"
+      - "package-lock.json"
+      - "next-env.d.ts"
   push:
     branches:
       - main
@@ -8,11 +22,15 @@ on:
       - ".github/workflows/recursive-autonomy-validation.yml"
       - "scripts/validate-recursive-completion-routes.mjs"
       - "src/lib/recursive-completion.ts"
+      - "src/workflows/eden-forensic-repair.ts"
       - "app/api/recursive-completion/readiness/route.ts"
       - "app/api/cron/recursive-completion-dry-run/route.ts"
+      - "app/api/workflows/eden-forensic-repair/route.ts"
+      - "app/api/cron/eden-image-automation/route.ts"
       - "AUTO_SYSTEM_MANIFEST.json"
       - "package.json"
       - "package-lock.json"
+      - "next-env.d.ts"
   workflow_dispatch:
     inputs:
       base_url:
@@ -31,7 +49,8 @@ permissions:
 
 env:
   NODE_VERSION: "24"
-  VALIDATION_BASE_URL: ${{ github.event.inputs.base_url || 'https://edenskyestudios.vercel.app' }}
+  PR_VALIDATION_BASE_URL: "https://edenskyestudios-git-auto-builde-f705df-strategic-minds-advisory.vercel.app"
+  VALIDATION_BASE_URL: ${{ github.event.inputs.base_url || (github.event_name == 'pull_request' && 'https://edenskyestudios-git-auto-builde-f705df-strategic-minds-advisory.vercel.app') || 'https://edenskyestudios.vercel.app' }}
   VALIDATION_LANE: ${{ github.event.inputs.lane || 'hourly_readiness' }}
   CRON_SECRET: ${{ secrets.CRON_SECRET }}
 
