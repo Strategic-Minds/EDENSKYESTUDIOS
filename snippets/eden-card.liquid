@@ -48,9 +48,19 @@
         assign forced_image_url = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503'
       when 'Private Media Drops'
         assign forced_image_url = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-ui-mobile-roster.png?v=1781419417'
-      when 'Eden''s Closet Access'
+      when 'Eden'
         assign forced_image_url = 'https://cdn.shopify.com/s/files/1/0754/8905/0678/files/eden-approved-walkin-closet-environment.png?v=1781419503'
     endcase
   endif
 %}
 {% if url != blank %}<a class="eden-card" href="{{ url }}">{% else %}<article class="eden-card">{% endif %}<div class="eden-card-media">{% if image != blank %}{{ image | image_url: width: 900 | image_tag: loading: 'lazy', alt: title }}{% elsif forced_image_url != blank %}<img src="{{ forced_image_url }}" alt="{{ title | escape }}" loading="lazy">{% endif %}</div><div class="eden-card-body"><h3>{{ title | escape }}</h3><p>{{ text | escape }}</p><span class="eden-card-tag">{{ tag | escape }}</span></div>{% if url != blank %}</a>{% else %}</article>{% endif %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "      when 'Eden''s Closet Access'"
+  to: "      when 'Eden'"
+  position: 3610..3627
+{% endcomment %}
