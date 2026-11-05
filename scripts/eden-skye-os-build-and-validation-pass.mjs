@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { writeReceipt } from './eden-bridge-receipt.mjs';
 
 const files = {
   'docs/eden_skye_os/READINESS_AUDIT_RUNNER.md': `# EDEN SKYE OS Readiness Audit Runner
@@ -209,5 +210,7 @@ const reportPath = path.resolve(process.cwd(), 'docs/eden_skye_os/BUILD_AND_VALI
 await writeFile(reportPath, report, { flag: 'wx' }).catch((error) => {
   if (error?.code !== 'EEXIST') throw error;
 });
+
+await writeReceipt(process.cwd(), created, skipped, 'docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md');
 
 console.log(JSON.stringify({ status: 'complete', created, skipped, live_mutation: false }, null, 2));

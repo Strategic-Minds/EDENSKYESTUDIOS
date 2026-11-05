@@ -23,6 +23,9 @@ jobs:
       - name: Run Eden Skye OS build and validation pass
         run: node scripts/eden-skye-os-build-and-validation-pass.mjs
 
+      - name: Validate required bridge receipt
+        run: node scripts/eden-bridge-receipt.mjs
+
       - name: Show generated artifacts
         run: |
           echo 'EDEN SKYE OS generated/available artifacts:'

@@ -226,3 +226,14 @@ Governance remains locked for:
 - Supabase project ref: `prhppuuwcnmfdhwsagug`
 - Shopify store: `eden-skye-studios.myshopify.com`
 - Drive approval control plane: `https://docs.google.com/spreadsheets/d/1D-2NTRPkvHfItlQ2LoDrrUNUrDZg9Iy1DvZ8GrxlrYg/edit`
+
+## 2026-11-05 — Required Bridge Receipt Repair (Local Candidate)
+
+- Confirmed remote main remains `71727a1535ff2dd77ffba8d385335568cd5e3990`.
+- Run `41994660282` generated scaffolds successfully but failed staging absent
+  `.eden/bridge-results/*.json`. Added an actual scaffold-generation receipt and
+  strict manifest/hash validation rather than removing the required pattern.
+- Eight local Node regression tests pass. Existing outputs are preserved; receipt
+  asserts artifact integrity only, never live readiness. No secret reads or network
+  calls are added. No push, hosted rerun, deployment, migration or schedule change.
+- See `docs/eden_skye_os/GITHUB_ACTIONS_BRIDGE.md` for scope, checklist and next steps.
