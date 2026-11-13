@@ -1,12 +1,13 @@
 name: Eden Skye OS Bridge Runner
 
+# Non-canonical, manual-only scaffold validation. Eden Prime's existing X1
+# mission owns recurring execution; this workflow must never schedule itself,
+# commit generated files, activate databases, or deploy.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   bridge-runner:
@@ -20,18 +21,33 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run Eden Skye OS build and validation pass
-        run: node scripts/eden-skye-os-build-and-validation-pass.mjs
-
-      - name: Show generated artifacts
+      - name: Regenerate scaffold report in ephemeral runner (no deployment)
+        shell: bash
         run: |
-          echo 'EDEN SKYE OS generated/available artifacts:'
-          find docs/eden_skye_os -maxdepth 3 -type f | sort || true
-          find app/api/eden -maxdepth 5 -type f | sort || true
-          find supabase/migrations -maxdepth 2 -type f | sort || true
+          set -euo pipefail
+          rm -f docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          node scripts/eden-skye-os-build-and-validation-pass.mjs > "$RUNNER_TEMP/eden-bridge-generator.json"
 
-      - name: Commit bridge results if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Verify fresh report and generator dry-run declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          test -s "$RUNNER_TEMP/eden-bridge-generator.json"
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const payload = JSON.parse(readFileSync(join(process.env.RUNNER_TEMP, 'eden-bridge-generator.json'), 'utf8'));
+          const report = readFileSync('docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md', 'utf8');
+          if (payload?.status !== 'complete' || payload?.live_mutation !== false) throw new Error('Generator did not declare a successful dry run');
+          if (!report.startsWith('# EDEN SKYE OS Build And Validation Pass Result')) throw new Error('Incorrect report');
+          if (!/^## Live Mutation\r?\nfalse(?:\r?\n|$)/m.test(report)) throw new Error('Report did not declare live mutation false');
+          console.log('Fresh local scaffold report validated; not a provider or production-readiness receipt.');
+          NODE
+
+      - name: Preserve report as review artifact (not a provider receipt)
+        uses: actions/upload-artifact@v4
         with:
-          commit_message: Eden Skye OS bridge runner results
-          file_pattern: .eden/bridge-results/*.json docs/eden_skye_os/*.md docs/eden_skye_os/**/*.md app/api/eden/**/*.ts supabase/migrations/*.sql
+          name: eden-bridge-manual-scaffold-report
+          path: docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          if-no-files-found: error
