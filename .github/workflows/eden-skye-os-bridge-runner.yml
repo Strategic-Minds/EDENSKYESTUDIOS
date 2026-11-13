@@ -1,12 +1,13 @@
 name: Eden Skye OS Bridge Runner
 
+# Non-canonical, manual-only scaffold validation. Eden Prime's existing X1
+# mission owns recurring execution; this workflow must never schedule itself
+# or commit generated files directly to main.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   bridge-runner:
@@ -20,18 +21,21 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run Eden Skye OS build and validation pass
+      - name: Generate local scaffold and validation report (no deployment)
         run: node scripts/eden-skye-os-build-and-validation-pass.mjs
 
-      - name: Show generated artifacts
+      - name: Require a locally generated validation report
+        shell: bash
         run: |
-          echo 'EDEN SKYE OS generated/available artifacts:'
-          find docs/eden_skye_os -maxdepth 3 -type f | sort || true
-          find app/api/eden -maxdepth 5 -type f | sort || true
-          find supabase/migrations -maxdepth 2 -type f | sort || true
+          set -euo pipefail
+          test -s docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          grep -Fq '## Live Mutation' docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          grep -Fxq 'false' docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          echo 'Scaffold report present. No live readiness or deployment asserted.'
 
-      - name: Commit bridge results if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Preserve report as review artifact (not a provider receipt)
+        uses: actions/upload-artifact@v4
         with:
-          commit_message: Eden Skye OS bridge runner results
-          file_pattern: .eden/bridge-results/*.json docs/eden_skye_os/*.md docs/eden_skye_os/**/*.md app/api/eden/**/*.ts supabase/migrations/*.sql
+          name: eden-bridge-manual-scaffold-report
+          path: docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          if-no-files-found: error
