@@ -5,7 +5,7 @@ const files = {
   'docs/eden_skye_os/READINESS_AUDIT_RUNNER.md': `# EDEN SKYE OS Readiness Audit Runner
 
 ## Purpose
-Audits EDEN SKYE OS readiness across GitHub, Drive, OpenAI, n8n, Vercel, Supabase, Metricool, Shopify, Stripe, media, telemetry, governance, and monetization layers.
+Audits EDEN SKYE OS readiness across GitHub, Drive, OpenAI, canonical X1 Operating Systems execution, Etherverse receipts, Vercel, existing authorized Supabase, Metricool, Shopify, Stripe, media, telemetry, governance, and monetization layers.
 
 ## Scoring
 0 absent, 25 documented, 50 scaffolded, 75 dry-run tested, 100 governed-live verified.
@@ -69,86 +69,17 @@ No live scheduling or publishing without final publish approval.
   'docs/eden_skye_os/FINAL_BLOCKER_REPORT.md': `# EDEN SKYE OS Final Blocker Report
 
 ## Remaining Activation Steps
-1. Run repository generators via GitHub Actions.
-2. Review generated docs.
-3. Apply Supabase migration only after approval.
-4. Deploy Vercel routes only after approval.
-5. Import n8n workflows and configure credentials.
-6. Validate OpenAI, Metricool, Shopify, Stripe, Drive, media connectors.
-7. Run readiness audit.
-8. Approve limited dry-run pilot.
+1. Review locally generated documents without enabling runtime actions.
+2. Read existing canonical X1 task, leases and receipts.
+3. Reuse existing Etherverse identity, memories, messages and receipts.
+4. Do not apply another queue migration or import competing n8n controllers.
+5. Validate current authorized OpenAI, Metricool, Shopify, Stripe, Drive and media scopes.
+6. Review preview-only Vercel surfaces without production deployment.
+7. Run independent readiness and Guardian validation.
+8. Approve a bounded dry-run pilot only after independent review.
 
 ## Not Allowed By This Packet
-No deployment, schema apply, live posting, scheduling, Shopify/Stripe mutation, billing change, or source-truth overwrite.
-`,
-  'supabase/migrations/0001_eden_skye_os_runtime_scaffold.sql': `-- EDEN SKYE OS runtime scaffold migration
--- DO NOT APPLY WITHOUT EXPLICIT APPROVAL.
-
-create table if not exists eden_workflow_queue (
-  id uuid primary key default gen_random_uuid(),
-  workflow_key text not null,
-  payload_json jsonb not null default '{}'::jsonb,
-  status text not null default 'pending',
-  priority integer not null default 100,
-  dry_run boolean not null default true,
-  approval_gate_id uuid,
-  idempotency_key text,
-  claimed_by text,
-  claimed_at timestamptz,
-  completed_at timestamptz,
-  error_json jsonb,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-create table if not exists eden_workflow_runs (
-  id uuid primary key default gen_random_uuid(),
-  workflow_key text not null,
-  queue_id uuid,
-  status text not null,
-  started_at timestamptz default now(),
-  finished_at timestamptz,
-  result_json jsonb,
-  error_json jsonb
-);
-
-create table if not exists eden_approval_gates (
-  id uuid primary key default gen_random_uuid(),
-  gate_type text not null,
-  object_type text not null,
-  object_id text not null,
-  status text not null default 'pending',
-  reviewer text,
-  decision_notes text,
-  created_at timestamptz not null default now(),
-  reviewed_at timestamptz
-);
-
-create table if not exists eden_audit_log (
-  id uuid primary key default gen_random_uuid(),
-  event_type text not null,
-  actor text,
-  entity_type text,
-  entity_id text,
-  payload_json jsonb default '{}'::jsonb,
-  created_at timestamptz not null default now()
-);
-
-create table if not exists eden_connector_health (
-  id uuid primary key default gen_random_uuid(),
-  connector_key text not null,
-  status text not null default 'unknown',
-  last_checked_at timestamptz,
-  details_json jsonb default '{}'::jsonb
-);
-
-create table if not exists eden_metric_snapshots (
-  id uuid primary key default gen_random_uuid(),
-  source text not null,
-  object_id text,
-  metrics_json jsonb not null default '{}'::jsonb,
-  captured_at timestamptz not null default now()
-);
+No deployment, schema apply, new queue, cron or orchestration service, live posting, scheduling, Shopify/Stripe mutation, billing change or source-truth overwrite.
 `,
   'app/api/eden/health/route.ts': `export async function GET() {
   return Response.json({ ok: true, service: 'eden-skye-os', mode: 'scaffold' });
@@ -156,14 +87,6 @@ create table if not exists eden_metric_snapshots (
 `,
   'app/api/eden/readiness/route.ts': `export async function GET() {
   return Response.json({ ok: true, readiness: 'scaffolded', live: false });
-}
-`,
-  'app/api/eden/cron/bridge-runner/route.ts': `export async function GET() {
-  return Response.json({ ok: true, cron: 'bridge-runner', dry_run: true, live_mutation: false });
-}
-`,
-  'app/api/eden/cron/readiness-audit/route.ts': `export async function GET() {
-  return Response.json({ ok: true, cron: 'readiness-audit', dry_run: true, live_mutation: false });
 }
 `,
   'app/api/eden/triggers/content/route.ts': `export async function POST() {
@@ -178,15 +101,15 @@ create table if not exists eden_metric_snapshots (
   return Response.json({ ok: true, trigger: 'approval', dry_run: true, queued: false });
 }
 `,
-  'docs/eden_skye_os/n8n/EDEN_SKYE_OS_IMPORT_PACKET.md': `# EDEN SKYE OS n8n Import Packet
 
-## Workflows
-Master Orchestrator, Supabase Queue Consumer, Approval Router, Kill Switch, Readiness Audit, Content Pipeline, Media Pipeline, Metricool Draft Pipeline, Shopify/Stripe Draft Pipeline, Analytics Collector, Learning Loop.
-
-## Defaults
-dry_run=true, draft_only=true, require_human_approval=true.
-`
 };
+
+// Refuse alternate queues, cron routes, or orchestration scaffolds if added later.
+for (const file of Object.keys(files)) {
+  if (file.startsWith('supabase/migrations/') || file.includes('/cron/') || file.includes('/n8n/')) {
+    throw new Error(`Non-canonical runtime scaffold refused: ${file}`);
+  }
+}
 
 let created = [];
 let skipped = [];
