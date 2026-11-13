@@ -1,8 +1,8 @@
 name: Eden Skye OS Bridge Runner
 
 # Non-canonical, manual-only scaffold validation. Eden Prime's existing X1
-# mission owns recurring execution; this workflow must never schedule itself
-# or commit generated files directly to main.
+# mission owns recurring execution; this workflow must never schedule itself,
+# commit generated files, activate databases, or deploy.
 on:
   workflow_dispatch:
 
@@ -21,17 +21,29 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate local scaffold and validation report (no deployment)
-        run: node scripts/eden-skye-os-build-and-validation-pass.mjs
+      - name: Regenerate scaffold report in ephemeral runner (no deployment)
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
+          node scripts/eden-skye-os-build-and-validation-pass.mjs > "$RUNNER_TEMP/eden-bridge-generator.json"
 
-      - name: Require a locally generated validation report
+      - name: Verify fresh report and generator dry-run declaration
         shell: bash
         run: |
           set -euo pipefail
           test -s docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
-          grep -Fq '## Live Mutation' docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
-          grep -Fxq 'false' docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md
-          echo 'Scaffold report present. No live readiness or deployment asserted.'
+          test -s "$RUNNER_TEMP/eden-bridge-generator.json"
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const payload = JSON.parse(readFileSync(join(process.env.RUNNER_TEMP, 'eden-bridge-generator.json'), 'utf8'));
+          const report = readFileSync('docs/eden_skye_os/BUILD_AND_VALIDATION_PASS_RESULT.md', 'utf8');
+          if (payload?.status !== 'complete' || payload?.live_mutation !== false) throw new Error('Generator did not declare a successful dry run');
+          if (!report.startsWith('# EDEN SKYE OS Build And Validation Pass Result')) throw new Error('Incorrect report');
+          if (!/^## Live Mutation\r?\nfalse(?:\r?\n|$)/m.test(report)) throw new Error('Report did not declare live mutation false');
+          console.log('Fresh local scaffold report validated; not a provider or production-readiness receipt.');
+          NODE
 
       - name: Preserve report as review artifact (not a provider receipt)
         uses: actions/upload-artifact@v4
